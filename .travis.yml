@@ -10,6 +10,8 @@ install:
 
 script:
   - npm test
+
+before_deploy:
   - export PKG_NAME=$(node -p -e "require('./package.json').name")
   - export PKG_VERSION=$(node -p -e "require('./package.json').version")
   - mkdirp ./dist -m 0777

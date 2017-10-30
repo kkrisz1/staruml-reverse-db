@@ -23,7 +23,7 @@ deploy:
   api_key:
     secure: 6tiMyuJ1F+RbV+C+nCBqNfRTZEnl0iH5XbNtJYGGcZPwa9pVKKvTjLA2+kqMLUC9lu3xlRVhn/5B9C2v2vcBIS7pSgMaTmAhL5ENmGemczuR06lMeU5MxE0InVpzBCipK2FPKmGS4dQku2NKnhdV28j0T+xl4qsikmMZviDh0n9Zdb1qgQFzAxiBddtqilsWww0Jh6AiX+dZlW9M7whf0bY5R67OdKqRD1/8IN8Pd8ysn15AwApOZDWHCyPv9FwgkMywimi0+bCiwkJxoHqD1naQHsDAx9Qx516nUCzvRHv/OKn55rBhwljxdlE3KsYW1T8qTMbAvOqoTt9b4GGIHLUOdQoKAehWQGPhNA1+B8wl7rzaGvE1q9EpiSIgZ4vUgaA/y8zZ8jqxca3o0Ai4xh93soUylQW9X5I4GCQbLyDQHjSXGc+8q177bLhimklIdNq9DMw3UO4vMJkGSJNUrbSOsUm+AzQOfiiobtlDxCYjSMr97tzx1kR2C/EOZjFJzmZiMZEd3OHowTj8uGcONFw40lbGlKdmLnwYK51WNp2AxJt+h8x6tbuPja5kR9qvLTUVORJ0qqJRfUPnX2gEg4PHptedsN35IAOe9kEago0g6FzxF1CtyDlEWn4K0Q5gOwEQ9rIYDl20Qfs1tGm+ddO8UnQVR574t4qHis0dcAs=
   on:
-    repo: kkrisz1/staruml-erd
+    repo: kkrisz1/staruml-reverse-db
     tags: true
   file_glob: true
   file: dist/*

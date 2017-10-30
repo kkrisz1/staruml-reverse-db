@@ -21,7 +21,7 @@
     "postversion": "git push && git push --tags",
     "release:patch": "npm version patch -m \"[release] %s\"",
     "release:minor": "npm version minor -m \"[release] %s\"",
-    "release:major": "npm version major -m \"[release] %s\"",
+    "release:major": "npm version major -m \"[release] %s\""
   },
   "license": "GPLv3",
   "engines": {

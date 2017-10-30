@@ -1,0 +1,30 @@
+{
+  "name": "kkrisz1.staruml-reverse-db",
+  "title": "Entity Relationship DataModel Generation",
+  "description": "ERD Generation Extension for StarUML 2",
+  "homepage": "https://github.com/kkrisz1/staruml-reverse-db",
+  "issues": "https://github.com/kkrisz1/staruml-reverse-db/issues",
+  "keywords": [
+    "schema",
+    "erd",
+    "database"
+  ],
+  "version": "0.0.1",
+  "author": {
+    "name": "Krisztián Kurucz",
+    "email": "krisz.bme.vik@gmail.com",
+    "url": "https://github.com/kkrisz1"
+  },
+  "scripts": {
+    "preversion": "npm test",
+    "version": "git add -A",
+    "postversion": "git push && git push --tags",
+    "release:patch": "npm version patch -m \"[release] %s\"",
+    "release:minor": "npm version minor -m \"[release] %s\"",
+    "release:major": "npm version major -m \"[release] %s\"",
+  },
+  "license": "GPLv3",
+  "engines": {
+    "staruml": ">=2.8.0"
+  }
+}

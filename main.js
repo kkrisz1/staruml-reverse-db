@@ -71,6 +71,7 @@ define(function (require, exports, module) {
     MethodPolyfill.stringStartsWith();    // ECMAScript 2015
     MethodPolyfill.findElementInArray();  // ECMAScript 2015
     MethodPolyfill.flattenArray();
+    MethodPolyfill.objectAssign();        // ECMAScript 2015
 
     CoreExtension.findElementByNameIgnoreCase();
     CoreExtension.getTagValue();

@@ -12,6 +12,8 @@ define(function (require, exports, module) {
   var MsSqlDbPreferences = require("mssql/Preferences");
   var MsSqlErdGenerator = require("mssql/ErdGenerator");
 
+  var PostgreSqlDbPreferences = require("postgresql/Preferences");
+
   var MethodPolyfill = require("polyfill/MethodPolyfill");
   var CoreExtension = require("util/CoreExtension");
 
@@ -41,7 +43,7 @@ define(function (require, exports, module) {
     options = options || MsSqlDbPreferences.getConnOptions();
 
     MsSqlErdGenerator.analyze(options, model)
-      .then(result.resolve, result.reject, _notifyUser);
+        .then(result.resolve, result.reject, _notifyUser);
 
     return result.promise();
   }
@@ -51,6 +53,10 @@ define(function (require, exports, module) {
    */
   function _handleMsSqlDbConfigure() {
     CommandManager.execute(Commands.FILE_PREFERENCES, MsSqlDbPreferences.getId());
+  }
+
+  function _handlePostgreSqlDbConfigure() {
+    CommandManager.execute(Commands.FILE_PREFERENCES, PostgreSqlDbPreferences.getId());
   }
 
 
@@ -93,7 +99,7 @@ define(function (require, exports, module) {
 
   CommandManager.register("PostgreSQL Server", CMD_DB_POSTGRESQL, CommandManager.doNothing);
   CommandManager.register("Generate ER Data Model...", CMD_DB_POSTGRESQL_GENERATE_ERD, CommandManager.doNothing);
-  CommandManager.register("Configure Server...", CMD_DB_POSTGRESQL_CONFIGURE, CommandManager.doNothing);
+  CommandManager.register("Configure Server...", CMD_DB_POSTGRESQL_CONFIGURE, _handlePostgreSqlDbConfigure);
 
   // Add menus
   var topMenu = MenuManager.getMenu(Commands.TOOLS);
@@ -105,7 +111,7 @@ define(function (require, exports, module) {
   msSqlSubMenuItem.addMenuItem(CMD_DB_MSSQL_CONFIGURE);
 
   var postgreSqlSubMenuItem = dbMenuItem.addMenuItem(CMD_DB_POSTGRESQL);
-  postgreSqlSubMenuItem .addMenuItem(CMD_DB_POSTGRESQL_GENERATE_ERD, ["Alt-Shift-L"]);
-  postgreSqlSubMenuItem .addMenuDivider();
-  postgreSqlSubMenuItem .addMenuItem(CMD_DB_POSTGRESQL_CONFIGURE);
+  postgreSqlSubMenuItem.addMenuItem(CMD_DB_POSTGRESQL_GENERATE_ERD, ["Alt-Shift-L"]);
+  postgreSqlSubMenuItem.addMenuDivider();
+  postgreSqlSubMenuItem.addMenuItem(CMD_DB_POSTGRESQL_CONFIGURE);
 });

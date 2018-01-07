@@ -9,67 +9,67 @@ define(function (require, exports, module) {
   var preferenceId = "db.mssql";
 
   var dbPreferences = {
-    "db.connection": {
+    "mssql.connection": {
       text: "Database Connection",
       type: "Section"
     },
-    "db.connection.username": {
+    "mssql.connection.username": {
       text: "Username",
       description: "Username for database connection.",
       type: "String",
       default: ""
     },
-    "db.connection.password": {
+    "mssql.connection.password": {
       text: "Password",
       description: "Password for database connection.",
       type: "String",
       default: ""
     },
-    "db.connection.server": {
+    "mssql.connection.server": {
       text: "Server IP",
       description: "IP address of the database server.",
       type: "String",
       default: ""
     },
-    "db.connection.owner": {
+    "mssql.connection.owner": {
       text: "Database Schema Owner",
       description: "Database Schema Owner.",
       type: "String",
       default: ""
     },
-    "db.connection.options": {
+    "mssql.connection.options": {
       text: "Database Connection Options",
       type: "Section"
     },
-    "db.connection.options.port": {
+    "mssql.connection.options.port": {
       text: "Server Port",
-      description: "Port number to access he database server.",
+      description: "Port number to access the database server.",
       type: "Number",
       default: 1433
     },
-    "db.connection.options.database": {
+    "mssql.connection.options.database": {
       text: "Database",
       description: "Database.",
       type: "String",
       default: ""
     },
-    "db.dev.options": {
+    "mssql.dev.options": {
       text: "Development Options (DO NOT CHANGE THEM)",
       type: "Section"
     },
-    "db.dev.options.useColumnNames": {
+    "mssql.dev.options.useColumnNames": {
       text: "Return row a key-value pair collection",
       description: "A boolean, that when true return rows as key-value collections else as an array.",
       type: "Check",
       default: true
     },
-    "db.dev.options.rowCollectionOnDone": {
+    "mssql.dev.options.rowCollectionOnDone": {
       text: "Return rows as a collection on request done",
       description: "A boolean, that when true will expose received rows in Requests' done* events.",
       type: "Check",
       default: false
     },
-    "db.dev.options.rowCollectionOnRequestCompletion": {
+    "mssql.dev.options.rowCollectionOnRequestCompletion": {
       text: "Return rows as a collection on request completion",
       description: "A boolean, that when true will expose received rows in Requests' completion callback.",
       type: "Check",
@@ -83,16 +83,16 @@ define(function (require, exports, module) {
 
   function getConnOptions() {
     return {
-      userName: PreferenceManager.get("db.connection.username"),
-      password: PreferenceManager.get("db.connection.password"),
-      server: PreferenceManager.get("db.connection.server"),
-      owner: PreferenceManager.get("db.connection.owner"),
+      userName: PreferenceManager.get("mssql.connection.username"),
+      password: PreferenceManager.get("mssql.connection.password"),
+      server: PreferenceManager.get("mssql.connection.server"),
+      owner: PreferenceManager.get("mssql.connection.owner"),
       options: {
-        port: PreferenceManager.get("db.connection.options.port"),
-        database: PreferenceManager.get("db.connection.options.database"),
-        useColumnNames: PreferenceManager.get("db.dev.options.useColumnNames"),
-        rowCollectionOnDone: PreferenceManager.get("db.dev.options.rowCollectionOnDone"),
-        rowCollectionOnRequestCompletion: PreferenceManager.get("db.dev.options.rowCollectionOnRequestCompletion")
+        port: PreferenceManager.get("mssql.connection.options.port"),
+        database: PreferenceManager.get("mssql.connection.options.database"),
+        useColumnNames: PreferenceManager.get("mssql.dev.options.useColumnNames"),
+        rowCollectionOnDone: PreferenceManager.get("mssql.dev.options.rowCollectionOnDone"),
+        rowCollectionOnRequestCompletion: PreferenceManager.get("mssql.dev.options.rowCollectionOnRequestCompletion")
       }
     };
   }

@@ -4,7 +4,7 @@ node_js:
   - node
 
 install:
-  - npm install --prefix ./node tedious@1.14.0 tedious-connection-pool@1.0.5
+  - npm install --prefix ./node tedious@1.14.0 tedious-connection-pool@1.0.5 pg@6.4.2 pg-pool@1.8.0 object-assign@4.1.1
 
 script:
   - npm test

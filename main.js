@@ -20,10 +20,16 @@ define(function (require, exports, module) {
    * Commands IDs
    */
   var CMD_DB = "db";
+
   var CMD_DB_MSSQL = CMD_DB + ".mssql";
   var CMD_DB_MSSQL_CONFIGURE = CMD_DB_MSSQL + ".configure";
   var CMD_DB_MSSQL_GENERATE = CMD_DB_MSSQL + ".generate";
   var CMD_DB_MSSQL_GENERATE_ERD = CMD_DB_MSSQL_GENERATE + ".erd";
+
+  var CMD_DB_POSTGRESQL = CMD_DB + ".postgresql";
+  var CMD_DB_POSTGRESQL_CONFIGURE = CMD_DB_POSTGRESQL + ".configure";
+  var CMD_DB_POSTGRESQL_GENERATE = CMD_DB_POSTGRESQL + ".generate";
+  var CMD_DB_POSTGRESQL_GENERATE_ERD = CMD_DB_POSTGRESQL_GENERATE + ".erd";
 
   /**
    * Command Handler for ER Data Model Generator based on DB schema
@@ -80,16 +86,26 @@ define(function (require, exports, module) {
 
   // Register Command;
   CommandManager.register("Database", CMD_DB, CommandManager.doNothing);
+
   CommandManager.register("MS SQL Server", CMD_DB_MSSQL, CommandManager.doNothing);
   CommandManager.register("Generate ER Data Model...", CMD_DB_MSSQL_GENERATE_ERD, _handleMsSqlErdGen);
   CommandManager.register("Configure Server...", CMD_DB_MSSQL_CONFIGURE, _handleMsSqlDbConfigure);
 
+  CommandManager.register("PostgreSQL Server", CMD_DB_POSTGRESQL, CommandManager.doNothing);
+  CommandManager.register("Generate ER Data Model...", CMD_DB_POSTGRESQL_GENERATE_ERD, CommandManager.doNothing);
+  CommandManager.register("Configure Server...", CMD_DB_POSTGRESQL_CONFIGURE, CommandManager.doNothing);
+
   // Add menus
-  var topMenu =  MenuManager.getMenu(Commands.TOOLS);
+  var topMenu = MenuManager.getMenu(Commands.TOOLS);
   var dbMenuItem = topMenu.addMenuItem(CMD_DB);
 
   var msSqlSubMenuItem = dbMenuItem.addMenuItem(CMD_DB_MSSQL);
   msSqlSubMenuItem.addMenuItem(CMD_DB_MSSQL_GENERATE_ERD, ["Alt-Shift-M"]);
   msSqlSubMenuItem.addMenuDivider();
   msSqlSubMenuItem.addMenuItem(CMD_DB_MSSQL_CONFIGURE);
+
+  var postgreSqlSubMenuItem = dbMenuItem.addMenuItem(CMD_DB_POSTGRESQL);
+  postgreSqlSubMenuItem .addMenuItem(CMD_DB_POSTGRESQL_GENERATE_ERD, ["Alt-Shift-L"]);
+  postgreSqlSubMenuItem .addMenuDivider();
+  postgreSqlSubMenuItem .addMenuItem(CMD_DB_POSTGRESQL_CONFIGURE);
 });

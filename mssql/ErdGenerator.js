@@ -54,24 +54,24 @@ define(function (require, exports, module) {
 
   DbAnalyzer.prototype.analyze = function () {
     var self = this;
-    var sqlStr = "SELECT col.TABLE_CATALOG AS [Database], "
-      + "  col.TABLE_SCHEMA AS Owner, "
-      + "  col.TABLE_NAME AS TableName, "
-      + "  col.COLUMN_NAME AS ColumnName, "
-      + "  col.ORDINAL_POSITION AS OrdinalPosition, "
-      + "  col.COLUMN_DEFAULT AS DefaultSetting, "
-      + "  col.DATA_TYPE AS DataType, "
-      + "  col.CHARACTER_MAXIMUM_LENGTH AS MaxLength, "
-      + "  col.DATETIME_PRECISION AS DatePrecision, "
-      + "  CAST(CASE col.IS_NULLABLE WHEN 'NO' THEN 0 ELSE 1 END AS bit) AS IsNullable, "
-      + "  COLUMNPROPERTY(OBJECT_ID('[' + col.TABLE_SCHEMA + '].[' + col.TABLE_NAME + ']'), col.COLUMN_NAME, 'IsIdentity') AS IsIdentity, "
-      + "  COLUMNPROPERTY(OBJECT_ID('[' + col.TABLE_SCHEMA + '].[' + col.TABLE_NAME + ']'), col.COLUMN_NAME, 'IsComputed') AS IsComputed, "
-      + "  CAST(ISNULL(pk.is_primary_key, 0) AS bit) AS IsPrimaryKey, "
-      + "  CAST(ISNULL(uk.is_unique, 0) AS bit) AS IsUnique, "
-      + "  CAST(CASE WHEN fk.FK_NAME IS NULL THEN 0 ELSE 1 END AS bit) AS IsForeignKey, "
-      + "  fk.FK_NAME AS ForeignKeyName, "
-      + "  fk.REFERENCED_TABLE_NAME AS ReferencedTableName, "
-      + "  fk.REFERENCED_COLUMN_NAME AS ReferencedColumnName "
+    var sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog, "
+      + "  col.TABLE_SCHEMA AS owner, "
+      + "  col.TABLE_NAME AS table_name, "
+      + "  col.COLUMN_NAME AS column_name, "
+      + "  col.ORDINAL_POSITION AS ordinal_position, "
+      + "  col.COLUMN_DEFAULT AS default_setting, "
+      + "  col.DATA_TYPE AS data_type, "
+      + "  col.CHARACTER_MAXIMUM_LENGTH AS max_length, "
+      + "  col.DATETIME_PRECISION AS date_precision, "
+      + "  CAST(CASE col.IS_NULLABLE WHEN 'NO' THEN 0 ELSE 1 END AS bit) AS is_nullable, "
+      + "  COLUMNPROPERTY(OBJECT_ID('[' + col.TABLE_SCHEMA + '].[' + col.TABLE_NAME + ']'), col.COLUMN_NAME, 'is_identity') AS IsIdentity, "
+      + "  COLUMNPROPERTY(OBJECT_ID('[' + col.TABLE_SCHEMA + '].[' + col.TABLE_NAME + ']'), col.COLUMN_NAME, 'is_computed') AS IsComputed, "
+      + "  CAST(ISNULL(pk.is_primary_key, 0) AS bit) AS is_primary_key, "
+      + "  CAST(ISNULL(uk.is_unique, 0) AS bit) AS is_unique, "
+      + "  CAST(CASE WHEN fk.FK_NAME IS NULL THEN 0 ELSE 1 END AS bit) AS is_foreign_key, "
+      + "  fk.FK_NAME AS foreign_key_name, "
+      + "  fk.REFERENCED_TABLE_NAME AS referenced_table_name, "
+      + "  fk.REFERENCED_COLUMN_NAME AS referenced_column_name "
       + "FROM INFORMATION_SCHEMA.COLUMNS as col "
       + "  LEFT JOIN( "
       + "    SELECT SCHEMA_NAME(o.schema_id)AS TABLE_SCHEMA, "
@@ -167,7 +167,7 @@ define(function (require, exports, module) {
   DbAnalyzer.prototype.performFirstPhase = function (element) {
     var self = this;
 
-    var entityName = element.TableName.value;
+    var entityName = element.table_name.value;
     if (!self.currentEntity || self.currentEntity.name !== entityName) {
       self.currentEntity = self.erDmBuilder.createErdEntity(entityName);
       self.erDmBuilder.addErdEntity(self.currentEntity);
@@ -187,7 +187,7 @@ define(function (require, exports, module) {
 
     if (column.foreignKey && column.referenceTo) {
       self.addOrSetErdRelationship(self.currentEntity, column, column.referenceTo,
-        element.ForeignKeyName.value);
+        element.foreign_key_name.value);
     }
   };
 

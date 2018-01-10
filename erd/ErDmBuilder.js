@@ -53,16 +53,16 @@ define(function (require, exports, module) {
     var column = new type.ERDColumn();
 
     column._parent = namespace;
-    column.name = element.ColumnName.value;
-    column.primaryKey = element.IsPrimaryKey.value;
-    column.nullable = element.IsNullable.value;
-    column.unique = element.IsUnique.value;
-    column.type = element.DataType.value.toUpperCase();
-    column.length = element.MaxLength.value ? element.MaxLength.value.toString() : "";
-    column.foreignKey = element.IsForeignKey.value;
+    column.name = element.column_name.value;
+    column.primaryKey = element.is_primary_key.value;
+    column.nullable = element.is_nullable.value;
+    column.unique = element.is_unique.value;
+    column.type = element.data_type.value.toUpperCase();
+    column.length = element.max_length.value ? element.max_length.value.toString() : "";
+    column.foreignKey = element.is_foreign_key.value;
     column.referenceTo = column.foreignKey
-      ? self.createReference(column, element.ForeignKeyName.value, element.ReferencedTableName.value,
-        element.ReferencedColumnName.value, handleRefNotFound)
+      ? self.createReference(column, element.foreign_key_name.value, element.referenced_table_name.value,
+        element.referenced_column_name.value, handleRefNotFound)
       : undefined;
 
     return column;

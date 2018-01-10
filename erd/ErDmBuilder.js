@@ -46,24 +46,34 @@ define(function (require, exports, module) {
    * @param {type.ERDEntity} namespace
    * @param {Object} element
    * @param {Function} handleRefNotFound
+   * @param {Function} columnPropertyMapper
    * @return {type.ERDColumn} column
    */
-  ErDmBuilder.prototype.createErdColumn = function (namespace, element, handleRefNotFound) {
+  ErDmBuilder.prototype.createErdColumn = function (namespace, element, handleRefNotFound, columnPropertyMapper) {
     var self = this;
     var column = new type.ERDColumn();
 
+    if (columnPropertyMapper === undefined) {
+      columnPropertyMapper = function (columnProperty) {
+        return columnProperty;
+      }
+    }
+
     column._parent = namespace;
-    column.name = element.column_name.value;
-    column.primaryKey = element.is_primary_key.value;
-    column.nullable = element.is_nullable.value;
-    column.unique = element.is_unique.value;
-    column.type = element.data_type.value.toUpperCase();
-    column.length = element.max_length.value ? element.max_length.value.toString() : "";
-    column.foreignKey = element.is_foreign_key.value;
+    column.name = columnPropertyMapper(element.column_name);
+    column.primaryKey = columnPropertyMapper(element.is_primary_key);
+    column.nullable = columnPropertyMapper(element.is_nullable);
+    column.unique = columnPropertyMapper(element.is_unique);
+    column.type = columnPropertyMapper(element.data_type).toUpperCase();
+    column.length = columnPropertyMapper(element.max_length) ? columnPropertyMapper(element.max_length).toString() : "";
+    column.foreignKey = columnPropertyMapper(element.is_foreign_key);
     column.referenceTo = column.foreignKey
-      ? self.createReference(column, element.foreign_key_name.value, element.referenced_table_name.value,
-        element.referenced_column_name.value, handleRefNotFound)
-      : undefined;
+        ? self.createReference(column,
+            columnPropertyMapper(element.foreign_key_name),
+            columnPropertyMapper(element.referenced_table_name),
+            columnPropertyMapper(element.referenced_column_name),
+            handleRefNotFound)
+        : undefined;
 
     return column;
   };
@@ -139,9 +149,9 @@ define(function (require, exports, module) {
     relationship.name = name;
     relationship.identifying = true;
     relationship.end1 = self.createErdRelationshipEnd(relationship, elementFrom, "",
-      elementFrom.unique ? "0..1" : "0..*");
+        elementFrom.unique ? "0..1" : "0..*");
     relationship.end2 = self.createErdRelationshipEnd(relationship, elementTo, elementFrom.name,
-      elementFrom.nullable ? "0..1" : "1");
+        elementFrom.nullable ? "0..1" : "1");
 
     return relationship;
   };

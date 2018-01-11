@@ -16,7 +16,7 @@ before_deploy:
   - mkdirp ./dist -m 0777
   - mkdirp ./$PKG_NAME -m 0777
   - cp *.js package.json README.md LICENSE ./$PKG_NAME
-  - cp -r ./erd ./mssql ./node ./polyfill ./util ./$PKG_NAME
+  - cp -r ./erd ./mssql ./node ./polyfill ./postgresql ./util ./$PKG_NAME
   - zip -r ./dist/$PKG_NAME-$PKG_VERSION.zip ./$PKG_NAME
 
 deploy:

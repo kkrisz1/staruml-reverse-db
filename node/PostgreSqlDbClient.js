@@ -29,7 +29,8 @@
    */
   var _poolConfig = {
     min: 5,
-    max: 10
+    max: 10,
+    log: console.log
   };
 
   function _cmdExecStmnt(config, requestId, sqlStr, inputParams) {
@@ -38,8 +39,8 @@
       _pool = new ConnectionPool(objectAssign(config, _poolConfig));
       console.log('Pool is created');
       _pool.on('error', error);
-      // _pool.on('connect', connect);
-      // _pool.on('acquire', acquire);
+      _pool.on('connect', connect);
+      _pool.on('acquire', acquire);
       types.setTypeParser(BIT_OID, function (val) {
         return parseInt(val);
       })
@@ -50,7 +51,9 @@
 
   function _cmdClose() {
     if (_pool) {
-      _pool.end();
+      _pool.end(function () {
+        console.log('Pool is ended...');
+      });
       _pool = null;
     }
   }
@@ -58,51 +61,30 @@
   function exec(connection, requestId, sql, inputs) {
     sql = sql.toString();
 
-    // var request = new Request(sql, function (err, rowCount, rows) {
-    //     if (err) {
-    //       console.error('Statement failed: ', err);
-    //       return;
-    //     }
-    //
-    //     connection.release();
-    //     _domainManager.emitEvent("postgreSqlDbClient", "statementComplete", [requestId, rowCount, rows]);
-    //   }
-    // );
-    // request.on('columnMetadata', columnMetadata);
-    // request.on('row', function (columns) {
-    //   _domainManager.emitEvent("postgreSqlDbClient", "rowReceived", [requestId, columns]);
-    // });
-    // request.on('done', requestDone);
-    //
-    // inputs.forEach(function (input) {
-    //   request.addParameter(input.name, input.type, input.value);
-    // });
-
     console.log('Execute query', sql, inputs);
     connection.query(sql, inputs, function (err, res) {
       if (err) {
         console.error(err);
         error(err);
+        return;
       }
 
       _domainManager.emitEvent("postgreSqlDbClient", "statementComplete", [requestId, res.rowCount, res.rows]);
     });
   }
 
-  function requestDone(rowCount, more) {
-    //console.log(rowCount + ' rows');
+  function connect(client) {
+    //console.log('connect');
+  }
+
+  function acquire(client) {
+    //console.log('acquire');
   }
 
   function error(err, client) {
     console.error('Connection fails to connect to the SQL Server', err);
     _cmdClose();
     _domainManager.emitEvent("postgreSqlDbClient", "error", err);
-  }
-
-  function columnMetadata(columnsMetadata) {
-    // columnsMetadata.forEach(function (column) {
-    //   console.log(column);
-    // });
   }
 
   /**
@@ -165,7 +147,7 @@
         "postgreSqlDbClient",           // domain name
         "error",  // event name
         [ // event arguments
-          {name: "err", type: "object", description: "Error object"},
+          {name: "err", type: "object", description: "Error object"}
         ]
     );
   }

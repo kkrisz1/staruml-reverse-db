@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres:10.1-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "127.0.0.1:5432:5432"
+  web:
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8090:80"

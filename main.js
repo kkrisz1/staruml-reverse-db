@@ -13,6 +13,7 @@ define(function (require, exports, module) {
   var MsSqlErdGenerator = require("mssql/ErdGenerator");
 
   var PostgreSqlDbPreferences = require("postgresql/Preferences");
+  var PostgreSqlErdGenerator = require("postgresql/ErdGenerator");
 
   var MethodPolyfill = require("polyfill/MethodPolyfill");
   var CoreExtension = require("util/CoreExtension");
@@ -43,6 +44,16 @@ define(function (require, exports, module) {
     options = options || MsSqlDbPreferences.getConnOptions();
 
     MsSqlErdGenerator.analyze(options, model)
+        .then(result.resolve, result.reject, _notifyUser);
+
+    return result.promise();
+  }
+
+  function _handlePostgreSqlErdGen(options, model) {
+    var result = new $.Deferred();
+    options = options || PostgreSqlDbPreferences.getConnOptions();
+
+    PostgreSqlErdGenerator.analyze(options, model)
         .then(result.resolve, result.reject, _notifyUser);
 
     return result.promise();
@@ -98,7 +109,7 @@ define(function (require, exports, module) {
   CommandManager.register("Configure Server...", CMD_DB_MSSQL_CONFIGURE, _handleMsSqlDbConfigure);
 
   CommandManager.register("PostgreSQL Server", CMD_DB_POSTGRESQL, CommandManager.doNothing);
-  CommandManager.register("Generate ER Data Model...", CMD_DB_POSTGRESQL_GENERATE_ERD, CommandManager.doNothing);
+  CommandManager.register("Generate ER Data Model...", CMD_DB_POSTGRESQL_GENERATE_ERD, _handlePostgreSqlErdGen);
   CommandManager.register("Configure Server...", CMD_DB_POSTGRESQL_CONFIGURE, _handlePostgreSqlDbConfigure);
 
   // Add menus

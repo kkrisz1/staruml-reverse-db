@@ -15,6 +15,8 @@ define(function (require, exports, module) {
   var PostgreSqlDbPreferences = require("postgresql/Preferences");
   var PostgreSqlErdGenerator = require("postgresql/ErdGenerator");
 
+  var MySqlDbPreferences = require("mysql/Preferences");
+
   var MethodPolyfill = require("polyfill/MethodPolyfill");
   var CoreExtension = require("util/CoreExtension");
 
@@ -33,6 +35,11 @@ define(function (require, exports, module) {
   var CMD_DB_POSTGRESQL_CONFIGURE = CMD_DB_POSTGRESQL + ".configure";
   var CMD_DB_POSTGRESQL_GENERATE = CMD_DB_POSTGRESQL + ".generate";
   var CMD_DB_POSTGRESQL_GENERATE_ERD = CMD_DB_POSTGRESQL_GENERATE + ".erd";
+
+  var CMD_DB_MYSQL = CMD_DB + ".mysql";
+  var CMD_DB_MYSQL_CONFIGURE = CMD_DB_MYSQL + ".configure";
+  var CMD_DB_MYSQL_GENERATE = CMD_DB_MYSQL + ".generate";
+  var CMD_DB_MYSQL_GENERATE_ERD = CMD_DB_MYSQL_GENERATE + ".erd";
 
   /**
    * Command Handler for ER Data Model Generator based on DB schema
@@ -68,6 +75,10 @@ define(function (require, exports, module) {
 
   function _handlePostgreSqlDbConfigure() {
     CommandManager.execute(Commands.FILE_PREFERENCES, PostgreSqlDbPreferences.getId());
+  }
+
+  function _handleMySqlDbConfigure() {
+    CommandManager.execute(Commands.FILE_PREFERENCES, MySqlDbPreferences.getId());
   }
 
 
@@ -112,6 +123,10 @@ define(function (require, exports, module) {
   CommandManager.register("Generate ER Data Model...", CMD_DB_POSTGRESQL_GENERATE_ERD, _handlePostgreSqlErdGen);
   CommandManager.register("Configure Server...", CMD_DB_POSTGRESQL_CONFIGURE, _handlePostgreSqlDbConfigure);
 
+  CommandManager.register("MySQL Server", CMD_DB_MYSQL, CommandManager.doNothing);
+  CommandManager.register("Generate ER Data Model...", CMD_DB_MYSQL_GENERATE_ERD, CommandManager.doNothing);
+  CommandManager.register("Configure Server...", CMD_DB_MYSQL_CONFIGURE, _handleMySqlDbConfigure);
+
   // Add menus
   var topMenu = MenuManager.getMenu(Commands.TOOLS);
   var dbMenuItem = topMenu.addMenuItem(CMD_DB);
@@ -125,4 +140,9 @@ define(function (require, exports, module) {
   postgreSqlSubMenuItem.addMenuItem(CMD_DB_POSTGRESQL_GENERATE_ERD, ["Alt-Shift-L"]);
   postgreSqlSubMenuItem.addMenuDivider();
   postgreSqlSubMenuItem.addMenuItem(CMD_DB_POSTGRESQL_CONFIGURE);
+
+  var mySqlSubMenuItem = dbMenuItem.addMenuItem(CMD_DB_MYSQL);
+  mySqlSubMenuItem.addMenuItem(CMD_DB_MYSQL_GENERATE_ERD, ["Alt-Shift-P"]);
+  mySqlSubMenuItem.addMenuDivider();
+  mySqlSubMenuItem.addMenuItem(CMD_DB_MYSQL_CONFIGURE);
 });

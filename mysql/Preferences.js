@@ -6,48 +6,48 @@ define(function (require, exports, module) {
   var AppInit = app.getModule("utils/AppInit");
   var PreferenceManager = app.getModule("core/PreferenceManager");
 
-  var preferenceId = "db.postgresql";
+  var preferenceId = "db.mysql";
 
   var dbPreferences = {
-    "postgresql.connection": {
+    "mysql.connection": {
       text: "Database Connection",
       type: "Section"
     },
-    "postgresql.connection.username": {
+    "mysql.connection.username": {
       text: "Username",
       description: "Username for database connection.",
       type: "String",
       default: ""
     },
-    "postgresql.connection.password": {
+    "mysql.connection.password": {
       text: "Password",
       description: "Password for database connection.",
       type: "String",
       default: ""
     },
-    "postgresql.connection.server": {
+    "mysql.connection.server": {
       text: "Server IP",
       description: "IP address of the database server.",
       type: "String",
       default: "localhost"
     },
-    "postgresql.connection.owner": {
+    "mysql.connection.owner": {
       text: "Database Schema",
       description: "Database Schema.",
       type: "String",
       default: "public"
     },
-    "postgresql.connection.options": {
+    "mysql.connection.options": {
       text: "Database Connection Options",
       type: "Section"
     },
-    "postgresql.connection.options.port": {
+    "mysql.connection.options.port": {
       text: "Server Port",
       description: "Port number to access the database server.",
       type: "Number",
-      default: 5432
+      default: 3306
     },
-    "postgresql.connection.options.database": {
+    "mysql.connection.options.database": {
       text: "Database",
       description: "Database.",
       type: "String",
@@ -61,19 +61,19 @@ define(function (require, exports, module) {
 
   function getConnOptions() {
     return {
-      userName: PreferenceManager.get("postgresql.connection.username"),
-      password: PreferenceManager.get("postgresql.connection.password"),
-      server: PreferenceManager.get("postgresql.connection.server"),
-      owner: PreferenceManager.get("postgresql.connection.owner"),
+      userName: PreferenceManager.get("mysql.connection.username"),
+      password: PreferenceManager.get("mysql.connection.password"),
+      server: PreferenceManager.get("mysql.connection.server"),
+      owner: PreferenceManager.get("mysql.connection.owner"),
       options: {
-        port: PreferenceManager.get("postgresql.connection.options.port"),
-        database: PreferenceManager.get("postgresql.connection.options.database")
+        port: PreferenceManager.get("mysql.connection.options.port"),
+        database: PreferenceManager.get("mysql.connection.options.database")
       }
     };
   }
 
   AppInit.htmlReady(function () {
-    PreferenceManager.register(preferenceId, "PostgreSQL Server", dbPreferences);
+    PreferenceManager.register(preferenceId, "MySQL Server", dbPreferences);
   });
 
   exports.getId = getId;

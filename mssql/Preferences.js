@@ -29,7 +29,7 @@ define(function (require, exports, module) {
       text: "Server IP",
       description: "IP address of the database server.",
       type: "String",
-      default: ""
+      default: "localhost"
     },
     "mssql.connection.owner": {
       text: "Database Schema Owner",

@@ -35,9 +35,7 @@
 
   function _cmdExecStmnt(config, requestId, sqlStr, inputParams) {
     if (!_pool) {
-      console.log('Pool will be created');
       _pool = new ConnectionPool(objectAssign(config, _poolConfig));
-      console.log('Pool is created');
       _pool.on('error', error);
       _pool.on('connect', connect);
       _pool.on('acquire', acquire);
@@ -61,10 +59,8 @@
   function exec(connection, requestId, sql, inputs) {
     sql = sql.toString();
 
-    console.log('Execute query', sql, inputs);
     connection.query(sql, inputs, function (err, res) {
       if (err) {
-        console.error(err);
         error(err);
         return;
       }
@@ -82,7 +78,7 @@
   }
 
   function error(err, client) {
-    console.error('Connection fails to connect to the SQL Server', err);
+    console.error('Error is occurred', err);
     _cmdClose();
     _domainManager.emitEvent("postgreSqlDbClient", "error", err);
   }

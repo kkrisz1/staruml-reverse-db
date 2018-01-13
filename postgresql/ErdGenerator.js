@@ -120,7 +120,7 @@ define(function (require, exports, module) {
         + "AND col.TABLE_CATALOG = $2::text "
         + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
 
-    return self.executeSql(sqlStr, function (row) {
+    return self.executeSql(sqlStr, function () {
     }, function (rowCount, rows) {
       OperationBuilder.begin("Generate ER Data Model");
       rows.forEach(function (row) {
@@ -271,7 +271,7 @@ define(function (require, exports, module) {
           result.reject(err);
         })
         .always(function () {
-          return new Manager().closeAllConnections();
+          // When StarUML closed or NodeJS server is restarted then all connections are closed
         });
 
     return result.promise();

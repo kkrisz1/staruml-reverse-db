@@ -286,7 +286,7 @@ define(function (require, exports, module) {
           result.reject(err);
         })
         .always(function () {
-          return new Manager().closeAllConnections();
+          // When StarUML closed or NodeJS server is restarted then all connections are closed
         });
 
     return result.promise();

@@ -16,6 +16,7 @@ define(function (require, exports, module) {
   var PostgreSqlErdGenerator = require("postgresql/ErdGenerator");
 
   var MySqlDbPreferences = require("mysql/Preferences");
+  var MySqlErdGenerator = require("mysql/ErdGenerator");
 
   var MethodPolyfill = require("polyfill/MethodPolyfill");
   var CoreExtension = require("util/CoreExtension");
@@ -61,6 +62,16 @@ define(function (require, exports, module) {
     options = options || PostgreSqlDbPreferences.getConnOptions();
 
     PostgreSqlErdGenerator.analyze(options, model)
+        .then(result.resolve, result.reject, _notifyUser);
+
+    return result.promise();
+  }
+
+  function _handleMySqlErdGen(options, model) {
+    var result = new $.Deferred();
+    options = options || MySqlDbPreferences.getConnOptions();
+
+    MySqlErdGenerator.analyze(options, model)
         .then(result.resolve, result.reject, _notifyUser);
 
     return result.promise();
@@ -124,7 +135,7 @@ define(function (require, exports, module) {
   CommandManager.register("Configure Server...", CMD_DB_POSTGRESQL_CONFIGURE, _handlePostgreSqlDbConfigure);
 
   CommandManager.register("MySQL Server", CMD_DB_MYSQL, CommandManager.doNothing);
-  CommandManager.register("Generate ER Data Model...", CMD_DB_MYSQL_GENERATE_ERD, CommandManager.doNothing);
+  CommandManager.register("Generate ER Data Model...", CMD_DB_MYSQL_GENERATE_ERD, _handleMySqlErdGen);
   CommandManager.register("Configure Server...", CMD_DB_MYSQL_CONFIGURE, _handleMySqlDbConfigure);
 
   // Add menus

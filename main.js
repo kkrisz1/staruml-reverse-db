@@ -9,13 +9,16 @@ define(function (require, exports, module) {
   var MenuManager = app.getModule("menu/MenuManager");
   var Toast = app.getModule("ui/Toast");
 
-  var MsSqlDbPreferences = require("mssql/Preferences");
+  var MsSqlDbPreferences = require("mssql/MsSqlPreferences");
+  var msSqlDbPrefs = new MsSqlDbPreferences();
   var MsSqlErdGenerator = require("mssql/ErdGenerator");
 
-  var PostgreSqlDbPreferences = require("postgresql/Preferences");
+  var PostgreSqlDbPreferences = require("postgresql/PostgreSqlPreferences");
+  var postgreSqlDbPrefs = new PostgreSqlDbPreferences();
   var PostgreSqlErdGenerator = require("postgresql/ErdGenerator");
 
-  var MySqlDbPreferences = require("mysql/Preferences");
+  var MySqlDbPreferences = require("mysql/MySqlPreferences");
+  var mySqlDbPrefs = new MySqlDbPreferences();
   var MySqlErdGenerator = require("mysql/ErdGenerator");
 
   var MethodPolyfill = require("polyfill/MethodPolyfill");
@@ -49,7 +52,7 @@ define(function (require, exports, module) {
    */
   function _handleMsSqlErdGen(options, model) {
     var result = new $.Deferred();
-    options = options || MsSqlDbPreferences.getConnOptions();
+    options = options || msSqlDbPrefs.getConnOptions();
 
     MsSqlErdGenerator.analyze(options, model)
         .then(result.resolve, result.reject, _notifyUser);
@@ -59,7 +62,7 @@ define(function (require, exports, module) {
 
   function _handlePostgreSqlErdGen(options, model) {
     var result = new $.Deferred();
-    options = options || PostgreSqlDbPreferences.getConnOptions();
+    options = options || postgreSqlDbPrefs.getConnOptions();
 
     PostgreSqlErdGenerator.analyze(options, model)
         .then(result.resolve, result.reject, _notifyUser);
@@ -69,7 +72,7 @@ define(function (require, exports, module) {
 
   function _handleMySqlErdGen(options, model) {
     var result = new $.Deferred();
-    options = options || MySqlDbPreferences.getConnOptions();
+    options = options || mySqlDbPrefs.getConnOptions();
 
     MySqlErdGenerator.analyze(options, model)
         .then(result.resolve, result.reject, _notifyUser);
@@ -81,15 +84,15 @@ define(function (require, exports, module) {
    * Popup PreferenceDialog with DB Preference Schema
    */
   function _handleMsSqlDbConfigure() {
-    CommandManager.execute(Commands.FILE_PREFERENCES, MsSqlDbPreferences.getId());
+    CommandManager.execute(Commands.FILE_PREFERENCES, msSqlDbPrefs.getId());
   }
 
   function _handlePostgreSqlDbConfigure() {
-    CommandManager.execute(Commands.FILE_PREFERENCES, PostgreSqlDbPreferences.getId());
+    CommandManager.execute(Commands.FILE_PREFERENCES, postgreSqlDbPrefs.getId());
   }
 
   function _handleMySqlDbConfigure() {
-    CommandManager.execute(Commands.FILE_PREFERENCES, MySqlDbPreferences.getId());
+    CommandManager.execute(Commands.FILE_PREFERENCES, mySqlDbPrefs.getId());
   }
 
 

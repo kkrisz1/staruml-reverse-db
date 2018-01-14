@@ -8,9 +8,9 @@ define(function (require, exports, module) {
   var ProjectManager = app.getModule("engine/ProjectManager");
 
   var ProjectWriter = require("util/ProjectWriter");
-  var Request = require("mssql/Manager").Request;
-  var RequestInput = require("mssql/Manager").RequestInput;
-  var Manager = require("mssql/Manager").Manager;
+  var Request = require("db/DbRequest");
+  var RequestInput = require("db/DbRequestInput");
+  var Manager = require("mssql/MsSqlManager");
 
   var ErDmBuilder = require("erd/ErDmBuilder");
 

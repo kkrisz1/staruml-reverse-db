@@ -3,70 +3,13 @@
 define(function (require, exports, module) {
   "use strict";
 
-  var IdGenerator = app.getModule("core/IdGenerator");
-
-  var PostgreSqlNodeDomain = require("util/node/PostgreSqlNodeDomain");
-
-
   /**
-   * Request
+   * DbManager
    * @constructor
-   * @param {string} sql
-   * @param {Array.<RequestInput>} inputs
+   * @param {NodeDomain} nodeDomain
+   * @param {DbRequest} request
    */
-  function Request(sql, inputs) {
-    /**
-     * @member {string}
-     */
-    this.id = IdGenerator.generateGuid();
-
-    /**
-     * @member {string}
-     */
-    this.sql = sql;
-
-    /**
-     * @member {Array.<RequestInput>}
-     */
-    this.inputs = inputs;
-  }
-
-
-  /**
-   * RequestInput
-   * @constructor
-   * @param {string} name
-   * @param {string} type
-   * @param {string} value
-   */
-  function RequestInput(name, type, value) {
-    /**
-     * @private
-     * @member {string}
-     */
-    this.name = name;
-
-    /**
-     * @private
-     * @member {string}
-     */
-    this.type = type;
-
-    /**
-     * @private
-     * @member {string}
-     */
-    this.value = value;
-  }
-
-
-  /**
-   * Manager
-   * @constructor
-   * @param {Request} request
-   * @param {object} options
-   */
-  function Manager(request, options) {
+  function DbManager(nodeDomain, request) {
     /**
      * @private
      * @member {Request}
@@ -75,12 +18,12 @@ define(function (require, exports, module) {
 
     /**
      * @private
-     * @member {PostgreSqlNodeDomain}
+     * @member {NodeDomain}
      */
-    this.nodeDomain = new PostgreSqlNodeDomain(options);
+    this.nodeDomain = nodeDomain;
   }
 
-  Manager.prototype.executeSql = function (handleRowReceived, handleStatementComplete) {
+  DbManager.prototype.executeSql = function (handleRowReceived, handleStatementComplete) {
     var result = new $.Deferred();
     var self = this;
 
@@ -94,7 +37,7 @@ define(function (require, exports, module) {
   };
 
 
-  Manager.prototype.handleEvents = function (requestId, handleRowReceived, handleStatementComplete) {
+  DbManager.prototype.handleEvents = function (requestId, handleRowReceived, handleStatementComplete) {
     var result = new $.Deferred();
     var self = this;
 
@@ -140,27 +83,25 @@ define(function (require, exports, module) {
   };
 
 
-  Manager.prototype.closeAllConnections = function () {
+  DbManager.prototype.closeAllConnections = function () {
     var self = this;
 
     return self.nodeDomain.close();
   };
 
 
-  Manager.prototype.subscribe = function (event, callback) {
+  DbManager.prototype.subscribe = function (event, callback) {
     var self = this;
 
     $(self.nodeDomain).on(event, callback);
   };
 
 
-  Manager.prototype.unsubscribe = function (event) {
+  DbManager.prototype.unsubscribe = function (event) {
     var self = this;
 
     $(self.nodeDomain).off(event);
   };
 
-  exports.Request = Request;
-  exports.RequestInput = RequestInput;
-  exports.Manager = Manager;
+  module.exports = DbManager;
 });

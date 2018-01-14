@@ -8,8 +8,9 @@ define(function (require, exports, module) {
   var ProjectManager = app.getModule("engine/ProjectManager");
 
   var ProjectWriter = require("util/ProjectWriter");
-  var Request = require("postgresql/Manager").Request;
-  var Manager = require("postgresql/Manager").Manager;
+  var Request = require("db/DbRequest");
+  var RequestInput = require("db/DbRequestInput");
+  var Manager = require("postgresql/PostgreSqlManager");
 
   var ErDmBuilder = require("erd/ErDmBuilder");
 

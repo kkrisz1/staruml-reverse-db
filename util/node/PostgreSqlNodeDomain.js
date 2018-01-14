@@ -4,7 +4,8 @@ define(function (require, exports, module) {
   "use strict";
 
   var ExtensionUtils = app.getModule("utils/ExtensionUtils");
-  var NodeDomain = app.getModule("utils/NodeDomain");
+
+  var DbNodeDomain = require("util/node/DbNodeDomain");
 
 
   /**
@@ -12,41 +13,20 @@ define(function (require, exports, module) {
    * @constructor
    */
   function PostgreSqlNodeDomain(options) {
-    NodeDomain.apply(this, ["postgreSqlDbClient", ExtensionUtils.getModulePath(module, "../../node/PostgreSqlDbClient")]);
-
-    /**
-     * All DB Client-related (pg-pool) options
-     * @private
-     * @member {object}
-     */
-    this.options = options && {
-      user: options.userName,
-      password: options.password,
-      host: options.server,
-      port: options.options.port,
-      database: options.options.database || options.userName
-    };
+    DbNodeDomain.apply(this, ["postgreSqlDbClient",
+      ExtensionUtils.getModulePath(module, "../../node/PostgreSqlDbClient"),
+      options && {
+        user: options.userName,
+        password: options.password,
+        host: options.server,
+        port: options.options.port,
+        database: options.options.database || options.userName
+      }]);
   }
-  // inherits from NodeDomain
-  PostgreSqlNodeDomain.prototype = Object.create(NodeDomain.prototype);
+
+  // inherits from DbNodeDomain
+  PostgreSqlNodeDomain.prototype = Object.create(DbNodeDomain.prototype);
   PostgreSqlNodeDomain.prototype.constructor = PostgreSqlNodeDomain;
-
-  /**
-   * Execute SQL statement
-   * @param {Request} request
-   * @return {$.Promise}
-   */
-  PostgreSqlNodeDomain.prototype.send = function (request) {
-    return this.exec("execStmnt", this.options, request.id, request.sql, request.inputs)
-  };
-
-  /**
-   * Close all opened connections
-   * @return {$.Promise}
-   */
-  PostgreSqlNodeDomain.prototype.close = function () {
-    return this.exec("close");
-  };
 
   module.exports = PostgreSqlNodeDomain;
 });

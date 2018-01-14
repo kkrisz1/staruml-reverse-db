@@ -4,7 +4,8 @@ define(function (require, exports, module) {
   "use strict";
 
   var ExtensionUtils = app.getModule("utils/ExtensionUtils");
-  var NodeDomain = app.getModule("utils/NodeDomain");
+
+  var DbNodeDomain = require("util/node/DbNodeDomain");
 
 
   /**
@@ -12,41 +13,20 @@ define(function (require, exports, module) {
    * @constructor
    */
   function MySqlNodeDomain(options) {
-    NodeDomain.apply(this, ["mySqlDbClient", ExtensionUtils.getModulePath(module, "../../node/MySqlDbClient")]);
-
-    /**
-     * All DB Client-related (pg-pool) options
-     * @private
-     * @member {object}
-     */
-    this.options = options && {
-      user: options.userName,
-      password: options.password,
-      host: options.server,
-      port: options.options.port,
-      database: options.options.database || options.userName
-    };
+    DbNodeDomain.apply(this, ["mySqlDbClient",
+      ExtensionUtils.getModulePath(module, "../../node/MySqlDbClient"),
+      options && {
+        user: options.userName,
+        password: options.password,
+        host: options.server,
+        port: options.options.port,
+        database: options.options.database || options.userName
+      }]);
   }
-  // inherits from NodeDomain
-  MySqlNodeDomain.prototype = Object.create(NodeDomain.prototype);
+
+  // inherits from DbNodeDomain
+  MySqlNodeDomain.prototype = Object.create(DbNodeDomain.prototype);
   MySqlNodeDomain.prototype.constructor = MySqlNodeDomain;
-
-  /**
-   * Execute SQL statement
-   * @param {Request} request
-   * @return {$.Promise}
-   */
-  MySqlNodeDomain.prototype.send = function (request) {
-    return this.exec("execStmnt", this.options, request.id, request.sql, request.inputs)
-  };
-
-  /**
-   * Close all opened connections
-   * @return {$.Promise}
-   */
-  MySqlNodeDomain.prototype.close = function () {
-    return this.exec("close");
-  };
 
   module.exports = MySqlNodeDomain;
 });

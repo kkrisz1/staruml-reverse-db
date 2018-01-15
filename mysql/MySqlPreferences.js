@@ -12,7 +12,7 @@ define(function (require, exports, module) {
   function MySqlPreferences() {
     DbPreferences.apply(this, ["MySQL Server", "db.mysql"]);
 
-    this.dbPreferences[this.connPrefKeyPrefix + ".owner"].default = "";
+    this.dbPreferences[this.connPrefOptKeyPrefix + ".database"].default = "def";
     this.dbPreferences[this.connPrefOptKeyPrefix + ".port"].default = 3306;
 
     this._register();

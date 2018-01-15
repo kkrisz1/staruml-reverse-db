@@ -17,6 +17,7 @@ define(function (require, exports, module) {
   function analyze(options, model) {
     if (!model) {
       model = new type.ERDDataModel();
+      model.name = options.options.database + "." + options.owner;
       model._parent = ProjectManager.getProject() ? ProjectManager.getProject() : ProjectManager.newProject();
     }
 

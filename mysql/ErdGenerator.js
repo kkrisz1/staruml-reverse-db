@@ -5,6 +5,7 @@ define(function (require, exports, module) {
 
   var ProjectManager = app.getModule("engine/ProjectManager");
 
+  var DbErdGenerator = require("db/DbErdGenerator");
   var DbAnalyzer = require("mysql/MySqlAnalyzer");
 
   /**
@@ -14,32 +15,12 @@ define(function (require, exports, module) {
    * @return {$.Promise} jqueryPromise
    */
   function analyze(options, model) {
-    var result = new $.Deferred();
-    result.notify({severity: "info", message: "ER Data Model generation has been started. Please wait..."});
-    setTimeout(function () {
-      if (result.state() === "pending") {
-        result.notify({severity: "info", message: "ER Data Model generation is in progress... "});
-      }
-    }, 8000);
-
     if (!model) {
       model = new type.ERDDataModel();
       model._parent = ProjectManager.getProject() ? ProjectManager.getProject() : ProjectManager.newProject();
     }
-    var dbAnalyzer = new DbAnalyzer(options, model);
-    dbAnalyzer.analyze()
-        .then(function () {
-          result.notify({severity: "info", message: "ER Data Model generation has been finished."});
-          result.resolve();
-        }, function (err) {
-          result.notify({severity: "error", message: "Error occurred!"});
-          result.reject(err);
-        })
-        .always(function () {
-          // When StarUML closed or NodeJS server is restarted then all connections are closed
-        });
 
-    return result.promise();
+    return DbErdGenerator.analyze(options, new DbAnalyzer(options, model));
   }
 
   exports.analyze = analyze;

@@ -20,7 +20,7 @@ define(function (require, exports, module) {
         password: options.password,
         host: options.server,
         port: options.options.port,
-        database: options.options.database || options.userName
+        database: options.owner
       }]);
   }
 

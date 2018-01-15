@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "127.0.0.1:3306:3306"
+  web:
+    image: adminer:4.3
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8091:8080"

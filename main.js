@@ -9,11 +9,17 @@ define(function (require, exports, module) {
   var MenuManager = app.getModule("menu/MenuManager");
   var Toast = app.getModule("ui/Toast");
 
-  var MsSqlDbPreferences = require("mssql/Preferences");
+  var MsSqlDbPreferences = require("mssql/MsSqlPreferences");
+  var msSqlDbPrefs = new MsSqlDbPreferences();
   var MsSqlErdGenerator = require("mssql/ErdGenerator");
 
-  var PostgreSqlDbPreferences = require("postgresql/Preferences");
+  var PostgreSqlDbPreferences = require("postgresql/PostgreSqlPreferences");
+  var postgreSqlDbPrefs = new PostgreSqlDbPreferences();
   var PostgreSqlErdGenerator = require("postgresql/ErdGenerator");
+
+  var MySqlDbPreferences = require("mysql/MySqlPreferences");
+  var mySqlDbPrefs = new MySqlDbPreferences();
+  var MySqlErdGenerator = require("mysql/ErdGenerator");
 
   var MethodPolyfill = require("polyfill/MethodPolyfill");
   var CoreExtension = require("util/CoreExtension");
@@ -34,6 +40,11 @@ define(function (require, exports, module) {
   var CMD_DB_POSTGRESQL_GENERATE = CMD_DB_POSTGRESQL + ".generate";
   var CMD_DB_POSTGRESQL_GENERATE_ERD = CMD_DB_POSTGRESQL_GENERATE + ".erd";
 
+  var CMD_DB_MYSQL = CMD_DB + ".mysql";
+  var CMD_DB_MYSQL_CONFIGURE = CMD_DB_MYSQL + ".configure";
+  var CMD_DB_MYSQL_GENERATE = CMD_DB_MYSQL + ".generate";
+  var CMD_DB_MYSQL_GENERATE_ERD = CMD_DB_MYSQL_GENERATE + ".erd";
+
   /**
    * Command Handler for ER Data Model Generator based on DB schema
    *
@@ -41,7 +52,7 @@ define(function (require, exports, module) {
    */
   function _handleMsSqlErdGen(options, model) {
     var result = new $.Deferred();
-    options = options || MsSqlDbPreferences.getConnOptions();
+    options = options || msSqlDbPrefs.getConnOptions();
 
     MsSqlErdGenerator.analyze(options, model)
         .then(result.resolve, result.reject, _notifyUser);
@@ -51,9 +62,19 @@ define(function (require, exports, module) {
 
   function _handlePostgreSqlErdGen(options, model) {
     var result = new $.Deferred();
-    options = options || PostgreSqlDbPreferences.getConnOptions();
+    options = options || postgreSqlDbPrefs.getConnOptions();
 
     PostgreSqlErdGenerator.analyze(options, model)
+        .then(result.resolve, result.reject, _notifyUser);
+
+    return result.promise();
+  }
+
+  function _handleMySqlErdGen(options, model) {
+    var result = new $.Deferred();
+    options = options || mySqlDbPrefs.getConnOptions();
+
+    MySqlErdGenerator.analyze(options, model)
         .then(result.resolve, result.reject, _notifyUser);
 
     return result.promise();
@@ -63,11 +84,15 @@ define(function (require, exports, module) {
    * Popup PreferenceDialog with DB Preference Schema
    */
   function _handleMsSqlDbConfigure() {
-    CommandManager.execute(Commands.FILE_PREFERENCES, MsSqlDbPreferences.getId());
+    CommandManager.execute(Commands.FILE_PREFERENCES, msSqlDbPrefs.getId());
   }
 
   function _handlePostgreSqlDbConfigure() {
-    CommandManager.execute(Commands.FILE_PREFERENCES, PostgreSqlDbPreferences.getId());
+    CommandManager.execute(Commands.FILE_PREFERENCES, postgreSqlDbPrefs.getId());
+  }
+
+  function _handleMySqlDbConfigure() {
+    CommandManager.execute(Commands.FILE_PREFERENCES, mySqlDbPrefs.getId());
   }
 
 
@@ -112,6 +137,10 @@ define(function (require, exports, module) {
   CommandManager.register("Generate ER Data Model...", CMD_DB_POSTGRESQL_GENERATE_ERD, _handlePostgreSqlErdGen);
   CommandManager.register("Configure Server...", CMD_DB_POSTGRESQL_CONFIGURE, _handlePostgreSqlDbConfigure);
 
+  CommandManager.register("MySQL Server", CMD_DB_MYSQL, CommandManager.doNothing);
+  CommandManager.register("Generate ER Data Model...", CMD_DB_MYSQL_GENERATE_ERD, _handleMySqlErdGen);
+  CommandManager.register("Configure Server...", CMD_DB_MYSQL_CONFIGURE, _handleMySqlDbConfigure);
+
   // Add menus
   var topMenu = MenuManager.getMenu(Commands.TOOLS);
   var dbMenuItem = topMenu.addMenuItem(CMD_DB);
@@ -125,4 +154,9 @@ define(function (require, exports, module) {
   postgreSqlSubMenuItem.addMenuItem(CMD_DB_POSTGRESQL_GENERATE_ERD, ["Alt-Shift-L"]);
   postgreSqlSubMenuItem.addMenuDivider();
   postgreSqlSubMenuItem.addMenuItem(CMD_DB_POSTGRESQL_CONFIGURE);
+
+  var mySqlSubMenuItem = dbMenuItem.addMenuItem(CMD_DB_MYSQL);
+  mySqlSubMenuItem.addMenuItem(CMD_DB_MYSQL_GENERATE_ERD, ["Alt-Shift-P"]);
+  mySqlSubMenuItem.addMenuDivider();
+  mySqlSubMenuItem.addMenuItem(CMD_DB_MYSQL_CONFIGURE);
 });

@@ -4,7 +4,8 @@ define(function (require, exports, module) {
   "use strict";
 
   var ExtensionUtils = app.getModule("utils/ExtensionUtils");
-  var NodeDomain = app.getModule("utils/NodeDomain");
+
+  var DbNodeDomain = require("util/node/DbNodeDomain");
 
 
   /**
@@ -12,7 +13,9 @@ define(function (require, exports, module) {
    * @constructor
    */
   function MsSqlNodeDomain(options) {
-    NodeDomain.apply(this, ["msSqlDbClient", ExtensionUtils.getModulePath(module, "../../node/MsSqlDbClient")]);
+    DbNodeDomain.apply(this, ["msSqlDbClient",
+      ExtensionUtils.getModulePath(module, "../../node/MsSqlDbClient"),
+      options]);
 
     /**
      * All DB Client-related (tedious) options
@@ -21,26 +24,10 @@ define(function (require, exports, module) {
      */
     this.options = options;
   }
-  // inherits from NodeDomain
-  MsSqlNodeDomain.prototype = Object.create(NodeDomain.prototype);
+
+  // inherits from DbNodeDomain
+  MsSqlNodeDomain.prototype = Object.create(DbNodeDomain.prototype);
   MsSqlNodeDomain.prototype.constructor = MsSqlNodeDomain;
-
-  /**
-   * Execute SQL statement
-   * @param {Request} request
-   * @return {$.Promise}
-   */
-  MsSqlNodeDomain.prototype.send = function (request) {
-    return this.exec("execStmnt", this.options, request.id, request.sql, request.inputs)
-  };
-
-  /**
-   * Close all opened connections
-   * @return {$.Promise}
-   */
-  MsSqlNodeDomain.prototype.close = function () {
-    return this.exec("close");
-  };
 
   module.exports = MsSqlNodeDomain;
 });

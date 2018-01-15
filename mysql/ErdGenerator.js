@@ -6,7 +6,7 @@ define(function (require, exports, module) {
   var ProjectManager = app.getModule("engine/ProjectManager");
 
   var DbErdGenerator = require("db/DbErdGenerator");
-  var DbAnalyzer = require("postgresql/PostgreSqlAnalyzer");
+  var DbAnalyzer = require("mysql/MySqlAnalyzer");
 
   /**
    * Analyze all columns of tables and their relationships under the given database

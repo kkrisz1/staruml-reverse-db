@@ -9,24 +9,24 @@ define(function (require, exports, module) {
 
 
   /**
-   * Node Domain for PostgreSQL Client
+   * Node Domain for MySQL Client
    * @constructor
    */
-  function PostgreSqlNodeDomain(options) {
-    DbNodeDomain.apply(this, ["postgreSqlDbClient",
-      ExtensionUtils.getModulePath(module, "../../node/PostgreSqlDbClient"),
+  function MySqlNodeDomain(options) {
+    DbNodeDomain.apply(this, ["mySqlDbClient",
+      ExtensionUtils.getModulePath(module, "../../node/MySqlDbClient"),
       options && {
         user: options.userName,
         password: options.password,
         host: options.server,
         port: options.options.port,
-        database: options.options.database || options.userName
+        database: options.owner
       }]);
   }
 
   // inherits from DbNodeDomain
-  PostgreSqlNodeDomain.prototype = Object.create(DbNodeDomain.prototype);
-  PostgreSqlNodeDomain.prototype.constructor = PostgreSqlNodeDomain;
+  MySqlNodeDomain.prototype = Object.create(DbNodeDomain.prototype);
+  MySqlNodeDomain.prototype.constructor = MySqlNodeDomain;
 
-  module.exports = PostgreSqlNodeDomain;
+  module.exports = MySqlNodeDomain;
 });

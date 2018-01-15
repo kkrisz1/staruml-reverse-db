@@ -4,9 +4,7 @@
   "use strict";
 
   var objectAssign = require('object-assign');
-  var ConnectionPool = require('pg-pool');
-  var types = require('pg').types;
-  var BIT_OID = 1560;
+  var mysql = require('mysql2');
 
   /**
    * @private
@@ -17,7 +15,7 @@
 
   /**
    * @private
-   * @type {ConnectionPool}
+   * @type {Pool}
    * ConnectionPool.
    */
   var _pool = null;
@@ -28,20 +26,16 @@
    * ConnectionPool configurations.
    */
   var _poolConfig = {
-    min: 5,
-    max: 10,
-    log: console.log
+    connectionLimit: 10,
+    debug: true
   };
 
   function _cmdExecStmnt(config, requestId, sqlStr, inputParams) {
     if (!_pool) {
-      _pool = new ConnectionPool(objectAssign(config, _poolConfig));
+      _pool = mysql.createPool(objectAssign(config, _poolConfig));
       _pool.on('error', error);
-      _pool.on('connect', connect);
+      _pool.on('connection', connect);
       _pool.on('acquire', acquire);
-      types.setTypeParser(BIT_OID, function (val) {
-        return parseInt(val);
-      })
     }
 
     exec(_pool, requestId, sqlStr, inputParams);
@@ -59,13 +53,13 @@
   function exec(connection, requestId, sql, inputs) {
     sql = sql.toString();
 
-    connection.query(sql, inputs, function (err, res) {
+    connection.execute(sql, inputs, function (err, results, fields) {
       if (err) {
         error(err);
         return;
       }
 
-      _domainManager.emitEvent("postgreSqlDbClient", "statementComplete", [requestId, res.rowCount, res.rows]);
+      _domainManager.emitEvent("mySqlDbClient", "statementComplete", [requestId, results.length, results]);
     });
   }
 
@@ -77,24 +71,24 @@
     //console.log('acquire');
   }
 
-  function error(err, client) {
+  function error(err) {
     console.error('Error is occurred', err);
     _cmdClose();
-    _domainManager.emitEvent("postgreSqlDbClient", "error", err);
+    _domainManager.emitEvent("mySqlDbClient", "error", err);
   }
 
   /**
-   * Initialize the 'postgreSqlDbClient' domain with commands and events.
+   * Initialize the 'mySqlDbClient' domain with commands and events.
    * @param {DomainManager} domainManager The DomainManager for the server
    */
   function init(domainManager) {
     _domainManager = domainManager;
-    if (!domainManager.hasDomain("postgreSqlDbClient")) {
-      domainManager.registerDomain("postgreSqlDbClient", {major: 0, minor: 1});
+    if (!domainManager.hasDomain("mySqlDbClient")) {
+      domainManager.registerDomain("mySqlDbClient", {major: 0, minor: 1});
     }
 
     domainManager.registerCommand(
-        "postgreSqlDbClient",       // domain name
+        "mySqlDbClient",       // domain name
         "execStmnt",    // command name
         _cmdExecStmnt,   // command handler function
         false,          // this command is synchronous in Node
@@ -111,7 +105,7 @@
     );
 
     domainManager.registerCommand(
-        "postgreSqlDbClient",       // domain name
+        "mySqlDbClient",       // domain name
         "close",    // command name
         _cmdClose,   // command handler function
         false,          // this command is synchronous in Node
@@ -121,7 +115,7 @@
     );
 
     domainManager.registerEvent(
-        "postgreSqlDbClient",           // domain name
+        "mySqlDbClient",           // domain name
         "statementComplete",  // event name
         [ // event arguments
           {name: "requestId", type: "string", description: "request identification"},
@@ -131,7 +125,7 @@
     );
 
     domainManager.registerEvent(
-        "postgreSqlDbClient",           // domain name
+        "mySqlDbClient",           // domain name
         "rowReceived",  // event name
         [ // event arguments
           {name: "requestId", type: "string", description: "request identification"},
@@ -140,7 +134,7 @@
     );
 
     domainManager.registerEvent(
-        "postgreSqlDbClient",           // domain name
+        "mySqlDbClient",           // domain name
         "error",  // event name
         [ // event arguments
           {name: "err", type: "object", description: "Error object"}

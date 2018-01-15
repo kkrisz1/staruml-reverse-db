@@ -60,7 +60,7 @@
 
     var request = new Request(sql, function (err, rowCount, rows) {
         if (err) {
-          console.error('Statement failed: ', err);
+          error(err);
           return;
         }
 
@@ -93,7 +93,7 @@
   }
 
   function error(err) {
-    console.error('Connection fails to connect to the SQL Server', err);
+    console.error('Error is occurred', err);
     _cmdClose();
     _domainManager.emitEvent("msSqlDbClient", "error", err);
   }

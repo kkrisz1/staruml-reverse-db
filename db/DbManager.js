@@ -7,15 +7,8 @@ define(function (require, exports, module) {
    * DbManager
    * @constructor
    * @param {NodeDomain} nodeDomain
-   * @param {DbRequest} request
    */
-  function DbManager(nodeDomain, request) {
-    /**
-     * @private
-     * @member {Request}
-     */
-    this.request = request;
-
+  function DbManager(nodeDomain) {
     /**
      * @private
      * @member {NodeDomain}
@@ -23,13 +16,13 @@ define(function (require, exports, module) {
     this.nodeDomain = nodeDomain;
   }
 
-  DbManager.prototype.executeSql = function (handleRowReceived, handleStatementComplete) {
+  DbManager.prototype.executeSql = function (request, handleRowReceived, handleStatementComplete) {
     var result = new $.Deferred();
     var self = this;
 
-    self.nodeDomain.send(self.request)
+    self.nodeDomain.send(request)
         .then(function () {
-          self.handleEvents(self.request.id, handleRowReceived, handleStatementComplete)
+          self.handleEvents(request.id, handleRowReceived, handleStatementComplete)
               .then(result.resolve, result.reject);
         }, result.reject);
 

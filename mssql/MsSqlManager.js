@@ -9,11 +9,10 @@ define(function (require, exports, module) {
   /**
    * MsSqlManager
    * @constructor
-   * @param {DbRequest} request
    * @param {object} options
    */
-  function MsSqlManager(request, options) {
-    DbManager.apply(this, [new MsSqlNodeDomain(options), request]);
+  function MsSqlManager(options) {
+    DbManager.apply(this, [new MsSqlNodeDomain(options)]);
   }
 
   // inherits from DbPreferences

@@ -9,11 +9,10 @@ define(function (require, exports, module) {
   /**
    * MySqlManager
    * @constructor
-   * @param {DbRequest} request
    * @param {object} options
    */
-  function MySqlManager(request, options) {
-    DbManager.apply(this, [new MySqlNodeDomain(options), request]);
+  function MySqlManager(options) {
+    DbManager.apply(this, [new MySqlNodeDomain(options)]);
   }
 
   // inherits from DbPreferences

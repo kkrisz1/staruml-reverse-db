@@ -53,12 +53,6 @@ define(function (require, exports, module) {
     var self = this;
     var column = new type.ERDColumn();
 
-    if (columnPropertyMapper === undefined) {
-      columnPropertyMapper = function (columnProperty) {
-        return columnProperty;
-      }
-    }
-
     column._parent = namespace;
     column.name = columnPropertyMapper(element.column_name);
     column.primaryKey = columnPropertyMapper(element.is_primary_key);

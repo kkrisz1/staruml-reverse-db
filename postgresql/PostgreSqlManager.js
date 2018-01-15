@@ -9,11 +9,10 @@ define(function (require, exports, module) {
   /**
    * PostgreSqlManager
    * @constructor
-   * @param {DbRequest} request
    * @param {object} options
    */
-  function PostgreSqlManager(request, options) {
-    DbManager.apply(this, [new PostgreSqlNodeDomain(options), request]);
+  function PostgreSqlManager(options) {
+    DbManager.apply(this, [new PostgreSqlNodeDomain(options)]);
   }
 
   // inherits from DbPreferences

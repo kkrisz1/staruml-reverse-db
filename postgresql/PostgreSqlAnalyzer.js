@@ -93,7 +93,7 @@ define(function (require, exports, module) {
         + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
 
     var request = new Request(sqlStr,
-        [self.options.owner || self.options.userName, self.options.options.database || self.options.userName]);
+        [self.options.owner, self.options.options.database || self.options.userName]);
 
     return self.executeSql(request, function () {
     }, function (rowCount, rows) {

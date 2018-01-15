@@ -104,9 +104,10 @@ define(function (require, exports, module) {
         // + "  AND col.COLUMN_NAME = fk.COLUMN_NAME "
         // + "WHERE col.TABLE_SCHEMA = 'user' "
         + "WHERE col.TABLE_SCHEMA = ? "
+        + "AND col.TABLE_CATALOG = ? "
         + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
 
-    var request = new Request(sqlStr, [self.options.owner || self.options.options.database || self.options.userName]);
+    var request = new Request(sqlStr, [self.options.owner || self.options.userName, self.options.options.database]);
 
     return self.executeSql(request, function () {
     }, function (rowCount, rows) {

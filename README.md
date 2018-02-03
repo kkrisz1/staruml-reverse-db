@@ -10,7 +10,7 @@ This extension for [StarUML](http://staruml.io) support to generate ER Data Mode
 <a href="https://www.postgresql.org/" title="PostgreSQL">
   <img src="http://logo-load.com/uploads/posts/2016-08/postgresql-logo.png" width="100" />
 </a>
-<a href="https://www.mysql.com/" title="PostgreSQL">
+<a href="https://www.mysql.com/" title="MySQL">
   <img src="http://logo-load.com/uploads/posts/2016-02/1455471347_logo-mysql.png" width="100" />
 </a>
 

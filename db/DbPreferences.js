@@ -78,8 +78,8 @@ define(function (require, exports, module) {
       default: "localhost"
     };
     dbPreferences[self.connPrefKeyPrefix + ".owner"] = {
-      text: "Database Schema",
-      description: "Database Schema.",
+      text: "Table Schema (Database Schema)",
+      description: "Table Schema (Database Schema)",
       type: "String",
       // default: "" // TODO database dependent
     };
@@ -94,8 +94,8 @@ define(function (require, exports, module) {
       // default: -1 // TODO database dependent
     };
     dbPreferences[self.connPrefOptKeyPrefix + ".database"] = {
-      text: "Database",
-      description: "Database.",
+      text: "Table Catalog (Database)",
+      description: "Table Catalog (Database)",
       type: "String",
       default: ""
     };

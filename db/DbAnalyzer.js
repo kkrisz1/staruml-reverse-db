@@ -1,18 +1,14 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50, regexp: true, continue:true */
-/*global define, $, _, window, app, type, document */
-define(function (require, exports, module) {
-  "use strict";
+const ProjectWriter = require("../util/ProjectWriter");
 
-  var ProjectWriter = require("util/ProjectWriter");
+const ErDmBuilder = require("../erd/ErDmBuilder");
 
-  var ErDmBuilder = require("erd/ErDmBuilder");
-
-
+class DbAnalyzer {
   /**
    * Database Schema Analyzer
+   *
    * @constructor
    */
-  function DbAnalyzer(options, model, manager) {
+  constructor(options, model, manager) {
     /**
      * @private
      * @member {object}
@@ -51,7 +47,7 @@ define(function (require, exports, module) {
   }
 
 
-  DbAnalyzer.prototype.executeSql = function (request, handleRowReceived, handleStatementComplete) {
+  executeSql(request, handleRowReceived, handleStatementComplete) {
     var self = this;
 
     return self.manager.executeSql(request, handleRowReceived, handleStatementComplete);
@@ -63,10 +59,11 @@ define(function (require, exports, module) {
    *   - get entity if exists, otherwise create a new one
    *   - create a column of the got/created entity
    *   - create relationship if there is a reference to another entity
+   *
    * @param {Object} element
    * @param {Function} elementMapper
    */
-  DbAnalyzer.prototype.performFirstPhase = function (element, elementMapper) {
+  performFirstPhase(element, elementMapper) {
     var self = this;
 
     var entityName = elementMapper(element.table_name);
@@ -100,7 +97,7 @@ define(function (require, exports, module) {
    *   - generate ER Data Model
    *   - generate empty ER Diagram
    */
-  DbAnalyzer.prototype.performSecondPhase = function () {
+  performSecondPhase() {
     var self = this;
 
     self.proceedPendingReferences();
@@ -110,13 +107,14 @@ define(function (require, exports, module) {
 
   /**
    * Create or set (if it exists) a relationship
+   *
    * @param {type.ERDEntity} namespace
    * @param {type.ERDColumn} elementFrom
    * @param {type.ERDColumn} elementTo
    * @param {string} name
    * @throws {Error} 'elementFrom' is not a foreign key or 'elementTo' is undefined
    */
-  DbAnalyzer.prototype.addOrSetErdRelationship = function (namespace, elementFrom, elementTo, name) {
+  addOrSetErdRelationship(namespace, elementFrom, elementTo, name) {
     if (!elementFrom.foreignKey) {
       throw new Error("'elementFrom' is not a foreign key ");
     }
@@ -139,7 +137,7 @@ define(function (require, exports, module) {
   /**
    * Proceed pending references
    */
-  DbAnalyzer.prototype.proceedPendingReferences = function () {
+  proceedPendingReferences() {
     var self = this;
 
     self.pendingReferences.forEach(function (pendingReference) {
@@ -155,6 +153,6 @@ define(function (require, exports, module) {
       }
     });
   };
+}
 
-  module.exports = DbAnalyzer;
-});
+module.exports = DbAnalyzer;

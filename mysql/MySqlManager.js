@@ -1,23 +1,17 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, regexp: true */
-/*global define, $, _, window, app, type, document */
-define(function (require, exports, module) {
-  "use strict";
+const DbManager = require("../db/DbManager");
+const MySqlNodeDomain = require("../util/node/MySqlNodeDomain");
 
-  var DbManager = require("db/DbManager");
-  var MySqlNodeDomain = require("util/node/MySqlNodeDomain");
+class MySqlManager extends DbManager {
 
   /**
    * MySqlManager
+   *
    * @constructor
    * @param {object} options
    */
-  function MySqlManager(options) {
-    DbManager.apply(this, [new MySqlNodeDomain(options)]);
+  constructor(options) {
+    super(new MySqlNodeDomain(options));
   }
+}
 
-  // inherits from DbPreferences
-  MySqlManager.prototype = Object.create(DbManager.prototype);
-  MySqlManager.prototype.constructor = MySqlManager;
-
-  module.exports = MySqlManager;
-});
+module.exports = MySqlManager;

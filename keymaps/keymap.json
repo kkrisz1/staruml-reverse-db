@@ -1,0 +1,5 @@
+{
+  "alt-shift-m": "reverse-db-mssql:generate-erd",
+  "alt-shift-l": "reverse-db-postgresql:generate-erd",
+  "alt-shift-p": "reverse-db-mysql:generate-erd"
+}

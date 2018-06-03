@@ -1,173 +1,99 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50, node: true */
-/*global */
-(function () {
-  "use strict";
+const DbClient = require("./DbClient");
 
-  var ConnectionPool = require('tedious-connection-pool');
-  var Request = require('tedious').Request;
-  var TYPES = require('tedious').TYPES;
+const ConnectionPool = require('tedious-connection-pool');
+const Request = require('tedious').Request;
+const TYPES = require('tedious').TYPES;
 
-  /**
-   * @private
-   * @type {DomainManager}
-   * The DomainManager passed in at init.
-   */
-  var _domainManager = null;
+class MsSqlDbClient extends DbClient {
+  constructor(options) {
+    super(options, null, {
+      min: 5,
+      max: 10,
+      log: true
+    });
+  }
 
-  /**
-   * @private
-   * @type {ConnectionPool}
-   * ConnectionPool.
-   */
-  var _pool = null;
+  _cmdExecStmnt(requestId, sqlStr, inputParams) {
+    let result = new $.Deferred();
 
-  /**
-   * @private
-   * @type {Object}
-   * ConnectionPool configurations.
-   */
-  var _poolConfig = {
-    min: 5,
-    max: 10,
-    log: true
-  };
-
-  function _cmdExecStmnt(config, requestId, sqlStr, inputParams) {
-    if (!_pool) {
-      _pool = new ConnectionPool(_poolConfig, config);
-      _pool.on('error', error);
+    if (!this.pool) {
+      this.pool = new ConnectionPool(this.poolConfig, this.options);
+      this.pool.on("error", this.errorHandler);
     }
 
-    _pool.acquire(function (err, connection) {
+    this.pool.acquire((err, connection) => {
       if (err) {
-        console.error('Connection failed: ', err);
+        console.error("Connection failed: ", err);
         return;
       }
 
-      exec(connection, requestId, sqlStr, inputParams);
+      this.exec(connection, requestId, sqlStr, inputParams);
     });
+
+    result.resolve();
+    return result.promise();
   }
 
-  function _cmdClose() {
-    if (_pool) {
-      _pool.drain();
-      _pool = null;
+  _cmdClose() {
+    let result = new $.Deferred();
+
+    if (this.pool) {
+      this.pool.drain();
+      this.pool = null;
     }
+
+    result.resolve();
+    return result.promise();
   }
 
-  function exec(connection, requestId, sql, inputs) {
+  exec(connection, requestId, sql, inputs) {
     sql = sql.toString();
 
-    var request = new Request(sql, function (err, rowCount, rows) {
-        if (err) {
-          error(err);
-          return;
+    let request = new Request(sql, (err, rowCount, rows) => {
+          if (err) {
+            this.errorHandler(err);
+            return;
+          }
+
+          connection.release();
+          $(this).trigger("statementComplete", [requestId, rowCount, rows]);
         }
-
-        connection.release();
-        _domainManager.emitEvent("msSqlDbClient", "statementComplete", [requestId, rowCount, rows]);
-      }
     );
-    request.on('columnMetadata', columnMetadata);
-    request.on('row', function (columns) {
-      _domainManager.emitEvent("msSqlDbClient", "rowReceived", [requestId, columns]);
+    request.on("columnMetadata", this.columnMetadata);
+    request.on("row", columns => {
+      $(this).trigger("rowReceived", [requestId, columns]);
     });
-    request.on('done', requestDone);
+    request.on("done", this.requestDone);
 
-    inputs.forEach(function (input) {
-      request.addParameter(input.name, getTediousType(input.type), input.value);
+    inputs.forEach(input => {
+      request.addParameter(input.name, this.getTediousType(input.type), input.value);
     });
 
     connection.execSql(request);
   }
 
-  function getTediousType(type) {
+  getTediousType(type) {
     switch (type) {
       case 'varchar':
         return TYPES.VarChar;
     }
   }
 
-  function requestDone(rowCount, more) {
+  requestDone(rowCount, more) {
     //console.log(rowCount + ' rows');
   }
 
-  function error(err) {
-    console.error('Error is occurred', err);
-    _cmdClose();
-    _domainManager.emitEvent("msSqlDbClient", "error", err);
+  errorHandler(err) {
+    console.error("Error is occurred", err);
+    this._cmdClose();
+    $(this).trigger("error", err);
   }
 
-  function columnMetadata(columnsMetadata) {
+  columnMetadata(columnsMetadata) {
     // columnsMetadata.forEach(function (column) {
     //   console.log(column);
     // });
   }
+}
 
-  /**
-   * Initialize the 'msSqlDbClient' domain with commands and events.
-   * @param {DomainManager} domainManager The DomainManager for the server
-   */
-  function init(domainManager) {
-    _domainManager = domainManager;
-    if (!domainManager.hasDomain("msSqlDbClient")) {
-      domainManager.registerDomain("msSqlDbClient", { major: 0, minor: 1 });
-    }
-
-    domainManager.registerCommand(
-      "msSqlDbClient",       // domain name
-      "execStmnt",    // command name
-      _cmdExecStmnt,   // command handler function
-      false,          // this command is synchronous in Node
-      "Execute SQL statement",
-      [ // parameters
-        { name: "config", type: "object", description: "configurations to connect to the database" },
-        { name: "requestId", type: "string", description: "request identification" },
-        { name: "sql", type: "string", description: "given SQL statement will be executed" },
-        { name: "input", type: "array", description: "input parameters if it SQL statement is parameterized" }
-      ],
-      [ // return value
-        // { name: "resultSet", type: "object", description: "result of the given SQL statement" }
-      ]
-    );
-
-    domainManager.registerCommand(
-      "msSqlDbClient",       // domain name
-      "close",    // command name
-      _cmdClose,   // command handler function
-      false,          // this command is synchronous in Node
-      "Close all connections",
-      [],
-      []
-    );
-
-    domainManager.registerEvent(
-      "msSqlDbClient",           // domain name
-      "statementComplete",  // event name
-      [ // event arguments
-        { name: "requestId", type: "string", description: "request identification" },
-        { name: "rowCount", type: "string", description: "Number of rows" },
-        { name: "rows", type: "array", description: "Result of the SQL statement" }
-      ]
-    );
-
-    domainManager.registerEvent(
-      "msSqlDbClient",           // domain name
-      "rowReceived",  // event name
-      [ // event arguments
-        { name: "requestId", type: "string", description: "request identification" },
-        { name: "row", type: "object", description: "Collection of a row values" }
-      ]
-    );
-
-    domainManager.registerEvent(
-      "msSqlDbClient",           // domain name
-      "error",  // event name
-      [ // event arguments
-        { name: "err", type: "object", description: "Error object" },
-      ]
-    );
-  }
-
-  exports.init = init;
-}());
+module.exports = MsSqlDbClient;

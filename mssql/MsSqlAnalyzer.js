@@ -1,30 +1,19 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50, regexp: true, continue:true */
-/*global define, $, _, window, app, type, document */
-define(function (require, exports, module) {
-  "use strict";
+const Request = require("../db/DbRequest");
+const RequestInput = require("../db/DbRequestInput");
+const DbAnalyzer = require("../db/DbAnalyzer");
+const Manager = require("./MsSqlManager");
 
-  var OperationBuilder = app.getModule("core/OperationBuilder");
-  var Repository = app.getModule("core/Repository");
-
-  var Request = require("db/DbRequest");
-  var RequestInput = require("db/DbRequestInput");
-  var DbAnalyzer = require("db/DbAnalyzer");
-  var Manager = require("mssql/MsSqlManager");
-
+class MySqlAnalyzer extends DbAnalyzer {
   /**
    * MySqlAnalyzer
+   *
    * @constructor
    */
-  function MySqlAnalyzer(options, model) {
-    DbAnalyzer.apply(this, [options, model, new Manager(options)]);
+  constructor(options, model) {
+    super(options, model, new Manager(options));
   }
 
-  // inherits from DbAnalyzer
-  MySqlAnalyzer.prototype = Object.create(DbAnalyzer.prototype);
-  MySqlAnalyzer.prototype.constructor = MySqlAnalyzer;
-
-
-  MySqlAnalyzer.prototype.analyze = function () {
+  analyze() {
     var self = this;
     var sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog, "
         + "  col.TABLE_SCHEMA AS owner, "
@@ -116,12 +105,13 @@ define(function (require, exports, module) {
         return columnProperty.value;
       })
     }, function () {
-      OperationBuilder.begin("Generate ER Data Model");
+      var builder = app.repository.getOperationBuilder();
+      builder.begin("Generate ER Data Model");
       self.performSecondPhase();
-      OperationBuilder.end();
-      Repository.doOperation(OperationBuilder.getOperation());
+      builder.end();
+      app.repository.doOperation(builder.getOperation());
     })
   };
+}
 
-  module.exports = MySqlAnalyzer;
-});
+module.exports = MySqlAnalyzer;

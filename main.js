@@ -1,162 +1,98 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50, regexp: true */
-/*global define, $, _, window, app, type, appshell, document */
-define(function (require, exports, module) {
-  "use strict";
+const MsSqlDbPreferences = require("./mssql/MsSqlPreferences");
+const msSqlDbPrefs = new MsSqlDbPreferences();
+const MsSqlErdGenerator = require("./mssql/ErdGenerator");
 
-  var AppInit = app.getModule("utils/AppInit");
-  var Commands = app.getModule("command/Commands");
-  var CommandManager = app.getModule("command/CommandManager");
-  var MenuManager = app.getModule("menu/MenuManager");
-  var Toast = app.getModule("ui/Toast");
+const PostgreSqlDbPreferences = require("./postgresql/PostgreSqlPreferences");
+const postgreSqlDbPrefs = new PostgreSqlDbPreferences();
+const PostgreSqlErdGenerator = require("./postgresql/ErdGenerator");
 
-  var MsSqlDbPreferences = require("mssql/MsSqlPreferences");
-  var msSqlDbPrefs = new MsSqlDbPreferences();
-  var MsSqlErdGenerator = require("mssql/ErdGenerator");
+const MySqlDbPreferences = require("./mysql/MySqlPreferences");
+const mySqlDbPrefs = new MySqlDbPreferences();
+const MySqlErdGenerator = require("./mysql/ErdGenerator");
 
-  var PostgreSqlDbPreferences = require("postgresql/PostgreSqlPreferences");
-  var postgreSqlDbPrefs = new PostgreSqlDbPreferences();
-  var PostgreSqlErdGenerator = require("postgresql/ErdGenerator");
+const MethodPolyfill = require("./polyfill/MethodPolyfill");
+const CoreExtension = require("./util/CoreExtension");
 
-  var MySqlDbPreferences = require("mysql/MySqlPreferences");
-  var mySqlDbPrefs = new MySqlDbPreferences();
-  var MySqlErdGenerator = require("mysql/ErdGenerator");
+/**
+ * Command Handler for ER Data Model Generator based on DB schema
+ *
+ * @return {$.Promise}
+ */
+function _handleMsSqlErdGen(options, model) {
+  let result = new $.Deferred();
+  options = options || msSqlDbPrefs.getConnOptions();
 
-  var MethodPolyfill = require("polyfill/MethodPolyfill");
-  var CoreExtension = require("util/CoreExtension");
+  MsSqlErdGenerator.analyze(options, model)
+      .then(result.resolve, result.reject, _notifyUser);
+//
+  return result.promise();
+}
 
+function _handlePostgreSqlErdGen(options, model) {
+  let result = new $.Deferred();
+  options = options || postgreSqlDbPrefs.getConnOptions();
 
-  /**
-   * Commands IDs
-   */
-  var CMD_DB = "db";
+  PostgreSqlErdGenerator.analyze(options, model)
+      .then(result.resolve, result.reject, _notifyUser);
 
-  var CMD_DB_MSSQL = CMD_DB + ".mssql";
-  var CMD_DB_MSSQL_CONFIGURE = CMD_DB_MSSQL + ".configure";
-  var CMD_DB_MSSQL_GENERATE = CMD_DB_MSSQL + ".generate";
-  var CMD_DB_MSSQL_GENERATE_ERD = CMD_DB_MSSQL_GENERATE + ".erd";
+  return result.promise();
+}
 
-  var CMD_DB_POSTGRESQL = CMD_DB + ".postgresql";
-  var CMD_DB_POSTGRESQL_CONFIGURE = CMD_DB_POSTGRESQL + ".configure";
-  var CMD_DB_POSTGRESQL_GENERATE = CMD_DB_POSTGRESQL + ".generate";
-  var CMD_DB_POSTGRESQL_GENERATE_ERD = CMD_DB_POSTGRESQL_GENERATE + ".erd";
+function _handleMySqlErdGen(options, model) {
+  let result = new $.Deferred();
+  options = options || mySqlDbPrefs.getConnOptions();
 
-  var CMD_DB_MYSQL = CMD_DB + ".mysql";
-  var CMD_DB_MYSQL_CONFIGURE = CMD_DB_MYSQL + ".configure";
-  var CMD_DB_MYSQL_GENERATE = CMD_DB_MYSQL + ".generate";
-  var CMD_DB_MYSQL_GENERATE_ERD = CMD_DB_MYSQL_GENERATE + ".erd";
+  MySqlErdGenerator.analyze(options, model)
+      .then(result.resolve, result.reject, _notifyUser);
 
-  /**
-   * Command Handler for ER Data Model Generator based on DB schema
-   *
-   * @return {$.Promise}
-   */
-  function _handleMsSqlErdGen(options, model) {
-    var result = new $.Deferred();
-    options = options || msSqlDbPrefs.getConnOptions();
+  return result.promise();
+}
 
-    MsSqlErdGenerator.analyze(options, model)
-        .then(result.resolve, result.reject, _notifyUser);
+/**
+ * Popup PreferenceDialog with DB Preference Schema
+ */
+function _handleMsSqlDbConfigure() {
+  app.commands.execute("application:preferences", msSqlDbPrefs.getId());
+}
 
-    return result.promise();
-  }
+function _handlePostgreSqlDbConfigure() {
+  app.commands.execute("application:preferences", postgreSqlDbPrefs.getId());
+}
 
-  function _handlePostgreSqlErdGen(options, model) {
-    var result = new $.Deferred();
-    options = options || postgreSqlDbPrefs.getConnOptions();
-
-    PostgreSqlErdGenerator.analyze(options, model)
-        .then(result.resolve, result.reject, _notifyUser);
-
-    return result.promise();
-  }
-
-  function _handleMySqlErdGen(options, model) {
-    var result = new $.Deferred();
-    options = options || mySqlDbPrefs.getConnOptions();
-
-    MySqlErdGenerator.analyze(options, model)
-        .then(result.resolve, result.reject, _notifyUser);
-
-    return result.promise();
-  }
-
-  /**
-   * Popup PreferenceDialog with DB Preference Schema
-   */
-  function _handleMsSqlDbConfigure() {
-    CommandManager.execute(Commands.FILE_PREFERENCES, msSqlDbPrefs.getId());
-  }
-
-  function _handlePostgreSqlDbConfigure() {
-    CommandManager.execute(Commands.FILE_PREFERENCES, postgreSqlDbPrefs.getId());
-  }
-
-  function _handleMySqlDbConfigure() {
-    CommandManager.execute(Commands.FILE_PREFERENCES, mySqlDbPrefs.getId());
-  }
+function _handleMySqlDbConfigure() {
+  app.commands.execute("application:preferences", mySqlDbPrefs.getId());
+}
 
 
-  function _notifyUser(status) {
-    switch (status.severity) {
-      case "info": {
-        Toast.info(status.message);
-        break;
-      }
-      case "warning": {
-        Toast.warning(status.message);
-        break;
-      }
-      case "error": {
-        Toast.error(status.message);
-        break;
-      }
+function _notifyUser(status) {
+  switch (status.severity) {
+    case "info": {
+      app.toast.info(status.message);
+      break;
+    }
+    case "warning": {
+      app.toast.warning(status.message);
+      break;
+    }
+    case "error": {
+      app.toast.error(status.message);
+      break;
     }
   }
+}
 
+function init() {
+  MethodPolyfill.flattenArray();
 
-  AppInit.htmlReady(function () {
-    MethodPolyfill.repeatString();        // ECMAScript 2015
-    MethodPolyfill.stringStartsWith();    // ECMAScript 2015
-    MethodPolyfill.findElementInArray();  // ECMAScript 2015
-    MethodPolyfill.flattenArray();
-    MethodPolyfill.objectAssign();        // ECMAScript 2015
+  CoreExtension.findElementByNameIgnoreCase();
+  CoreExtension.getTagValue();
 
-    CoreExtension.findElementByNameIgnoreCase();
-    CoreExtension.getTagValue();
-  });
+  app.commands.register("reverse-db-mssql:generate-erd", _handleMsSqlErdGen);
+  app.commands.register("reverse-db-mssql:configure", _handleMsSqlDbConfigure);
+  app.commands.register("reverse-db-mysql:generate-erd", _handleMySqlErdGen);
+  app.commands.register("reverse-db-mysql:configure", _handleMySqlDbConfigure);
+  app.commands.register("reverse-db-postgresql:generate-erd", _handlePostgreSqlErdGen);
+  app.commands.register("reverse-db-postgresql:configure", _handlePostgreSqlDbConfigure);
+}
 
-
-  // Register Command;
-  CommandManager.register("Database", CMD_DB, CommandManager.doNothing);
-
-  CommandManager.register("MS SQL Server", CMD_DB_MSSQL, CommandManager.doNothing);
-  CommandManager.register("Generate ER Data Model...", CMD_DB_MSSQL_GENERATE_ERD, _handleMsSqlErdGen);
-  CommandManager.register("Configure Server...", CMD_DB_MSSQL_CONFIGURE, _handleMsSqlDbConfigure);
-
-  CommandManager.register("PostgreSQL Server", CMD_DB_POSTGRESQL, CommandManager.doNothing);
-  CommandManager.register("Generate ER Data Model...", CMD_DB_POSTGRESQL_GENERATE_ERD, _handlePostgreSqlErdGen);
-  CommandManager.register("Configure Server...", CMD_DB_POSTGRESQL_CONFIGURE, _handlePostgreSqlDbConfigure);
-
-  CommandManager.register("MySQL Server", CMD_DB_MYSQL, CommandManager.doNothing);
-  CommandManager.register("Generate ER Data Model...", CMD_DB_MYSQL_GENERATE_ERD, _handleMySqlErdGen);
-  CommandManager.register("Configure Server...", CMD_DB_MYSQL_CONFIGURE, _handleMySqlDbConfigure);
-
-  // Add menus
-  var topMenu = MenuManager.getMenu(Commands.TOOLS);
-  var dbMenuItem = topMenu.addMenuItem(CMD_DB);
-
-  var msSqlSubMenuItem = dbMenuItem.addMenuItem(CMD_DB_MSSQL);
-  msSqlSubMenuItem.addMenuItem(CMD_DB_MSSQL_GENERATE_ERD, ["Alt-Shift-M"]);
-  msSqlSubMenuItem.addMenuDivider();
-  msSqlSubMenuItem.addMenuItem(CMD_DB_MSSQL_CONFIGURE);
-
-  var postgreSqlSubMenuItem = dbMenuItem.addMenuItem(CMD_DB_POSTGRESQL);
-  postgreSqlSubMenuItem.addMenuItem(CMD_DB_POSTGRESQL_GENERATE_ERD, ["Alt-Shift-L"]);
-  postgreSqlSubMenuItem.addMenuDivider();
-  postgreSqlSubMenuItem.addMenuItem(CMD_DB_POSTGRESQL_CONFIGURE);
-
-  var mySqlSubMenuItem = dbMenuItem.addMenuItem(CMD_DB_MYSQL);
-  mySqlSubMenuItem.addMenuItem(CMD_DB_MYSQL_GENERATE_ERD, ["Alt-Shift-P"]);
-  mySqlSubMenuItem.addMenuDivider();
-  mySqlSubMenuItem.addMenuItem(CMD_DB_MYSQL_CONFIGURE);
-});
+exports.init = init;

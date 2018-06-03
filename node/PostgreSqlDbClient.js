@@ -1,152 +1,71 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50, node: true */
-/*global */
-(function () {
-  "use strict";
+const DbClient = require("./DbClient");
 
-  var objectAssign = require('object-assign');
-  var ConnectionPool = require('pg-pool');
-  var types = require('pg').types;
-  var BIT_OID = 1560;
+const ConnectionPool = require('pg-pool');
+const types = require('pg').types;
+const BIT_OID = 1560;
 
-  /**
-   * @private
-   * @type {DomainManager}
-   * The DomainManager passed in at init.
-   */
-  var _domainManager = null;
-
-  /**
-   * @private
-   * @type {ConnectionPool}
-   * ConnectionPool.
-   */
-  var _pool = null;
-
-  /**
-   * @private
-   * @type {Object}
-   * ConnectionPool configurations.
-   */
-  var _poolConfig = {
-    min: 5,
-    max: 10,
-    log: console.log
-  };
-
-  function _cmdExecStmnt(config, requestId, sqlStr, inputParams) {
-    if (!_pool) {
-      _pool = new ConnectionPool(objectAssign(config, _poolConfig));
-      _pool.on('error', error);
-      _pool.on('connect', connect);
-      _pool.on('acquire', acquire);
-      types.setTypeParser(BIT_OID, function (val) {
-        return parseInt(val);
-      })
-    }
-
-    exec(_pool, requestId, sqlStr, inputParams);
-  }
-
-  function _cmdClose() {
-    if (_pool) {
-      _pool.end(function () {
-        console.log('Pool is ended...');
-      });
-      _pool = null;
-    }
-  }
-
-  function exec(connection, requestId, sql, inputs) {
-    sql = sql.toString();
-
-    connection.query(sql, inputs, function (err, res) {
-      if (err) {
-        error(err);
-        return;
-      }
-
-      _domainManager.emitEvent("postgreSqlDbClient", "statementComplete", [requestId, res.rowCount, res.rows]);
+class PostgreSqlDbClient extends DbClient {
+  constructor(options) {
+    super(options, null, {
+      min: 5,
+      max: 10,
+      log: console.log
     });
   }
 
-  function connect(client) {
-    //console.log('connect');
-  }
+  _cmdExecStmnt(requestId, sqlStr, inputParams) {
+    let result = new $.Deferred();
 
-  function acquire(client) {
-    //console.log('acquire');
-  }
-
-  function error(err, client) {
-    console.error('Error is occurred', err);
-    _cmdClose();
-    _domainManager.emitEvent("postgreSqlDbClient", "error", err);
-  }
-
-  /**
-   * Initialize the 'postgreSqlDbClient' domain with commands and events.
-   * @param {DomainManager} domainManager The DomainManager for the server
-   */
-  function init(domainManager) {
-    _domainManager = domainManager;
-    if (!domainManager.hasDomain("postgreSqlDbClient")) {
-      domainManager.registerDomain("postgreSqlDbClient", {major: 0, minor: 1});
+    if (!this.pool) {
+      this.pool = new ConnectionPool(Object.assign(this.options, this.poolConfig));
+      this.pool.on("error", this.errorHandler);
+      this.pool.on("connect", this.connectHandler);
+      this.pool.on("acquire", this.acquireHandler);
+      types.setTypeParser(BIT_OID, val => parseInt(val));
     }
 
-    domainManager.registerCommand(
-        "postgreSqlDbClient",       // domain name
-        "execStmnt",    // command name
-        _cmdExecStmnt,   // command handler function
-        false,          // this command is synchronous in Node
-        "Execute SQL statement",
-        [ // parameters
-          {name: "config", type: "object", description: "configurations to connect to the database"},
-          {name: "requestId", type: "string", description: "request identification"},
-          {name: "sql", type: "string", description: "given SQL statement will be executed"},
-          {name: "input", type: "array", description: "input parameters if it SQL statement is parameterized"}
-        ],
-        [ // return value
-          // { name: "resultSet", type: "object", description: "result of the given SQL statement" }
-        ]
-    );
+    this.exec(requestId, sqlStr, inputParams);
 
-    domainManager.registerCommand(
-        "postgreSqlDbClient",       // domain name
-        "close",    // command name
-        _cmdClose,   // command handler function
-        false,          // this command is synchronous in Node
-        "Close all connections",
-        [],
-        []
-    );
-
-    domainManager.registerEvent(
-        "postgreSqlDbClient",           // domain name
-        "statementComplete",  // event name
-        [ // event arguments
-          {name: "requestId", type: "string", description: "request identification"},
-          {name: "rowCount", type: "string", description: "Number of rows"},
-          {name: "rows", type: "array", description: "Result of the SQL statement"}
-        ]
-    );
-
-    domainManager.registerEvent(
-        "postgreSqlDbClient",           // domain name
-        "rowReceived",  // event name
-        [ // event arguments
-          {name: "requestId", type: "string", description: "request identification"},
-          {name: "row", type: "object", description: "Collection of a row values"}
-        ]
-    );
-
-    domainManager.registerEvent(
-        "postgreSqlDbClient",           // domain name
-        "error",  // event name
-        [ // event arguments
-          {name: "err", type: "object", description: "Error object"}
-        ]
-    );
+    result.resolve();
+    return result.promise();
   }
 
-  exports.init = init;
-}());
+  _cmdClose() {
+    let result = new $.Deferred();
+
+    if (this.pool) {
+      this.pool.end(() => console.log("Pool is ended..."));
+      this.pool = null;
+    }
+
+    result.resolve();
+    return result.promise();
+  }
+
+  exec(requestId, sql, inputs) {
+    this.pool.query(sql.toString(), inputs, (err, res) => {
+      if (err) {
+        this.errorHandler(err);
+        return;
+      }
+
+      $(this).trigger("statementComplete", [requestId, res.rowCount, res.rows]);
+    });
+  }
+
+  connectHandler(client) {
+    // console.log("connect");
+  }
+
+  acquireHandler(client) {
+    // console.log("acquire");
+  }
+
+  errorHandler(err, client) {
+    console.error("Error is occurred", err);
+    this._cmdClose();
+    $(this).trigger("error", err);
+  }
+}
+
+module.exports = PostgreSqlDbClient;

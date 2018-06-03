@@ -1,0 +1,72 @@
+{
+  "id": "db.mssql",
+  "name": "MS SQL Server",
+  "schema": {
+    "db.mssql.connection": {
+      "text": "Database Connection",
+      "type": "section"
+    },
+    "db.mssql.connection.username": {
+      "text": "Username",
+      "description": "Username for database connection.",
+      "type": "string",
+      "default": ""
+    },
+    "db.mssql.connection.password": {
+      "text": "Password",
+      "description": "Password for database connection.",
+      "type": "string",
+      "default": ""
+    },
+    "db.mssql.connection.server": {
+      "text": "Server IP",
+      "description": "IP address of the database server.",
+      "type": "string",
+      "default": "localhost"
+    },
+    "db.mssql.connection.owner": {
+      "text": "Table Schema (Database Schema)",
+      "description": "Table Schema (Database Schema)",
+      "type": "string",
+      "default": ""
+    },
+    "db.mssql.connection.options": {
+      "text": "Database Connection",
+      "type": "section"
+    },
+    "db.mssql.connection.options.port": {
+      "text": "Server Port",
+      "description": "Port number to access the database server.",
+      "type": "number",
+      "default": 1433
+    },
+    "db.mssql.connection.options.database": {
+      "text": "Table Catalog (Database)",
+      "description": "Table Catalog (Database)",
+      "type": "string",
+      "default": ""
+    },
+    "db.mssql.connection.dev.options": {
+      "text": "Development Options (DO NOT CHANGE THEM)",
+      "type": "section"
+    },
+    "db.mssql.connection.dev.options.useColumnNames": {
+      "text": "Return row a key-value pair collection",
+      "description": "A boolean, that when true return rows as key-value collections else as an array.",
+      "type": "check",
+      "default": true
+    },
+    "db.mssql.connection.dev.options.rowCollectionOnDone": {
+      "text": "Return rows as a collection on request done",
+      "description": "A boolean, that when true will expose received rows in Requests' done* events.",
+      "type": "check",
+      "default": false
+    },
+    "db.mssql.connection.dev.options.rowCollectionOnRequestCompletion": {
+      "text": "Return rows as a collection on request completion",
+      "description": "A boolean, that when true will expose received rows in Requests' completion callback.",
+      "type": "check",
+      "default": false
+    }
+  }
+}

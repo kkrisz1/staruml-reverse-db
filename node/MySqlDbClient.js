@@ -38,10 +38,8 @@ class MySqlDbClient extends DbClient {
     return result.promise();
   }
 
-  exec(connection, requestId, sql, inputs) {
-    sql = sql.toString();
-
-    this.pool.execute(sql, inputs, (err, results, fields) => {
+  exec(requestId, sql, inputs) {
+    this.pool.execute(sql.toString(), inputs, (err, results, fields) => {
       if (err) {
         this.errorHandler(err);
         return;

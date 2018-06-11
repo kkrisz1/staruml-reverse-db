@@ -1,27 +1,24 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, regexp: true */
-/*global define, $, _, window, app, type, document */
-define(function (require, exports, module) {
-  "use strict";
-
+class DbManager {
   /**
    * DbManager
+   *
    * @constructor
-   * @param {NodeDomain} nodeDomain
+   * @param {DbNodeDomain} nodeDomain
    */
-  function DbManager(nodeDomain) {
+  constructor(nodeDomain) {
     /**
      * @private
-     * @member {NodeDomain}
+     * @member {DbNodeDomain}
      */
     this.nodeDomain = nodeDomain;
   }
 
-  DbManager.prototype.executeSql = function (request, handleRowReceived, handleStatementComplete) {
-    var result = new $.Deferred();
-    var self = this;
+  executeSql(request, handleRowReceived, handleStatementComplete) {
+    let result = new $.Deferred();
+    let self = this;
 
     self.nodeDomain.send(request)
-        .then(function () {
+        .then(() => {
           self.handleEvents(request.id, handleRowReceived, handleStatementComplete)
               .then(result.resolve, result.reject);
         }, result.reject);
@@ -29,12 +26,11 @@ define(function (require, exports, module) {
     return result.promise();
   };
 
+  handleEvents(requestId, handleRowReceived, handleStatementComplete) {
+    let result = new $.Deferred();
+    let self = this;
 
-  DbManager.prototype.handleEvents = function (requestId, handleRowReceived, handleStatementComplete) {
-    var result = new $.Deferred();
-    var self = this;
-
-    self.subscribe("rowReceived", function (event, rId, row) {
+    self.subscribe("rowReceived", (event, rId, row) => {
       if (rId !== requestId) {
         return;
       }
@@ -47,7 +43,7 @@ define(function (require, exports, module) {
       }
     });
 
-    self.subscribe("statementComplete", function (event, rId, rowCount, rows) {
+    self.subscribe("statementComplete", (event, rId, rowCount, rows) => {
       if (rId !== requestId) {
         return;
       }
@@ -64,7 +60,7 @@ define(function (require, exports, module) {
       }
     });
 
-    self.subscribe("error", function (event, err) {
+    self.subscribe("error", (event, err) => {
       self.unsubscribe("rowReceived");
       self.unsubscribe("statementComplete");
       self.unsubscribe("error");
@@ -76,25 +72,25 @@ define(function (require, exports, module) {
   };
 
 
-  DbManager.prototype.closeAllConnections = function () {
-    var self = this;
+  closeAllConnections() {
+    let self = this;
 
-    return self.nodeDomain.close();
+    return self.nodeDomain.client.close();
   };
 
 
-  DbManager.prototype.subscribe = function (event, callback) {
-    var self = this;
+  subscribe(event, callback) {
+    let self = this;
 
-    $(self.nodeDomain).on(event, callback);
+    $(self.nodeDomain.client).on(event, callback);
   };
 
 
-  DbManager.prototype.unsubscribe = function (event) {
-    var self = this;
+  unsubscribe(event) {
+    let self = this;
 
-    $(self.nodeDomain).off(event);
+    $(self.nodeDomain.client).off(event);
   };
+}
 
-  module.exports = DbManager;
-});
+module.exports = DbManager;

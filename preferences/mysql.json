@@ -1,0 +1,50 @@
+{
+  "id": "db.mysql",
+  "name": "MySQL Server",
+  "schema": {
+    "db.mysql.connection": {
+      "text": "Database Connection",
+      "type": "section"
+    },
+    "db.mysql.connection.username": {
+      "text": "Username",
+      "description": "Username for database connection.",
+      "type": "string",
+      "default": ""
+    },
+    "db.mysql.connection.password": {
+      "text": "Password",
+      "description": "Password for database connection.",
+      "type": "string",
+      "default": ""
+    },
+    "db.mysql.connection.server": {
+      "text": "Server IP",
+      "description": "IP address of the database server.",
+      "type": "string",
+      "default": "localhost"
+    },
+    "db.mysql.connection.owner": {
+      "text": "Table Schema (Database Schema)",
+      "description": "Table Schema (Database Schema)",
+      "type": "string",
+      "default": ""
+    },
+    "db.mysql.connection.options": {
+      "text": "Database Connection",
+      "type": "section"
+    },
+    "db.mysql.connection.options.port": {
+      "text": "Server Port",
+      "description": "Port number to access the database server.",
+      "type": "number",
+      "default": 3306
+    },
+    "db.mysql.connection.options.database": {
+      "text": "Table Catalog (Database)",
+      "description": "Table Catalog (Database)",
+      "type": "string",
+      "default": "def"
+    }
+  }
+}

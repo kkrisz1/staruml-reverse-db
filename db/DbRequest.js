@@ -1,21 +1,16 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, regexp: true */
-/*global define, $, _, window, app, type, document */
-define(function (require, exports, module) {
-  "use strict";
-
-  var IdGenerator = app.getModule("core/IdGenerator");
-
+class DbRequest {
   /**
    * DbRequest
+   *
    * @constructor
    * @param {string} sql
    * @param {Array.<RequestInput>} inputs
    */
-  function DbRequest(sql, inputs) {
+  constructor(sql, inputs) {
     /**
      * @member {string}
      */
-    this.id = IdGenerator.generateGuid();
+    this.id = app.repository.generateGuid();
 
     /**
      * @member {string}
@@ -27,6 +22,6 @@ define(function (require, exports, module) {
      */
     this.inputs = inputs;
   }
+}
 
-  module.exports = DbRequest;
-});
+module.exports = DbRequest;

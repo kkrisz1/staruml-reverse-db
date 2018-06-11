@@ -1,6 +1,10 @@
-# ERD Generation Extension for StarUML 2
+# ERD Generation Extension for StarUML v3
 
 This extension for [StarUML](http://staruml.io) support to generate ER Data Model from database schema.
+
+> __Note__
+> This extension does not provide perfect reverse engineering. 
+> If you need a complete reverse engineering feature, please check other professional reverse engineering tools.
 
 **Supported databases**
 

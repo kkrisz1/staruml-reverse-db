@@ -1,15 +1,11 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50, regexp: true, continue:true */
-/*global define, $, _, window, app, type, document */
-define(function (require, exports, module) {
-  "use strict";
-
-
+class ErDmBuilder {
   /**
    * ER Data Model Builder
+   *
    * @param {type.ERDDataModel} model
    * @constructor
    */
-  function ErDmBuilder(model) {
+  constructor(model) {
     /**
      * @private
      * @member {type.ERDDataModel}
@@ -17,8 +13,7 @@ define(function (require, exports, module) {
     this._root = model;
   }
 
-
-  ErDmBuilder.prototype.getErDataModel = function () {
+  getErDataModel() {
     var self = this;
 
     return self._root;
@@ -27,10 +22,11 @@ define(function (require, exports, module) {
 
   /**
    * Create an entity
+   *
    * @param {string} name
    * @return {type.ERDEntity} entity
    */
-  ErDmBuilder.prototype.createErdEntity = function (name) {
+  createErdEntity(name) {
     var self = this;
     var entity = new type.ERDEntity();
 
@@ -43,13 +39,14 @@ define(function (require, exports, module) {
 
   /**
    * Create a column
+   *
    * @param {type.ERDEntity} namespace
    * @param {Object} element
    * @param {Function} handleRefNotFound
    * @param {Function} columnPropertyMapper
    * @return {type.ERDColumn} column
    */
-  ErDmBuilder.prototype.createErdColumn = function (namespace, element, handleRefNotFound, columnPropertyMapper) {
+  createErdColumn(namespace, element, handleRefNotFound, columnPropertyMapper) {
     var self = this;
     var column = new type.ERDColumn();
 
@@ -76,6 +73,7 @@ define(function (require, exports, module) {
   /**
    * If the referred column(s) exist(s) then create a reference to the referred column
    * Otherwise store the information about the referred column for further proceeding
+   *
    * @param {type.ERDColumn} column
    * @param {string} foreignKeyName
    * @param {string} refEntityName
@@ -84,7 +82,7 @@ define(function (require, exports, module) {
    * @throws {Error} 'column' is not a foreign key
    * @return {type.ERDColumn} referenceTo
    */
-  ErDmBuilder.prototype.createReference = function (column, foreignKeyName, refEntityName, refColumnName, handleRefNotFound) {
+  createReference(column, foreignKeyName, refEntityName, refColumnName, handleRefNotFound) {
     if (!column.foreignKey) {
       throw new Error("The column is not a foreign key!");
     }
@@ -109,6 +107,7 @@ define(function (require, exports, module) {
 
   /**
    * Create a relationship
+   *
    * @param {type.ERDEntity} namespace
    * @param {type.ERDColumn} elementFrom
    * @param {type.ERDColumn} elementTo
@@ -116,7 +115,7 @@ define(function (require, exports, module) {
    * @throws {Error} 'elementFrom' is not a foreign key
    * @return {type.ERDRelationship} relationship
    */
-  ErDmBuilder.prototype.createErdRelationship = function (namespace, elementFrom, elementTo, name) {
+  createErdRelationship(namespace, elementFrom, elementTo, name) {
     if (!elementFrom.foreignKey) {
       throw new Error("The starting point of the relation is not a foreign key!");
     }
@@ -129,13 +128,14 @@ define(function (require, exports, module) {
 
   /**
    * Create a relationship
+   *
    * @param {type.ERDEntity} namespace
    * @param {type.ERDColumn} elementFrom
    * @param {type.ERDColumn} elementTo
    * @param {string} name
    * @return {type.ERDRelationship} relationship
    */
-  ErDmBuilder.prototype.createErdRelationshipWithoutCheck = function (namespace, elementFrom, elementTo, name) {
+  createErdRelationshipWithoutCheck(namespace, elementFrom, elementTo, name) {
     var self = this;
     var relationship = new type.ERDRelationship();
 
@@ -153,13 +153,14 @@ define(function (require, exports, module) {
 
   /**
    * Create a relationship end
+   *
    * @param {type.ERDRelationship} namespace
    * @param {type.ERDColumn} element
    * @param {string} name
    * @param {string} cardinality
    * @return {type.ERDRelationshipEnd} end of the relationship
    */
-  ErDmBuilder.prototype.createErdRelationshipEnd = function (namespace, element, name, cardinality) {
+  createErdRelationshipEnd(namespace, element, name, cardinality) {
     var relationshipEnd = new type.ERDRelationshipEnd();
 
     relationshipEnd._parent = namespace;
@@ -174,9 +175,10 @@ define(function (require, exports, module) {
 
   /**
    * Add an entity to the DataModel
+   *
    * @param {type.ERDEntity} element
    */
-  ErDmBuilder.prototype.addErdEntity = function (element) {
+  addErdEntity(element) {
     var self = this;
 
     self._root.ownedElements.push(element);
@@ -185,22 +187,24 @@ define(function (require, exports, module) {
 
   /**
    * Add a column to the entity
+   *
    * @param {type.ERDEntity} namespace
    * @param {type.ERDColumn} element
    */
-  ErDmBuilder.prototype.addErdColumn = function (namespace, element) {
+  addErdColumn(namespace, element) {
     namespace.columns.push(element);
   };
 
 
   /**
    * Add a relationship to the entity
+   *
    * @param {type.ERDEntity} namespace
    * @param {type.ERDRelationship} element
    */
-  ErDmBuilder.prototype.addErdRelationship = function (namespace, element) {
+  addErdRelationship(namespace, element) {
     namespace.ownedElements.push(element);
   };
+}
 
-  module.exports = ErDmBuilder;
-});
+module.exports = ErDmBuilder;

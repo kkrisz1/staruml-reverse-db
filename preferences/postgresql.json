@@ -1,0 +1,50 @@
+{
+  "id": "db.postgresql",
+  "name": "PostgreSQL Server",
+  "schema": {
+    "db.postgresql.connection": {
+      "text": "Database Connection",
+      "type": "section"
+    },
+    "db.postgresql.connection.username": {
+      "text": "Username",
+      "description": "Username for database connection.",
+      "type": "string",
+      "default": ""
+    },
+    "db.postgresql.connection.password": {
+      "text": "Password",
+      "description": "Password for database connection.",
+      "type": "string",
+      "default": ""
+    },
+    "db.postgresql.connection.server": {
+      "text": "Server IP",
+      "description": "IP address of the database server.",
+      "type": "string",
+      "default": "localhost"
+    },
+    "db.postgresql.connection.owner": {
+      "text": "Table Schema (Database Schema)",
+      "description": "Table Schema (Database Schema)",
+      "type": "string",
+      "default": "public"
+    },
+    "db.postgresql.connection.options": {
+      "text": "Database Connection",
+      "type": "section"
+    },
+    "db.postgresql.connection.options.port": {
+      "text": "Server Port",
+      "description": "Port number to access the database server.",
+      "type": "number",
+      "default": 5432
+    },
+    "db.postgresql.connection.options.database": {
+      "text": "Table Catalog (Database)",
+      "description": "Table Catalog (Database)",
+      "type": "string",
+      "default": ""
+    }
+  }
+}

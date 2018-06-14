@@ -75,7 +75,7 @@ class DbManager {
   closeAllConnections() {
     let self = this;
 
-    return self.nodeDomain.client.close();
+    return self.nodeDomain.close();
   };
 
 

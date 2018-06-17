@@ -1,5 +1,5 @@
 const DbManager = require("../db/DbManager");
-const PostgreSqlNodeDomain = require("../util/node/PostgreSqlNodeDomain");
+const PostgreSqlDbClient = require("./PostgreSqlDbClient");
 
 class PostgreSqlManager extends DbManager {
 
@@ -10,7 +10,14 @@ class PostgreSqlManager extends DbManager {
    * @param {object} options
    */
   constructor(options) {
-    super(new PostgreSqlNodeDomain(options));
+    super(new PostgreSqlDbClient(options && {
+      user: options.userName,
+      password: options.password,
+      host: options.server,
+      port: options.options.port,
+      database: options.options.database || options.userName
+    }
+    ));
   }
 }
 

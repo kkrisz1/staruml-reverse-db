@@ -14,13 +14,7 @@ function findElementByNameIgnoreCase() {
    * @param {string} name
    * @return {Element}
    */
-  Element.prototype.findByNameIgnoreCase = function (name) {
-    "use strict";
-
-    return this.getChildren().find(function (child) {
-      return child.name.toUpperCase() === name.toUpperCase();
-    });
-  };
+  Element.prototype.findByNameIgnoreCase = name => this.getChildren().find(child => child.name.toUpperCase() === name.toUpperCase());
 }
 
 function getTagValue() {
@@ -31,9 +25,9 @@ function getTagValue() {
    * @param {Function} getValue
    * @return {string|boolean|reference|number|undefined}
    */
-  ExtensibleModel.prototype.getTagValue = function (tagName, getValue) {
-    for (var i = 0, len = this.tags.length; i < len; i++) {
-      var tag = this.tags[i];
+  ExtensibleModel.prototype.getTagValue = (tagName, getValue) => {
+    for (let i = 0; i < this.tags.length; i++) {
+      const tag = this.tags[i];
       if (tag.name === tagName) {
         return getValue ? getValue(tag) : tag.value;
       }

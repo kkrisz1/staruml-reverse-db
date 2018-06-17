@@ -13,8 +13,8 @@ class MySqlAnalyzer extends DbAnalyzer {
   }
 
   analyze() {
-    var self = this;
-    var sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog , "
+    const self = this;
+    const sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog , "
         + "  col.TABLE_SCHEMA AS owner, "
         + "  col.TABLE_NAME AS table_name, "
         + "  col.COLUMN_NAME AS column_name, "
@@ -81,19 +81,14 @@ class MySqlAnalyzer extends DbAnalyzer {
         + "AND col.TABLE_CATALOG = $2::text "
         + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
 
-    var request = new Request(sqlStr,
-        [self.options.owner, self.options.options.database || self.options.userName]);
-
-    return self.executeSql(request, function () {
-    }, function (rowCount, rows) {
-      var builder = app.repository.getOperationBuilder();
+    const request = new Request(sqlStr, [this.options.owner, this.options.options.database || this.options.userName]);
+    return this.executeSql(request).then(result => {
+      const builder = app.repository.getOperationBuilder();
       builder.begin("Generate ER Data Model");
-      rows.forEach(function (row) {
-        self.performFirstPhase(row, function (columnProperty) {
-          return columnProperty;
-        });
-      });
+
+      result.rows.forEach(row => self.performFirstPhase(row, columnProperty => columnProperty));
       self.performSecondPhase();
+
       builder.end();
       app.repository.doOperation(builder.getOperation());
     });

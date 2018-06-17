@@ -47,10 +47,8 @@ class DbAnalyzer {
   }
 
 
-  executeSql(request, handleRowReceived, handleStatementComplete) {
-    var self = this;
-
-    return self.manager.executeSql(request, handleRowReceived, handleStatementComplete);
+  executeSql(request) {
+    return this.manager.executeSql(request);
   };
 
 

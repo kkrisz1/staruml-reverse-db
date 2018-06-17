@@ -14,71 +14,50 @@ const MethodPolyfill = require("./polyfill/MethodPolyfill");
 const CoreExtension = require("./util/CoreExtension");
 
 /**
- * Command Handler for ER Data Model Generator based on DB schema
- *
- * @return {$.Promise}
+ * Toast notifications
  */
-function _handleMsSqlErdGen(options, model) {
-  let result = new $.Deferred();
-  options = options || msSqlDbPrefs.getConnOptions();
-
-  MsSqlErdGenerator.analyze(options, model)
-      .then(result.resolve, result.reject, _notifyUser);
-//
-  return result.promise();
-}
-
-function _handlePostgreSqlErdGen(options, model) {
-  let result = new $.Deferred();
-  options = options || postgreSqlDbPrefs.getConnOptions();
-
-  PostgreSqlErdGenerator.analyze(options, model)
-      .then(result.resolve, result.reject, _notifyUser);
-
-  return result.promise();
-}
-
-function _handleMySqlErdGen(options, model) {
-  let result = new $.Deferred();
-  options = options || mySqlDbPrefs.getConnOptions();
-
-  MySqlErdGenerator.analyze(options, model)
-      .then(result.resolve, result.reject, _notifyUser);
-
-  return result.promise();
-}
-
+const startedNotification = () => app.toast.info("ER Data Model generation has been started. Please wait...");
+const pendingNotification = () => app.toast.info("ER Data Model generation is in progress...");
+const finishedNotification = () => app.toast.info("ER Data Model generation has been finished.");
+const errorNotification = err => app.toast.error("Error occurred: " + err.message);
 /**
  * Popup PreferenceDialog with DB Preference Schema
  */
-function _handleMsSqlDbConfigure() {
-  app.commands.execute("application:preferences", msSqlDbPrefs.getId());
+const appPreference = "application:preferences";
+const _handleMsSqlDbConfigure = () => app.commands.execute(appPreference, msSqlDbPrefs.getId());
+const _handlePostgreSqlDbConfigure = () => app.commands.execute(appPreference, postgreSqlDbPrefs.getId());
+const _handleMySqlDbConfigure = () => app.commands.execute(appPreference, mySqlDbPrefs.getId());
+
+/**
+ * Command Handler for ER Data Model Generator based on DB schema
+ *
+ * @return {Promise}
+ */
+function _handleMsSqlErdGen(options, model) {
+  options = options || msSqlDbPrefs.getConnOptions();
+
+  startedNotification();
+  return MsSqlErdGenerator.analyze(options, model)
+      .then(finishedNotification)
+      .catch(errorNotification);
 }
 
-function _handlePostgreSqlDbConfigure() {
-  app.commands.execute("application:preferences", postgreSqlDbPrefs.getId());
+function _handlePostgreSqlErdGen(options, model) {
+  options = options || postgreSqlDbPrefs.getConnOptions();
+
+  startedNotification();
+  return PostgreSqlErdGenerator.analyze(options, model)
+      .then(finishedNotification)
+      .catch(errorNotification);
 }
 
-function _handleMySqlDbConfigure() {
-  app.commands.execute("application:preferences", mySqlDbPrefs.getId());
-}
+function _handleMySqlErdGen(options, model) {
+  options = options || mySqlDbPrefs.getConnOptions();
 
-
-function _notifyUser(status) {
-  switch (status.severity) {
-    case "info": {
-      app.toast.info(status.message);
-      break;
-    }
-    case "warning": {
-      app.toast.warning(status.message);
-      break;
-    }
-    case "error": {
-      app.toast.error(status.message);
-      break;
-    }
-  }
+  startedNotification();
+  return MySqlErdGenerator.analyze(options, model)
+      .then(finishedNotification)
+      .catch(errorNotification);
 }
 
 function init() {

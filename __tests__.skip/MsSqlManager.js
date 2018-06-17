@@ -1,25 +1,132 @@
-const Request = require("../db/DbRequest");
-const RequestInput = require("../db/DbRequestInput");
-const DbAnalyzer = require("../db/DbAnalyzer");
-const Manager = require("./MsSqlManager");
-
-class MySqlAnalyzer extends DbAnalyzer {
-  /**
-   * MySqlAnalyzer
-   *
-   * @constructor
-   */
-  constructor(options, model) {
-    super(options, model, new Manager(Object.assign(options, {
-      options: {
-        useColumnNames: true,
-        rowCollectionOnRequestCompletion: true
-      }
-    })));
+const RequestInput = (require('../db/DbRequestInput'));
+const MsSqlManager = require("../mssql/MsSqlManager");
+const options = {
+  owner: "test_user",
+  userName: "test_user",
+  password: "password01@",
+  server: "127.0.0.1",
+  options: {
+    port: 1433,
+    database: "test",
+    useColumnNames: true,
+    rowCollectionOnRequestCompletion: true
   }
+};
 
-  analyze() {
-    const self = this;
+describe('Wrong connection options', () => {
+  let manager = null;
+
+  test("Wrong user", () => {
+    const wrongOptions = JSON.parse(JSON.stringify(options));
+    wrongOptions.userName = "dummy";
+    const request = {
+      id: "1",
+      sql: "SELECT 1",
+      inputs: []
+    };
+    const manager = new MsSqlManager(wrongOptions);
+
+    expect.assertions(1);
+    return expect(manager.executeSql(request))
+        .rejects
+        .toMatchObject({message: "ConnectionError: Login failed for user '" + wrongOptions.userName + "'."});
+  });
+
+  test("Wrong password", () => {
+    const wrongOptions = JSON.parse(JSON.stringify(options));
+    wrongOptions.password = "passwor";
+    const request = {
+      id: "1",
+      sql: "SELECT 1",
+      inputs: []
+    };
+    manager = new MsSqlManager(wrongOptions);
+
+    expect.assertions(1);
+    return expect(manager.executeSql(request))
+        .rejects
+        .toMatchObject({message: "ConnectionError: Login failed for user '" + wrongOptions.userName + "'."});
+  });
+
+  test("Wrong database", () => {
+    const wrongOptions = JSON.parse(JSON.stringify(options));
+    wrongOptions.options.database = "dummyDB";
+    const request = {
+      id: "1",
+      sql: "SELECT 1",
+      inputs: []
+    };
+    const manager = new MsSqlManager(wrongOptions);
+
+    expect.assertions(1);
+    return expect(manager.executeSql(request))
+        .rejects
+        .toMatchObject({message: "ConnectionError: Login failed for user '" + wrongOptions.userName + "'."});
+  });
+
+  test("Wrong server name", () => {
+    const wrongOptions = JSON.parse(JSON.stringify(options));
+    wrongOptions.server = "my.example.org";
+    const request = {
+      id: "1",
+      sql: "SELECT 1",
+      inputs: []
+    };
+    manager = new MsSqlManager(wrongOptions);
+
+    expect.assertions(1);
+    return expect(manager.executeSql(request))
+        .rejects
+        .toMatchObject({message: "ConnectionError: Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - getaddrinfo ENOTFOUND " + wrongOptions.server});
+  });
+
+  // test("Wrong server IP", () => {
+  //   const wrongOptions = JSON.parse(JSON.stringify(options));
+  //   wrongOptions.server = "10.0.0.2";
+  //   const request = {
+  //     id: "1",
+  //     sql: "SELECT 1",
+  //     inputs: []
+  //   };
+  //   manager = new MsSqlManager(wrongOptions);
+  //
+  //   expect.assertions(1);
+  //   return expect(manager.executeSql(request))
+  //       .rejects
+  //       .toMatchObject({message: "connect ETIMEDOUT " + wrongOptions.server + ":" + wrongOptions.options.port});
+  // });
+
+  test("Wrong server port", () => {
+    const wrongOptions = JSON.parse(JSON.stringify(options));
+    wrongOptions.options.port = 54321;
+    const request = {
+      id: "1",
+      sql: "SELECT 1",
+      inputs: []
+    };
+    manager = new MsSqlManager(wrongOptions);
+
+    expect.assertions(1);
+    return expect(manager.executeSql(request))
+        .rejects
+        .toMatchObject({message: "ConnectionError: Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port
+          + " - connect ECONNREFUSED " + wrongOptions.server + ":" + wrongOptions.options.port});
+  });
+});
+
+
+describe('MSSQL DB content', () => {
+  let manager = null;
+
+  beforeEach(() => {
+    manager = new MsSqlManager(options);
+  });
+
+  afterEach(() => {
+    manager.closeAllConnections();
+  });
+
+  test("MSSQL DB content", () => {
     const sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog, "
         + "  col.TABLE_SCHEMA AS owner, "
         + "  col.TABLE_NAME AS table_name, "
@@ -102,20 +209,12 @@ class MySqlAnalyzer extends DbAnalyzer {
         + "WHERE col.TABLE_SCHEMA = @owner "
         + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
 
-    const requestInput = new RequestInput('owner', 'varchar', self.options.owner || self.options.userName);
-    const request = new Request(sqlStr, [requestInput]);
+    const requestInput = new RequestInput('owner', 'varchar', options.owner || options.userName);
+    const request = {id: "1", sql: sqlStr, inputs: [requestInput]};
 
-    return self.executeSql(request).then(results => {
-      const builder = app.repository.getOperationBuilder();
-      builder.begin("Generate ER Data Model");
-
-      results.rows.forEach(row => self.performFirstPhase(row, columnProperty => columnProperty.value));
-      self.performSecondPhase();
-
-      builder.end();
-      app.repository.doOperation(builder.getOperation());
-    });
-  };
-}
-
-module.exports = MySqlAnalyzer;
+    expect.assertions(1);
+    return expect(manager.executeSql(request))
+        .resolves
+        .toMatchObject({rowCount: 14});
+  });
+});

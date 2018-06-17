@@ -1,5 +1,5 @@
 const DbManager = require("../db/DbManager");
-const MySqlNodeDomain = require("../util/node/MySqlNodeDomain");
+const MySqlDbClient = require("./MySqlDbClient");
 
 class MySqlManager extends DbManager {
 
@@ -10,7 +10,13 @@ class MySqlManager extends DbManager {
    * @param {object} options
    */
   constructor(options) {
-    super(new MySqlNodeDomain(options));
+    super(new MySqlDbClient(options && {
+      user: options.userName,
+      password: options.password,
+      host: options.server,
+      port: options.options.port,
+      database: options.owner
+    }));
   }
 }
 

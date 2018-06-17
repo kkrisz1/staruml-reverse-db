@@ -6,7 +6,7 @@ const DbAnalyzer = require("./MySqlAnalyzer");
  *
  * @param {Object} options
  * @param {type.ERDDataModel} model
- * @return {$.Promise} jqueryPromise
+ * @return {Promise} jqueryPromise
  */
 function analyze(options, model) {
   if (!model) {

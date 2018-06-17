@@ -45,28 +45,6 @@
       "description": "Table Catalog (Database)",
       "type": "string",
       "default": ""
-    },
-    "db.mssql.connection.dev.options": {
-      "text": "Development Options (DO NOT CHANGE THEM)",
-      "type": "section"
-    },
-    "db.mssql.connection.dev.options.useColumnNames": {
-      "text": "Return row a key-value pair collection",
-      "description": "A boolean, that when true return rows as key-value collections else as an array.",
-      "type": "check",
-      "default": true
-    },
-    "db.mssql.connection.dev.options.rowCollectionOnDone": {
-      "text": "Return rows as a collection on request done",
-      "description": "A boolean, that when true will expose received rows in Requests' done* events.",
-      "type": "check",
-      "default": false
-    },
-    "db.mssql.connection.dev.options.rowCollectionOnRequestCompletion": {
-      "text": "Return rows as a collection on request completion",
-      "description": "A boolean, that when true will expose received rows in Requests' completion callback.",
-      "type": "check",
-      "default": false
     }
   }
 }

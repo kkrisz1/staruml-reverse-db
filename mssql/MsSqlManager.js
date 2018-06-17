@@ -1,5 +1,5 @@
 const DbManager = require("../db/DbManager");
-const MsSqlNodeDomain = require("../util/node/MsSqlNodeDomain");
+const MsSqlDbClient = require("./MsSqlDbClient");
 
 class MsSqlManager extends DbManager {
 
@@ -10,7 +10,7 @@ class MsSqlManager extends DbManager {
    * @param {object} options
    */
   constructor(options) {
-    super(new MsSqlNodeDomain(options));
+    super(new MsSqlDbClient(options));
   }
 }
 

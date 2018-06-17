@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  db:
+    image: microsoft/mssql-server-linux:2017-CU7
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: password01@
+    ports:
+      - "127.0.0.1:1433:1433"
+  web:
+    image: adminer:4
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8092:8080"

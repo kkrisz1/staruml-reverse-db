@@ -4,10 +4,10 @@ node_js:
   - node
 
 install:
-  - npm install
+  - npm install --only=production
 
-script:
-  - npm test
+#script:
+#  - npm test
 
 before_deploy:
   - export PKG_NAME=$(node -p -e "require('./package.json').name")
@@ -16,7 +16,7 @@ before_deploy:
   - mkdirp ./dist -m 0777
   - mkdirp ./$PKG_NAME -m 0777
   - cp *.js package.json README.md LICENSE ./$PKG_NAME
-  - cp -r ./db ./erd ./keymaps ./menus ./mssql ./mysql ./node ./node_modules ./polyfill ./postgresql ./preferences ./util ./$PKG_NAME
+  - cp -r ./db ./erd ./keymaps ./menus ./mssql ./mysql ./node_modules ./polyfill ./postgresql ./preferences ./util ./$PKG_NAME
   - zip -r ./dist/$PKG_NAME-$PKG_VERSION.zip ./$PKG_NAME
 
 deploy:

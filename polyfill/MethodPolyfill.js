@@ -4,11 +4,8 @@ function flattenArray() {
     return;
   }
 
-  Array.prototype.flatten = function (getArrayProp) {
-    return this.reduce(function (acc, val) {
-      return acc.concat(getArrayProp(val));
-    }, []);
-  };
+  Array.prototype.flatten = getArrayProp =>
+      this.reduce((acc, val) => acc.concat(getArrayProp(val)), []);
 }
 
 exports.flattenArray = flattenArray;

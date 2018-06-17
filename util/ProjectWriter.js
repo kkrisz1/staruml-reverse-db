@@ -10,14 +10,14 @@ class ProjectWriter {
   }
 
   generateModel() {
-    var builder = app.repository.getOperationBuilder();
+    const builder = app.repository.getOperationBuilder();
     builder.insert(this.model);
     builder.fieldInsert(this.model._parent, "ownedElements", this.model);
   };
 
 
   generateEmptyDiagram(name) {
-    var baseModel = app.repository.get(this.model._id);
+    const baseModel = app.repository.get(this.model._id);
 
     app.factory.createDiagram(name, baseModel);
   };

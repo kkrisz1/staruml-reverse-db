@@ -10,6 +10,9 @@ services:
       - "127.0.0.1:5432:5432"
   web:
     image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: noreply@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
     depends_on:
       - db
     ports:

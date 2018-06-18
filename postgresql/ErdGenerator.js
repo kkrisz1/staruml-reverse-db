@@ -10,7 +10,7 @@ const DbAnalyzer = require("./PostgreSqlAnalyzer");
  */
 function analyze(options, model) {
   if (!model) {
-    var projectManager = app.project;
+    const projectManager = app.project;
     model = new type.ERDDataModel();
     model.name = options.options.database + "." + options.owner;
     model._parent = projectManager.getProject() ? projectManager.getProject() : projectManager.newProject();

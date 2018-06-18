@@ -59,32 +59,30 @@ class DbAnalyzer {
    *   - create relationship if there is a reference to another entity
    *
    * @param {Object} element
-   * @param {Function} elementMapper
    */
-  performFirstPhase(element, elementMapper) {
-    var self = this;
+  performFirstPhase(element) {
+    const self = this;
 
-    var entityName = elementMapper(element.table_name);
+    const entityName = element.table_name;
     if (!self.currentEntity || self.currentEntity.name !== entityName) {
       self.currentEntity = self.erDmBuilder.createErdEntity(entityName);
       self.erDmBuilder.addErdEntity(self.currentEntity);
     }
 
-    var column = self.erDmBuilder.createErdColumn(self.currentEntity, element,
+    const column = self.erDmBuilder.createErdColumn(self.currentEntity, element,
         function (column, foreignKeyName, refEntityName, refColumnName) {
-          var notFoundRef = {
+          const notFoundRef = {
             column: column,
             foreignKeyName: foreignKeyName,
             refEntityName: refEntityName,
             refColumnName: refColumnName
           };
           self.pendingReferences.push(notFoundRef);
-        }, elementMapper);
+        });
     self.erDmBuilder.addErdColumn(self.currentEntity, column);
 
     if (column.foreignKey && column.referenceTo) {
-      self.addOrSetErdRelationship(self.currentEntity, column, column.referenceTo,
-          elementMapper(element.foreign_key_name));
+      self.addOrSetErdRelationship(self.currentEntity, column, column.referenceTo, element.foreign_key_name);
     }
   };
 
@@ -96,10 +94,8 @@ class DbAnalyzer {
    *   - generate empty ER Diagram
    */
   performSecondPhase() {
-    var self = this;
-
-    self.proceedPendingReferences();
-    self.projectWriter.generateModel();
+    this.proceedPendingReferences();
+    this.projectWriter.generateModel();
   };
 
 
@@ -120,12 +116,11 @@ class DbAnalyzer {
       throw new Error("'elementTo' is undefined");
     }
 
-    var self = this;
-    var relationship = namespace.findByName(name);
+    let relationship = namespace.findByName(name);
 
     if (!relationship) {
-      relationship = self.erDmBuilder.createErdRelationship(namespace, elementFrom, elementTo, name);
-      self.erDmBuilder.addErdRelationship(namespace, relationship);
+      relationship = this.erDmBuilder.createErdRelationship(namespace, elementFrom, elementTo, name);
+      this.erDmBuilder.addErdRelationship(namespace, relationship);
     } else {
       relationship.end2.name += ", " + elementFrom.name;
     }
@@ -136,7 +131,7 @@ class DbAnalyzer {
    * Proceed pending references
    */
   proceedPendingReferences() {
-    var self = this;
+    const self = this;
 
     self.pendingReferences.forEach(function (pendingReference) {
       pendingReference.column.referenceTo = self.erDmBuilder.createReference(pendingReference.column,

@@ -105,11 +105,11 @@ class MySqlAnalyzer extends DbAnalyzer {
     const requestInput = new RequestInput('owner', 'varchar', self.options.owner || self.options.userName);
     const request = new Request(sqlStr, [requestInput]);
 
-    return self.executeSql(request).then(results => {
+    return self.executeSql(request).then(result => {
       const builder = app.repository.getOperationBuilder();
       builder.begin("Generate ER Data Model");
 
-      results.rows.forEach(row => self.performFirstPhase(row, columnProperty => columnProperty.value));
+      result.rows.forEach(row => self.performFirstPhase(row));
       self.performSecondPhase();
 
       builder.end();

@@ -20,13 +20,14 @@ class ErDmBuilder {
    * @return {type.ERDEntity} entity
    */
   createErdEntity(name) {
-    const entity = new type.ERDEntity();
-
-    entity._parent = this._root;
-    entity.name = name;
-
-    return entity;
-  };
+    return app.factory.createModel({
+      id: "ERDEntity",
+      parent: this._root,
+      modelInitializer: elem => {
+        elem.name = name;
+      }
+    });
+  }
 
 
   /**
@@ -38,26 +39,28 @@ class ErDmBuilder {
    * @return {type.ERDColumn} column
    */
   createErdColumn(namespace, element, handleRefNotFound) {
-    const column = new type.ERDColumn();
-
-    column._parent = namespace;
-    column.name = element.column_name;
-    column.primaryKey = Boolean(element.is_primary_key);
-    column.nullable = Boolean(element.is_nullable);
-    column.unique = !column.primaryKey && Boolean(element.is_unique);
-    column.type = element.data_type.toUpperCase();
-    column.length = element.max_length ? element.max_length.toString() : "";
-    column.foreignKey = Boolean(element.is_foreign_key);
-    column.referenceTo = column.foreignKey
-        ? this.createReference(column,
-            element.foreign_key_name,
-            element.referenced_table_name,
-            element.referenced_column_name,
-            handleRefNotFound)
-        : undefined;
-
-    return column;
-  };
+    return app.factory.createModel({
+      id: "ERDColumn",
+      parent: namespace,
+      field: "columns",
+      modelInitializer: elem => {
+        elem.name = element.column_name;
+        elem.primaryKey = Boolean(element.is_primary_key);
+        elem.nullable = Boolean(element.is_nullable);
+        elem.unique = !elem.primaryKey && Boolean(element.is_unique);
+        elem.type = element.data_type.toUpperCase();
+        elem.length = element.max_length ? element.max_length.toString() : "";
+        elem.foreignKey = Boolean(element.is_foreign_key);
+        elem.referenceTo = elem.foreignKey
+            ? this.createReference(elem,
+                element.foreign_key_name,
+                element.referenced_table_name,
+                element.referenced_column_name,
+                handleRefNotFound)
+            : undefined;
+      }
+    });
+  }
 
 
   /**
@@ -90,7 +93,7 @@ class ErDmBuilder {
     }
 
     return referenceTo;
-  };
+  }
 
 
   /**
@@ -109,7 +112,7 @@ class ErDmBuilder {
     }
 
     return this.createErdRelationshipWithoutCheck(namespace, elementFrom, elementTo, name);
-  };
+  }
 
 
   /**
@@ -122,6 +125,18 @@ class ErDmBuilder {
    * @return {type.ERDRelationship} relationship
    */
   createErdRelationshipWithoutCheck(namespace, elementFrom, elementTo, name) {
+    // return app.factory.createModel({
+    //   id: "ERDRelationship",
+    //   parent: namespace,
+    //   modelInitializer: elem => {
+    //     elem.name = name;
+    //     elem.identifying = true;
+    //     elem.end1 = this.createErdRelationshipEnd(elem, elementFrom, "",
+    //         elementFrom.unique ? "0..1" : "0..*");
+    //     elem.end2 = this.createErdRelationshipEnd(elem, elementTo, elementFrom.name,
+    //         elementFrom.nullable ? "0..1" : "1");
+    //   }
+    // });
     const relationship = new type.ERDRelationship();
 
     relationship._parent = namespace;
@@ -133,7 +148,7 @@ class ErDmBuilder {
         elementFrom.nullable ? "0..1" : "1");
 
     return relationship;
-  };
+  }
 
 
   /**
@@ -146,6 +161,16 @@ class ErDmBuilder {
    * @return {type.ERDRelationshipEnd} end of the relationship
    */
   createErdRelationshipEnd(namespace, element, name, cardinality) {
+    // return app.factory.createModel({
+    //   id: "ERDRelationshipEnd",
+    //   parent: namespace,
+    //   modelInitializer: elem => {
+    //     elem.name = name;
+    //     elem.identifying = true;
+    //     elem.cardinality = cardinality;
+    //     elem.reference = element._parent;
+    //   }
+    // });
     const relationshipEnd = new type.ERDRelationshipEnd();
 
     relationshipEnd._parent = namespace;
@@ -155,38 +180,6 @@ class ErDmBuilder {
     relationshipEnd.reference = element._parent;
 
     return relationshipEnd;
-  };
-
-
-  /**
-   * Add an entity to the DataModel
-   *
-   * @param {type.ERDEntity} element
-   */
-  addErdEntity(element) {
-    this._root.ownedElements.push(element);
-  };
-
-
-  /**
-   * Add a column to the entity
-   *
-   * @param {type.ERDEntity} namespace
-   * @param {type.ERDColumn} element
-   */
-  addErdColumn(namespace, element) {
-    namespace.columns.push(element);
-  };
-
-
-  /**
-   * Add a relationship to the entity
-   *
-   * @param {type.ERDEntity} namespace
-   * @param {type.ERDRelationship} element
-   */
-  addErdRelationship(namespace, element) {
-    namespace.ownedElements.push(element);
   };
 }
 

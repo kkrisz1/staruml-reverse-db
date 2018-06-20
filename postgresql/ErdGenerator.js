@@ -11,9 +11,15 @@ const DbAnalyzer = require("./PostgreSqlAnalyzer");
 function analyze(options, model) {
   if (!model) {
     const projectManager = app.project;
-    model = new type.ERDDataModel();
-    model.name = options.options.database + "." + options.owner;
-    model._parent = projectManager.getProject() ? projectManager.getProject() : projectManager.newProject();
+    const project = projectManager.getProject() ? projectManager.getProject() : projectManager.newProject();
+    model = app.factory.createModel({
+      id: "ERDDataModel",
+      parent: project,
+      modelInitializer: elem => elem.name = options.options.database + "." + options.owner
+    });
+    // model = new type.ERDDataModel();
+    // model.name = options.options.database + "." + options.owner;
+    // model._parent = project;
   }
 
   return DbErdGenerator.analyze(options, new DbAnalyzer(options, model));

@@ -66,7 +66,7 @@ class DbAnalyzer {
     const entityName = element.table_name;
     if (!self.currentEntity || self.currentEntity.name !== entityName) {
       self.currentEntity = self.erDmBuilder.createErdEntity(entityName);
-      self.erDmBuilder.addErdEntity(self.currentEntity);
+      // self.erDmBuilder.addErdEntity(self.currentEntity);
     }
 
     const column = self.erDmBuilder.createErdColumn(self.currentEntity, element,
@@ -79,7 +79,7 @@ class DbAnalyzer {
           };
           self.pendingReferences.push(notFoundRef);
         });
-    self.erDmBuilder.addErdColumn(self.currentEntity, column);
+    // self.erDmBuilder.addErdColumn(self.currentEntity, column);
 
     if (column.foreignKey && column.referenceTo) {
       self.addOrSetErdRelationship(self.currentEntity, column, column.referenceTo, element.foreign_key_name);
@@ -119,8 +119,7 @@ class DbAnalyzer {
     let relationship = namespace.findByName(name);
 
     if (!relationship) {
-      relationship = this.erDmBuilder.createErdRelationship(namespace, elementFrom, elementTo, name);
-      this.erDmBuilder.addErdRelationship(namespace, relationship);
+      this.erDmBuilder.createErdRelationship(namespace, elementFrom, elementTo, name);
     } else {
       relationship.end2.name += ", " + elementFrom.name;
     }

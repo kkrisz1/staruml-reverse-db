@@ -81,16 +81,7 @@ class MySqlAnalyzer extends DbAnalyzer {
         + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
 
     const request = new Request(sqlStr, [this.options.owner, this.options.options.database || this.options.userName]);
-    return this.executeSql(request).then(result => {
-      const builder = app.repository.getOperationBuilder();
-      builder.begin("Generate ER Data Model");
-
-      result.rows.forEach(row => this.performFirstPhase(row));
-      this.performSecondPhase();
-
-      builder.end();
-      app.repository.doOperation(builder.getOperation());
-    });
+    return this.executeSql(request);
   };
 }
 

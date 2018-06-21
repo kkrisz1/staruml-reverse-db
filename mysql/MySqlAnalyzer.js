@@ -13,7 +13,6 @@ class MySqlAnalyzer extends DbAnalyzer {
   }
 
   analyze() {
-    const self = this;
     const sqlStr = "SELECT "
         + "  col.TABLE_CATALOG                                  AS table_catalog, "
         + "  col.TABLE_SCHEMA                                   AS owner, "
@@ -59,14 +58,14 @@ class MySqlAnalyzer extends DbAnalyzer {
         + "WHERE col.TABLE_SCHEMA = ? AND col.TABLE_CATALOG = ? "
         + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
 
-    const request = new Request(sqlStr, [self.options.owner || self.options.userName, self.options.options.database]);
+    const request = new Request(sqlStr, [this.options.owner || this.options.userName, this.options.options.database]);
 
     return this.executeSql(request).then(result => {
       const builder = app.repository.getOperationBuilder();
       builder.begin("Generate ER Data Model");
 
-      result.rows.forEach(row => self.performFirstPhase(row));
-      self.performSecondPhase();
+      result.rows.forEach(row => this.performFirstPhase(row));
+      this.performSecondPhase();
 
       builder.end();
       app.repository.doOperation(builder.getOperation());

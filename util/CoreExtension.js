@@ -1,6 +1,5 @@
-const Core = require(app.getAppPath() + ("/src/core/core"));
-const Element = Core.Element;
-const ExtensibleModel = Core.ExtensibleModel;
+const Element = type.Element;
+const ExtensibleModel = type.ExtensibleModel;
 
 
 function findElementByNameIgnoreCase() {

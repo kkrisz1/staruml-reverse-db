@@ -13,7 +13,6 @@ class MySqlAnalyzer extends DbAnalyzer {
   }
 
   analyze() {
-    const self = this;
     const sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog , "
         + "  col.TABLE_SCHEMA AS owner, "
         + "  col.TABLE_NAME AS table_name, "
@@ -86,8 +85,8 @@ class MySqlAnalyzer extends DbAnalyzer {
       const builder = app.repository.getOperationBuilder();
       builder.begin("Generate ER Data Model");
 
-      result.rows.forEach(row => self.performFirstPhase(row));
-      self.performSecondPhase();
+      result.rows.forEach(row => this.performFirstPhase(row));
+      this.performSecondPhase();
 
       builder.end();
       app.repository.doOperation(builder.getOperation());

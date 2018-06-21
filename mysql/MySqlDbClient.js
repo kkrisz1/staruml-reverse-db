@@ -15,7 +15,9 @@ class MySqlDbClient extends DbClient {
       this.pool = mysql.createPool(Object.assign(this.options, this.poolConfig));
     }
 
-    return this.pool.query(sqlStr.toString(), inputParams);
+    return this.pool.query(sqlStr.toString(), inputParams).then(([rows, fields]) => {
+      return {rowCount: rows.length, rows: rows};
+    });
   }
 
   _cmdClose() {

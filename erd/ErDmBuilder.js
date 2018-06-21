@@ -13,13 +13,6 @@ class ErDmBuilder {
     this._root = model;
   }
 
-  getErDataModel() {
-    var self = this;
-
-    return self._root;
-  };
-
-
   /**
    * Create an entity
    *
@@ -27,14 +20,22 @@ class ErDmBuilder {
    * @return {type.ERDEntity} entity
    */
   createErdEntity(name) {
-    var self = this;
-    var entity = new type.ERDEntity();
+    // return app.factory.createModel({
+    //   id: "ERDEntity",
+    //   parent: this._root,
+    //   modelInitializer: elem => {
+    //     elem.name = name;
+    //   }
+    // });
+    const elem = new type.ERDEntity();
 
-    entity._parent = self._root;
-    entity.name = name;
+    elem._parent = this._root;
+    elem.name = name;
 
-    return entity;
-  };
+    this._root.ownedElements.push(elem);
+
+    return elem;
+  }
 
 
   /**
@@ -43,31 +44,52 @@ class ErDmBuilder {
    * @param {type.ERDEntity} namespace
    * @param {Object} element
    * @param {Function} handleRefNotFound
-   * @param {Function} columnPropertyMapper
    * @return {type.ERDColumn} column
    */
-  createErdColumn(namespace, element, handleRefNotFound, columnPropertyMapper) {
-    var self = this;
-    var column = new type.ERDColumn();
+  createErdColumn(namespace, element, handleRefNotFound) {
+    // return app.factory.createModel({
+    //   id: "ERDColumn",
+    //   parent: namespace,
+    //   field: "columns",
+    //   modelInitializer: elem => {
+    //     elem.name = element.column_name;
+    //     elem.primaryKey = Boolean(element.is_primary_key);
+    //     elem.nullable = Boolean(element.is_nullable);
+    //     elem.unique = !elem.primaryKey && Boolean(element.is_unique);
+    //     elem.type = element.data_type.toUpperCase();
+    //     elem.length = element.max_length ? element.max_length.toString() : "";
+    //     elem.foreignKey = Boolean(element.is_foreign_key);
+    //     elem.referenceTo = elem.foreignKey
+    //         ? this.createReference(elem,
+    //             element.foreign_key_name,
+    //             element.referenced_table_name,
+    //             element.referenced_column_name,
+    //             handleRefNotFound)
+    //         : undefined;
+    //   }
+    // });
+    const elem = new type.ERDColumn();
 
-    column._parent = namespace;
-    column.name = columnPropertyMapper(element.column_name);
-    column.primaryKey = columnPropertyMapper(element.is_primary_key);
-    column.nullable = columnPropertyMapper(element.is_nullable);
-    column.unique = columnPropertyMapper(element.is_unique);
-    column.type = columnPropertyMapper(element.data_type).toUpperCase();
-    column.length = columnPropertyMapper(element.max_length) ? columnPropertyMapper(element.max_length).toString() : "";
-    column.foreignKey = columnPropertyMapper(element.is_foreign_key);
-    column.referenceTo = column.foreignKey
-        ? self.createReference(column,
-            columnPropertyMapper(element.foreign_key_name),
-            columnPropertyMapper(element.referenced_table_name),
-            columnPropertyMapper(element.referenced_column_name),
+    elem._parent = namespace;
+    elem.name = element.column_name;
+    elem.primaryKey = Boolean(element.is_primary_key);
+    elem.nullable = Boolean(element.is_nullable);
+    elem.unique = !elem.primaryKey && Boolean(element.is_unique);
+    elem.type = element.data_type.toUpperCase();
+    elem.length = element.max_length ? element.max_length.toString() : "";
+    elem.foreignKey = Boolean(element.is_foreign_key);
+    elem.referenceTo = elem.foreignKey
+        ? this.createReference(elem,
+            element.foreign_key_name,
+            element.referenced_table_name,
+            element.referenced_column_name,
             handleRefNotFound)
         : undefined;
 
-    return column;
-  };
+    namespace.columns.push(elem);
+
+    return elem;
+  }
 
 
   /**
@@ -87,22 +109,20 @@ class ErDmBuilder {
       throw new Error("The column is not a foreign key!");
     }
 
-    var self = this;
-
-    var referredEntity = self._root.findByName(refEntityName);
+    const referredEntity = this._root.findByName(refEntityName);
     if (!referredEntity) {
       handleRefNotFound(column, foreignKeyName, refEntityName, refColumnName);
       return undefined;
     }
 
-    var referenceTo = referredEntity.findByName(refColumnName);
+    const referenceTo = referredEntity.findByName(refColumnName);
     if (!referenceTo) {
       handleRefNotFound(column, foreignKeyName, refEntityName, refColumnName);
       return undefined;
     }
 
     return referenceTo;
-  };
+  }
 
 
   /**
@@ -120,10 +140,8 @@ class ErDmBuilder {
       throw new Error("The starting point of the relation is not a foreign key!");
     }
 
-    var self = this;
-
-    return self.createErdRelationshipWithoutCheck(namespace, elementFrom, elementTo, name);
-  };
+    return this.createErdRelationshipWithoutCheck(namespace, elementFrom, elementTo, name);
+  }
 
 
   /**
@@ -136,19 +154,32 @@ class ErDmBuilder {
    * @return {type.ERDRelationship} relationship
    */
   createErdRelationshipWithoutCheck(namespace, elementFrom, elementTo, name) {
-    var self = this;
-    var relationship = new type.ERDRelationship();
+    // return app.factory.createModel({
+    //   id: "ERDRelationship",
+    //   parent: namespace,
+    //   modelInitializer: elem => {
+    //     elem.name = name;
+    //     elem.identifying = true;
+    //     elem.end1 = this.createErdRelationshipEnd(elem, elementFrom, "",
+    //         elementFrom.unique ? "0..1" : "0..*");
+    //     elem.end2 = this.createErdRelationshipEnd(elem, elementTo, elementFrom.name,
+    //         elementFrom.nullable ? "0..1" : "1");
+    //   }
+    // });
+    const elem = new type.ERDRelationship();
 
-    relationship._parent = namespace;
-    relationship.name = name;
-    relationship.identifying = true;
-    relationship.end1 = self.createErdRelationshipEnd(relationship, elementFrom, "",
+    elem._parent = namespace;
+    elem.name = name;
+    elem.identifying = true;
+    elem.end1 = this.createErdRelationshipEnd(elem, elementFrom, "",
         elementFrom.unique ? "0..1" : "0..*");
-    relationship.end2 = self.createErdRelationshipEnd(relationship, elementTo, elementFrom.name,
+    elem.end2 = this.createErdRelationshipEnd(elem, elementTo, elementFrom.name,
         elementFrom.nullable ? "0..1" : "1");
 
-    return relationship;
-  };
+    namespace.ownedElements.push(elem);
+
+    return elem;
+  }
 
 
   /**
@@ -161,49 +192,25 @@ class ErDmBuilder {
    * @return {type.ERDRelationshipEnd} end of the relationship
    */
   createErdRelationshipEnd(namespace, element, name, cardinality) {
-    var relationshipEnd = new type.ERDRelationshipEnd();
+    // return app.factory.createModel({
+    //   id: "ERDRelationshipEnd",
+    //   parent: namespace,
+    //   modelInitializer: elem => {
+    //     elem.name = name;
+    //     elem.identifying = true;
+    //     elem.cardinality = cardinality;
+    //     elem.reference = element._parent;
+    //   }
+    // });
+    const elem = new type.ERDRelationshipEnd();
 
-    relationshipEnd._parent = namespace;
-    relationshipEnd.name = name;
-    relationshipEnd.identifying = true;
-    relationshipEnd.cardinality = cardinality;
-    relationshipEnd.reference = element._parent;
+    elem._parent = namespace;
+    elem.name = name;
+    elem.identifying = true;
+    elem.cardinality = cardinality;
+    elem.reference = element._parent;
 
-    return relationshipEnd;
-  };
-
-
-  /**
-   * Add an entity to the DataModel
-   *
-   * @param {type.ERDEntity} element
-   */
-  addErdEntity(element) {
-    var self = this;
-
-    self._root.ownedElements.push(element);
-  };
-
-
-  /**
-   * Add a column to the entity
-   *
-   * @param {type.ERDEntity} namespace
-   * @param {type.ERDColumn} element
-   */
-  addErdColumn(namespace, element) {
-    namespace.columns.push(element);
-  };
-
-
-  /**
-   * Add a relationship to the entity
-   *
-   * @param {type.ERDEntity} namespace
-   * @param {type.ERDRelationship} element
-   */
-  addErdRelationship(namespace, element) {
-    namespace.ownedElements.push(element);
+    return elem;
   };
 }
 

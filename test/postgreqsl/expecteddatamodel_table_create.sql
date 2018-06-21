@@ -1,7 +1,7 @@
 -- Database: user
-DROP TABLE public.person CASCADE;
-DROP TABLE public.dog CASCADE;
-DROP TABLE public.department CASCADE;
+-- DROP TABLE public.person CASCADE;
+-- DROP TABLE public.dog CASCADE;
+-- DROP TABLE public.department CASCADE;
 
 CREATE TABLE public.department (
     id integer NOT NULL,

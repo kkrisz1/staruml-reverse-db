@@ -10,7 +10,6 @@ class DbManager {
      * DB Client
      *
      * @private
-     * @member {object} client
      */
     this._client = client;
   }

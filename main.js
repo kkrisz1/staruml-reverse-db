@@ -44,6 +44,16 @@ function _handleMsSqlErdGen(options, model) {
 
 function _handlePostgreSqlErdGen(options, model) {
   options = options || postgreSqlDbPrefs.getConnOptions();
+  // app.elementPickerDialog.showDialog('Select a base model to generate codes', null, type.ERDDataModel)
+  //     .then(({buttonId, returnValue}) => {
+  //       model = returnValue;
+  //       if (buttonId === 'ok') {
+  //         startedNotification();
+  //         return PostgreSqlErdGenerator.analyze(options, model)
+  //             .then(finishedNotification)
+  //             .catch(errorNotification);
+  //       }
+  //     });
 
   startedNotification();
   return PostgreSqlErdGenerator.analyze(options, model)

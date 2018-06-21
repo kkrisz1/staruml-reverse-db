@@ -34,7 +34,8 @@ class MsSqlDbClient extends DbClient {
               }
 
               connection.release();
-              resolve({rowCount: rowCount, rows: rows});
+              const mappedRows = rows.map(row => Object.assign(...Object.entries(row).map(([k, v]) => ({[k]: v.value}))));
+              resolve({rowCount: rowCount, rows: mappedRows});
             }
         );
         inputs.forEach(input => {

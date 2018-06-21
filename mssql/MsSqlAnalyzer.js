@@ -19,7 +19,6 @@ class MySqlAnalyzer extends DbAnalyzer {
   }
 
   analyze() {
-    const self = this;
     const sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog, "
         + "  col.TABLE_SCHEMA AS owner, "
         + "  col.TABLE_NAME AS table_name, "
@@ -102,15 +101,15 @@ class MySqlAnalyzer extends DbAnalyzer {
         + "WHERE col.TABLE_SCHEMA = @owner "
         + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
 
-    const requestInput = new RequestInput('owner', 'varchar', self.options.owner || self.options.userName);
+    const requestInput = new RequestInput('owner', 'varchar', this.options.owner || this.options.userName);
     const request = new Request(sqlStr, [requestInput]);
 
-    return self.executeSql(request).then(results => {
+    return this.executeSql(request).then(result => {
       const builder = app.repository.getOperationBuilder();
       builder.begin("Generate ER Data Model");
 
-      results.rows.forEach(row => self.performFirstPhase(row, columnProperty => columnProperty.value));
-      self.performSecondPhase();
+      result.rows.forEach(row => this.performFirstPhase(row));
+      this.performSecondPhase();
 
       builder.end();
       app.repository.doOperation(builder.getOperation());

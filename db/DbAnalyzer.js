@@ -48,7 +48,16 @@ class DbAnalyzer {
 
 
   executeSql(request) {
-    return this.manager.executeSql(request);
+    return this.manager.executeSql(request).then(result => {
+      const builder = app.repository.getOperationBuilder();
+      builder.begin("Generate ER Data Model");
+
+      result.rows.forEach(row => this.performFirstPhase(row));
+      this.performSecondPhase();
+
+      builder.end();
+      app.repository.doOperation(builder.getOperation());
+    });
   };
 
 

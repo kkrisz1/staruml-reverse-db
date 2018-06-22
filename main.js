@@ -1,25 +1,18 @@
 const MsSqlDbPreferences = require("./mssql/MsSqlPreferences");
 const msSqlDbPrefs = new MsSqlDbPreferences();
-const MsSqlErdGenerator = require("./mssql/ErdGenerator");
+const MsSqlErdGenerator = require("./mssql/MsSqlErdGenerator");
 
 const PostgreSqlDbPreferences = require("./postgresql/PostgreSqlPreferences");
 const postgreSqlDbPrefs = new PostgreSqlDbPreferences();
-const PostgreSqlErdGenerator = require("./postgresql/ErdGenerator");
+const PostgreSqlErdGenerator = require("./postgresql/PostgreSqlErdGenerator");
 
 const MySqlDbPreferences = require("./mysql/MySqlPreferences");
 const mySqlDbPrefs = new MySqlDbPreferences();
-const MySqlErdGenerator = require("./mysql/ErdGenerator");
+const MySqlErdGenerator = require("./mysql/MySqlErdGenerator");
 
 const MethodPolyfill = require("./polyfill/MethodPolyfill");
 const CoreExtension = require("./util/CoreExtension");
 
-/**
- * Toast notifications
- */
-const startedNotification = () => app.toast.info("ER Data Model generation has been started. Please wait...");
-const pendingNotification = () => app.toast.info("ER Data Model generation is in progress...");
-const finishedNotification = () => app.toast.info("ER Data Model generation has been finished.");
-const errorNotification = err => app.toast.error("Error occurred: " + err.message);
 /**
  * Popup PreferenceDialog with DB Preference Schema
  */
@@ -28,6 +21,21 @@ const _handleMsSqlDbConfigure = () => app.commands.execute(appPreference, msSqlD
 const _handlePostgreSqlDbConfigure = () => app.commands.execute(appPreference, postgreSqlDbPrefs.getId());
 const _handleMySqlDbConfigure = () => app.commands.execute(appPreference, mySqlDbPrefs.getId());
 
+const _createModel = options => {
+  const projectManager = app.project;
+  const project = projectManager.getProject() ? projectManager.getProject() : projectManager.newProject();
+  // model = app.factory.createModel({
+  //   id: "ERDDataModel",
+  //   parent: project,
+  //   modelInitializer: elem => elem.name = options.options.database + "." + options.owner
+  // });
+  let model = new type.ERDDataModel();
+  model._parent = project;
+  model.name = options.options.database + "." + options.owner;
+
+  return model;
+};
+
 /**
  * Command Handler for ER Data Model Generator based on DB schema
  *
@@ -35,15 +43,14 @@ const _handleMySqlDbConfigure = () => app.commands.execute(appPreference, mySqlD
  */
 function _handleMsSqlErdGen(options, model) {
   options = options || msSqlDbPrefs.getConnOptions();
+  model = model || _createModel(options);
 
-  startedNotification();
-  return MsSqlErdGenerator.analyze(options, model)
-      .then(finishedNotification)
-      .catch(errorNotification);
+  return new MsSqlErdGenerator(options, model).analyze();
 }
 
 function _handlePostgreSqlErdGen(options, model) {
   options = options || postgreSqlDbPrefs.getConnOptions();
+  model = model || _createModel(options);
   // app.elementPickerDialog.showDialog('Select a base model to generate codes', null, type.ERDDataModel)
   //     .then(({buttonId, returnValue}) => {
   //       model = returnValue;
@@ -55,19 +62,14 @@ function _handlePostgreSqlErdGen(options, model) {
   //       }
   //     });
 
-  startedNotification();
-  return PostgreSqlErdGenerator.analyze(options, model)
-      .then(finishedNotification)
-      .catch(errorNotification);
+  return new PostgreSqlErdGenerator(options, model).analyze();
 }
 
 function _handleMySqlErdGen(options, model) {
   options = options || mySqlDbPrefs.getConnOptions();
+  model = model || _createModel(options);
 
-  startedNotification();
-  return MySqlErdGenerator.analyze(options, model)
-      .then(finishedNotification)
-      .catch(errorNotification);
+  return new MySqlErdGenerator(options, model).analyze();
 }
 
 function init() {

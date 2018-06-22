@@ -38,7 +38,8 @@ class DbPreferences {
       owner: app.preferences.get(this.connPrefKeyPrefix + ".owner"),
       options: {
         port: app.preferences.get(this.connPrefOptKeyPrefix + ".port"),
-        database: app.preferences.get(this.connPrefOptKeyPrefix + ".database")
+        database: app.preferences.get(this.connPrefOptKeyPrefix + ".database"),
+        logging: app.preferences.get(this.connPrefOptKeyPrefix + ".logging")
       }
     };
   };

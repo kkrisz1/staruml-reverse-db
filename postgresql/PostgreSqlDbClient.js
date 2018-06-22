@@ -9,7 +9,7 @@ class PostgreSqlDbClient extends DbClient {
     super(options, null, {
       min: 5,
       max: 10,
-      log: console.log
+      log: options.logging ? console.log : null
     });
   }
 

@@ -17,9 +17,12 @@ class DbErdGenerator {
     app.toast.info(message);
   }
 
-  errorNotification(message) {
-    console.error(message);
-    app.toast.error(message);
+  errorNotification(err) {
+    if (err.message) {
+      err = err.message;
+    }
+    console.error(err);
+    app.toast.error(err);
   }
 
   pendingNotification() {
@@ -35,7 +38,7 @@ class DbErdGenerator {
     this.infoNotification("ER Data Model generation has been started. Please wait...");
     return this.dbAnalyzer.analyze()
         .then(() => this.infoNotification("ER Data Model generation has been finished."))
-        .catch(err => this.errorNotification("Error occurred: " + err.message));
+        .catch(err => this.errorNotification(err));
   }
 }
 

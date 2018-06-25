@@ -36,6 +36,18 @@ const _createModel = options => {
   return model;
 };
 
+const _updateModel = (command, options, model) => {
+  app.elementPickerDialog.showDialog('Select an ER data model', null, type.ERDDataModel)
+      .then(({buttonId, returnValue}) => {
+        if (buttonId === "ok") {
+          const msg = "Update of ER Data Model has not been implemented yet.";
+          console.warn(msg);
+          app.toast.warning(msg);
+          // return command(options, returnValue || model);
+        }
+      });
+};
+
 /**
  * Command Handler for ER Data Model Generator based on DB schema
  *
@@ -51,16 +63,6 @@ function _handleMsSqlErdGen(options, model) {
 function _handlePostgreSqlErdGen(options, model) {
   options = options || postgreSqlDbPrefs.getConnOptions();
   model = model || _createModel(options);
-  // app.elementPickerDialog.showDialog('Select a base model to generate codes', null, type.ERDDataModel)
-  //     .then(({buttonId, returnValue}) => {
-  //       model = returnValue;
-  //       if (buttonId === 'ok') {
-  //         startedNotification();
-  //         return PostgreSqlErdGenerator.analyze(options, model)
-  //             .then(finishedNotification)
-  //             .catch(errorNotification);
-  //       }
-  //     });
 
   return new PostgreSqlErdGenerator(options, model).analyze();
 }
@@ -72,6 +74,10 @@ function _handleMySqlErdGen(options, model) {
   return new MySqlErdGenerator(options, model).analyze();
 }
 
+function _handleMySqlErdUpdate(options, model) {
+  return _updateModel(_handleMySqlErdGen, options, model);
+}
+
 function init() {
   MethodPolyfill.flattenArray();
 
@@ -81,6 +87,7 @@ function init() {
   app.commands.register("reverse-db-mssql:generate-erd", _handleMsSqlErdGen);
   app.commands.register("reverse-db-mssql:configure", _handleMsSqlDbConfigure);
   app.commands.register("reverse-db-mysql:generate-erd", _handleMySqlErdGen);
+  // app.commands.register("reverse-db-mysql:update-erd", _handleMySqlErdUpdate);
   app.commands.register("reverse-db-mysql:configure", _handleMySqlDbConfigure);
   app.commands.register("reverse-db-postgresql:generate-erd", _handlePostgreSqlErdGen);
   app.commands.register("reverse-db-postgresql:configure", _handlePostgreSqlDbConfigure);

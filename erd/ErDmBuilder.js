@@ -154,9 +154,11 @@ class ErDmBuilder {
    * @return {type.ERDRelationship} relationship
    */
   createErdRelationshipWithoutCheck(namespace, elementFrom, elementTo, name) {
-    // return app.factory.createModel({
+    // return app.factory.createModelAndView({
     //   id: "ERDRelationship",
     //   parent: namespace,
+    //   tailModel: elementFrom._parent,
+    //   headModel: elementTo._parent,
     //   modelInitializer: elem => {
     //     elem.name = name;
     //     elem.identifying = true;

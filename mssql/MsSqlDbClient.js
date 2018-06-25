@@ -9,7 +9,7 @@ class MsSqlDbClient extends DbClient {
     super(options, null, {
       min: 5,
       max: 10,
-      log: true
+      log: options.options.logging
     });
   }
 

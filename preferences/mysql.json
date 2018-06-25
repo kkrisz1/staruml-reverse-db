@@ -45,6 +45,12 @@
       "description": "Table Catalog (Database)",
       "type": "string",
       "default": "def"
+    },
+    "db.mysql.connection.options.logging": {
+      "text": "Logging",
+      "description": "Logging",
+      "type": "check",
+      "default": false
     }
   }
 }

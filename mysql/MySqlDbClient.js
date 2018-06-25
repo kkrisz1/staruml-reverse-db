@@ -6,7 +6,7 @@ class MySqlDbClient extends DbClient {
   constructor(options) {
     super(options, null, {
       connectionLimit: 10,
-      debug: true
+      debug: options.logging
     });
   }
 

@@ -25,10 +25,6 @@ class DbErdGenerator {
     app.toast.error(err);
   }
 
-  pendingNotification() {
-    this.infoNotification("ER Data Model generation is in progress...");
-  }
-
   /**
    * Analyze all columns of tables and their relationships under the given database
    *
@@ -36,9 +32,13 @@ class DbErdGenerator {
    */
   analyze() {
     this.infoNotification("ER Data Model generation has been started. Please wait...");
+    const intervalId = setInterval(() => {
+      this.infoNotification("ER Data Model generation is in progress...");
+    }, 8000);
     return this.dbAnalyzer.analyze()
         .then(() => this.infoNotification("ER Data Model generation has been finished."))
-        .catch(err => this.errorNotification(err));
+        .catch(err => this.errorNotification(err))
+        .then(() => clearInterval(intervalId));
   }
 }
 

@@ -40,7 +40,7 @@ deploy:
     tags: true
   file_glob: true
   file: dist/*
-  skip_cleanup: true
+  skip_cleanup: false
 
 cache:
   directories:

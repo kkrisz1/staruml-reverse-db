@@ -12,7 +12,7 @@ addons:
       - mysql-server
 
 before_install:
-  - mysql -v -e 'source create_db.sql'
+  - mysql -v -e 'source db_create.sql'
   - mysql -v -e 'source expecteddatamodel_table_create.sql'
 
 install:

@@ -16,7 +16,7 @@ before_install:
   - mysql -v -e 'source test/mysql/expecteddatamodel_table_create.sql'
 
 install:
-  - npm install --only=production
+  - npm install
 
 #script:
 #  - npm test

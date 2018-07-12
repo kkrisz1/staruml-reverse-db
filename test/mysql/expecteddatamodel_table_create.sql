@@ -2,6 +2,7 @@
 -- DROP TABLE person CASCADE;
 -- DROP TABLE dog CASCADE;
 -- DROP TABLE department CASCADE;
+USE user;
 
 CREATE TABLE department (
     id integer NOT NULL,

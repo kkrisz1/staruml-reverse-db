@@ -1,9 +1,9 @@
 const MySqlManager = require("../mysql/MySqlManager");
 const options = {
   owner: "user",
-  userName: "root",
+  userName: "user",
   password: "password",
-  server: "127.0.0.1",
+  server: "localhost",
   options: {
     port: 3306,
     database: "def"
@@ -25,7 +25,7 @@ describe('Wrong connection options', () => {
     expect.assertions(1);
     return expect(manager.executeSql(request))
         .rejects
-        .toMatchObject({message: "Access denied for user '" + wrongOptions.userName + "'@'172.19.0.1' (using password: YES)"});
+        .toMatchObject({message: "Access denied for user '" + wrongOptions.userName + "'@'" + wrongOptions.server + "' (using password: YES)"});
   });
 
   test("Wrong server name", () => {

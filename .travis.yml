@@ -4,7 +4,7 @@ node_js:
   - node
 
 addons:
-  postgresql: "9.4"
+  postgresql: "10.1"
   apt:
     sources:
       - mysql-5.7-trusty

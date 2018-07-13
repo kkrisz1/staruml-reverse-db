@@ -17,7 +17,7 @@ before_install:
   - mysql -v -e "source test/mysql/db_create.sql"
   - mysql -v -e "source test/mysql/expecteddatamodel_table_create.sql"
   - psql -v ON_ERROR_STOP=1 --username postgres -f test/postgreqsl/db_create.sql
-  - psql -v ON_ERROR_STOP=1 --username postgres -f test/postgreqsl/expecteddatamodel_table_create.sql
+  - psql -v ON_ERROR_STOP=1 --username user -f test/postgreqsl/expecteddatamodel_table_create.sql
 
 #script:
 #  - npm test

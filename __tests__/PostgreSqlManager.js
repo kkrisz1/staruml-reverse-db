@@ -7,21 +7,22 @@ const options = {
   options: {
     port: 5432,
     database: "user"
-  }};
+  }
+};
+const testRequest = {
+  id: "1",
+  sql: "SELECT 1",
+  inputs: []
+};
 
 describe('Wrong connection options', () => {
   test("Wrong password", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.password = "passwor";
-    const request = {
-      id: "1",
-      sql: "SELECT 1",
-      inputs: []
-    };
     const manager = new PostgreSqlManager(wrongOptions);
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
+    return expect(manager.executeSql(testRequest))
         .rejects
         .toMatchObject({message: "password authentication failed for user \"" + wrongOptions.userName + "\""});
   });
@@ -29,15 +30,10 @@ describe('Wrong connection options', () => {
   test("Wrong server name", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.server = "my.example.org";
-    const request = {
-      id: "1",
-      sql: "SELECT 1",
-      inputs: []
-    };
     const manager = new PostgreSqlManager(wrongOptions);
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
+    return expect(manager.executeSql(testRequest))
         .rejects
         .toMatchObject({message: "getaddrinfo ENOTFOUND " + wrongOptions.server + " " + wrongOptions.server + ":" + wrongOptions.options.port});
   });
@@ -45,15 +41,10 @@ describe('Wrong connection options', () => {
   // test("Wrong server IP", () => {
   //   const wrongOptions = JSON.parse(JSON.stringify(options));
   //   wrongOptions.server = "10.0.0.2";
-  //   const request = {
-  //     id: "1",
-  //     sql: "SELECT 1",
-  //     inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
-  //   };
   //   const manager = new PostgreSqlManager(wrongOptions);
   //
   //   expect.assertions(1);
-  //   return expect(manager.executeSql(request))
+  //   return expect(manager.executeSql(testRequest))
   //       .rejects
   //       .toMatchObject({message: "connect ETIMEDOUT " + wrongOptions.server + ":" + wrongOptions.options.port});
   // });
@@ -61,15 +52,10 @@ describe('Wrong connection options', () => {
   test("Wrong server port", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.options.port = 54321;
-    const request = {
-      id: "1",
-      sql: "SELECT 1",
-      inputs: []
-    };
     const manager = new PostgreSqlManager(wrongOptions);
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
+    return expect(manager.executeSql(testRequest))
         .rejects
         .toMatchObject({message: "connect ECONNREFUSED " + wrongOptions.server + ":" + wrongOptions.options.port});
   });
@@ -77,17 +63,12 @@ describe('Wrong connection options', () => {
   test("Not existing database", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.options.database = "dummy";
-    const request = {
-      id: "1",
-      sql: "SELECT 1",
-      inputs: []
-    };
     const manager = new PostgreSqlManager(wrongOptions);
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
+    return expect(manager.executeSql(testRequest))
         .rejects
-        .toMatchObject({message: "database \""+ wrongOptions.options.database +"\" does not exist"});
+        .toMatchObject({message: "database \"" + wrongOptions.options.database + "\" does not exist"});
   });
 });
 

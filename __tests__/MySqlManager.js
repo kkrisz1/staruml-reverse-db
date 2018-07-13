@@ -15,6 +15,7 @@ describe('Wrong connection options', () => {
   test("Wrong password", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.password = "passwor";
+    wrongOptions.server = "localhost";  // FIXME: turn off name resolving 127.0.0.1 <-> localhost
     const request = {
       id: "1",
       sql: "SELECT 1",

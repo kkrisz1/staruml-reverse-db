@@ -3,7 +3,7 @@ const options = {
   owner: "user",
   userName: "user",
   password: "password",
-  server: "localhost",
+  server: "127.0.0.1",
   options: {
     port: 3306,
     database: "def"
@@ -79,6 +79,24 @@ describe('Wrong connection options', () => {
   test("Not existing database", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.owner = "dummy";
+    const request = {
+      id: "1",
+      sql: "SELECT 1",
+      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
+    };
+    const manager = new MySqlManager(wrongOptions);
+
+    expect.assertions(1);
+    return expect(manager.executeSql(request))
+        .rejects
+        .toMatchObject({message: "Access denied for user '"+ wrongOptions.userName +"'@'%' to database '" + wrongOptions.owner + "'"});
+  });
+
+  test("Not existing database as root", () => {
+    const wrongOptions = JSON.parse(JSON.stringify(options));
+      wrongOptions.userName = "root";
+      wrongOptions.password = "";
+      wrongOptions.owner = "dummy";
     const request = {
       id: "1",
       sql: "SELECT 1",

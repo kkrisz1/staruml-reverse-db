@@ -4,19 +4,13 @@ node_js:
   - node
 
 addons:
-  postgresql: "10"
+  postgresql: "9.4"
   apt:
     sources:
       - mysql-5.7-trusty
     packages:
       - mysql-client
       - mysql-server
-      - postgresql-10
-      - postgresql-client-10
-
-env:
-  global:
-    - PGPORT=5432
 
 before_install:
   - sudo mysql_upgrade

@@ -12,7 +12,6 @@ addons:
       - mysql-server
 
 before_install:
-  - sudo mysqladmin variables | grep skip_name_resolve
   - sudo mysql_upgrade
   - mysql -v -e "source test/mysql/db_create.sql"
   - mysql -v -e "source test/mysql/expecteddatamodel_table_create.sql"

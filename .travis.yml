@@ -12,10 +12,8 @@ addons:
       - mysql-server
 
 before_install:
-  - sudo mysql -v -e "source test/mysql/db_user.sql"
-  - sudo mysql_upgrade
-  - sudo service mysql restart
   - mysql -v -e "source test/mysql/db_create.sql"
+  - sudo mysql -v -e "source test/mysql/db_user.sql"
   - mysql -v -e "source test/mysql/expecteddatamodel_table_create.sql"
 
 #script:

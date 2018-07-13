@@ -16,7 +16,7 @@ describe('Wrong connection options', () => {
     const request = {
       id: "1",
       sql: "SELECT 1",
-      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
+      inputs: []
     };
     const manager = new PostgreSqlManager(wrongOptions);
 
@@ -32,7 +32,7 @@ describe('Wrong connection options', () => {
     const request = {
       id: "1",
       sql: "SELECT 1",
-      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
+      inputs: []
     };
     const manager = new PostgreSqlManager(wrongOptions);
 
@@ -64,7 +64,7 @@ describe('Wrong connection options', () => {
     const request = {
       id: "1",
       sql: "SELECT 1",
-      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
+      inputs: []
     };
     const manager = new PostgreSqlManager(wrongOptions);
 
@@ -80,7 +80,7 @@ describe('Wrong connection options', () => {
     const request = {
       id: "1",
       sql: "SELECT 1",
-      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
+      inputs: []
     };
     const manager = new PostgreSqlManager(wrongOptions);
 

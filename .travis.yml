@@ -14,7 +14,6 @@ addons:
 before_install:
   - sudo mysql_upgrade
   - mysql -v -e "source test/mysql/db_create.sql"
-  - sudo mysql -v -e "source test/mysql/db_user.sql"
   - mysql -v -e "source test/mysql/expecteddatamodel_table_create.sql"
 
 #script:

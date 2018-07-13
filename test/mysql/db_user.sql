@@ -3,4 +3,4 @@
 -- update user set plugin='mysql_native_password';
 -- FLUSH PRIVILEGES;
 CREATE USER 'user'@'%' IDENTIFIED BY 'password';
-GRANT ALL ON \`user\`.* TO 'user'@'%';
+GRANT ALL ON `user`.* TO 'user'@'%';

@@ -6,4 +6,4 @@ CREATE DATABASE user
         TABLESPACE = pg_default
         CONNECTION LIMIT = -1;
 
-CREATE USER user WITH SUPERUSER 'password';
+CREATE USER 'user' WITH SUPERUSER 'password';

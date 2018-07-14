@@ -8,9 +8,16 @@ addons:
   apt:
     sources:
       - mysql-5.7-trusty
+#      - sourceline: 'deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/mssql-server-2017 xenial main'
+#        key_url: 'https://packages.microsoft.com/keys/microsoft.asc'
     packages:
       - mysql-client
       - mysql-server
+#      - mssql-server
+#      - mssql-tools
+
+services:
+  - docker
 
 before_install:
   - sudo mysql_upgrade
@@ -22,6 +29,11 @@ before_install:
   - sudo sed -i '/\bhost    all             all             127.0.0.1\/32            trust\b/i host    all             user            all                      md5' /etc/postgresql/9.6/main/pg_hba.conf
   - sudo chmod 640 /etc/postgresql/9.6/main/pg_hba.conf
   - sudo service postgresql restart 9.6
+  - docker-compose -f test/mssql/docker-compose.yml up -d db
+  - docker cp test/mssql/db_create.sql mssql_db_1:/tmp/db_create.sql
+  - docker cp test/mssql/expecteddatamodel_table_create.sql mssql_db_1:/tmp/expecteddatamodel_table_create.sql
+  - docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -U sa -P password01@ -i /tmp/db_create.sql
+  - docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -U test_user -P password01@ -i /tmp/expecteddatamodel_table_create.sql
 
 #script:
 #  - npm test

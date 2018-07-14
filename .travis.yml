@@ -15,6 +15,9 @@ addons:
       - mysql-server
       - mssql-server
 
+services:
+  - docker
+
 before_install:
   - sudo mysql_upgrade
   - mysql -v -e "source test/mysql/db_create.sql"
@@ -25,6 +28,7 @@ before_install:
   - sudo sed -i '/\bhost    all             all             127.0.0.1\/32            trust\b/i host    all             user            all                      md5' /etc/postgresql/9.6/main/pg_hba.conf
   - sudo chmod 640 /etc/postgresql/9.6/main/pg_hba.conf
   - sudo service postgresql restart 9.6
+  - docker-compose -f test/mssql/docker-compose.yml up -d db
 
 #script:
 #  - npm test

@@ -19,8 +19,7 @@ before_install:
   - psql -v ON_ERROR_STOP=1 --username postgres -f test/postgreqsl/db_create.sql
   - psql -v ON_ERROR_STOP=1 --username user -f test/postgreqsl/expecteddatamodel_table_create.sql
   - sudo chmod 777 /etc/postgresql/9.6/main/pg_hba.conf
-  - sudo sed -i '/\bhost    all             all             127.0.0.1\/32            trust\b/i host all user all md5' /etc/postgresql/9.6/main/pg_hba.conf
-  - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
+  - sudo sed -i '/\bhost    all             all             127.0.0.1\/32            trust\b/i host    all             user            all                      md5' /etc/postgresql/9.6/main/pg_hba.conf
   - sudo chmod 640 /etc/postgresql/9.6/main/pg_hba.conf
   - sudo service postgresql restart 9.6
 

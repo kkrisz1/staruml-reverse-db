@@ -3,7 +3,7 @@
 -- DROP TABLE dog CASCADE;
 -- DROP TABLE department CASCADE;
 
--- docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U test_user -P password01@
+-- docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -U test_user -P password01@
 USE test;
 GO
 CREATE TABLE test_user.department (    id integer NOT NULL,    sysid integer NOT NULL,    name varchar(128) NOT NULL,    PRIMARY KEY (id, sysid));

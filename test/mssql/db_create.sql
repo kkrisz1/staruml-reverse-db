@@ -2,7 +2,7 @@
 -- Author:
 CREATE DATABASE test;
 GO
-CREATE LOGIN test_user WITH password = 'password01@' DEFAULT_DATABASE = 'test';
+CREATE LOGIN test_user WITH PASSWORD = N'password01@', DEFAULT_DATABASE = test;
 GO
 USE test;
 GO

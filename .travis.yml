@@ -8,9 +8,12 @@ addons:
   apt:
     sources:
       - mysql-5.7-trusty
+      - sourceline: 'deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/mssql-server-2017 xenial main'
+        key_url: 'https://packages.microsoft.com/keys/microsoft.asc'
     packages:
       - mysql-client
       - mysql-server
+      - mssql-server
 
 before_install:
   - sudo mysql_upgrade

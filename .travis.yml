@@ -18,7 +18,7 @@ before_install:
   - mysql -v -e "source test/mysql/expecteddatamodel_table_create.sql"
   - psql -v ON_ERROR_STOP=1 --username postgres -f test/postgreqsl/db_create.sql
   - psql -v ON_ERROR_STOP=1 --username user -f test/postgreqsl/expecteddatamodel_table_create.sql
-  - sudo echo -e "\nhost\tall\tall\tall\tmd5\n" >> /etc/postgresql/9.6/main/pg_hba.conf
+  - sudo -u travis echo -e "\nhost\tall\tall\tall\tmd5\n" >> /etc/postgresql/9.6/main/pg_hba.conf
   - sudo service postgresql restart 9.6
 
 #script:

@@ -16,16 +16,13 @@ before_install:
   - sudo mysql_upgrade
   - mysql -v -e "source test/mysql/db_create.sql"
   - mysql -v -e "source test/mysql/expecteddatamodel_table_create.sql"
-  - sudo find / -name "pg_hba.conf"
-  - sudo ls -la /etc/postgresql/9.6/main/pg_hba.conf
-  - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
-  - sudo chmod 777 /etc/postgresql/9.6/main/pg_hba.conf
-  - sudo echo -e "\nhost all all all md5\n" >> /etc/postgresql/9.6/main/pg_hba.conf
-  - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
-  - sudo service postgresql restart 9.6
-  - sudo /etc/init.d/postgresql restart
   - psql -v ON_ERROR_STOP=1 --username postgres -f test/postgreqsl/db_create.sql
   - psql -v ON_ERROR_STOP=1 --username user -f test/postgreqsl/expecteddatamodel_table_create.sql
+  - sudo chmod 777 /etc/postgresql/9.6/main/pg_hba.conf
+  - sudo sed -i '/host\s+all\s+all/i host all user all md5' /etc/postgresql/9.6/main/pg_hba.conf
+  - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
+  - sudo chmod 640 /etc/postgresql/9.6/main/pg_hba.conf
+  - sudo service postgresql restart 9.6
 
 #script:
 #  - npm test

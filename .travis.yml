@@ -18,8 +18,8 @@ before_install:
   - mysql -v -e "source test/mysql/expecteddatamodel_table_create.sql"
   - psql -v ON_ERROR_STOP=1 --username postgres -f test/postgreqsl/db_create.sql
   - psql -v ON_ERROR_STOP=1 --username user -f test/postgreqsl/expecteddatamodel_table_create.sql
-  - echo "" >> ~travis/pg_hba.conf
-  - echo "host all all all md5" >> ~travis/pg_hba.conf
+  - sudo find / -name "pg_hba.conf"
+  - echo -e "\nhost all all all md5\n" >> ~travis/pg_hba.conf
   - cat ~travis/pg_hba.conf
   - sudo service postgresql restart 9.6
 

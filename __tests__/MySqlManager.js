@@ -1,13 +1,19 @@
 const MySqlManager = require("../mysql/MySqlManager");
 const options = {
   owner: "user",
-  userName: "root",
+  userName: "user",
   password: "password",
   server: "127.0.0.1",
   options: {
     port: 3306,
     database: "def"
-  }};
+  }
+};
+const testRequest = {
+  id: "1",
+  sql: "SELECT 1",
+  inputs: []
+};
 
 describe('Wrong connection options', () => {
   let manager = null;
@@ -15,31 +21,22 @@ describe('Wrong connection options', () => {
   test("Wrong password", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.password = "passwor";
-    const request = {
-      id: "1",
-      sql: "SELECT 1",
-      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
-    };
+    wrongOptions.server = "localhost";  // FIXME: turn off name resolving 127.0.0.1 <-> localhost
     manager = new MySqlManager(wrongOptions);
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
+    return expect(manager.executeSql(testRequest))
         .rejects
-        .toMatchObject({message: "Access denied for user '" + wrongOptions.userName + "'@'172.19.0.1' (using password: YES)"});
+        .toMatchObject({message: "Access denied for user '" + wrongOptions.userName + "'@'" + wrongOptions.server + "' (using password: YES)"});
   });
 
   test("Wrong server name", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.server = "my.example.org";
-    const request = {
-      id: "1",
-      sql: "SELECT 1",
-      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
-    };
     manager = new MySqlManager(wrongOptions);
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
+    return expect(manager.executeSql(testRequest))
         .rejects
         .toMatchObject({message: "getaddrinfo ENOTFOUND " + wrongOptions.server + " " + wrongOptions.server + ":" + wrongOptions.options.port});
   });
@@ -47,15 +44,10 @@ describe('Wrong connection options', () => {
   // test("Wrong server IP", () => {
   //   const wrongOptions = JSON.parse(JSON.stringify(options));
   //   wrongOptions.server = "10.0.0.2";
-  //   const request = {
-  //     id: "1",
-  //     sql: "SELECT 1",
-  //     inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
-  //   };
   //   manager = new MySqlManager(wrongOptions);
   //
   //   expect.assertions(1);
-  //   return expect(manager.executeSql(request))
+  //   return expect(manager.executeSql(testRequest))
   //       .rejects
   //       .toMatchObject({message: "connect ETIMEDOUT " + wrongOptions.server + ":" + wrongOptions.options.port});
   // });
@@ -63,15 +55,10 @@ describe('Wrong connection options', () => {
   test("Wrong server port", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.options.port = 54321;
-    const request = {
-      id: "1",
-      sql: "SELECT 1",
-      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
-    };
     manager = new MySqlManager(wrongOptions);
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
+    return expect(manager.executeSql(testRequest))
         .rejects
         .toMatchObject({message: "connect ECONNREFUSED " + wrongOptions.server + ":" + wrongOptions.options.port});
   });
@@ -79,17 +66,25 @@ describe('Wrong connection options', () => {
   test("Not existing database", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.owner = "dummy";
-    const request = {
-      id: "1",
-      sql: "SELECT 1",
-      inputs: [wrongOptions.owner, wrongOptions.options.database || wrongOptions.userName]
-    };
     const manager = new MySqlManager(wrongOptions);
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
+    return expect(manager.executeSql(testRequest))
         .rejects
-        .toMatchObject({message: "Unknown database '"+ wrongOptions.owner +"'"});
+        .toMatchObject({message: "Access denied for user '" + wrongOptions.userName + "'@'%' to database '" + wrongOptions.owner + "'"});
+  });
+
+  test("Not existing database as root", () => {
+    const wrongOptions = JSON.parse(JSON.stringify(options));
+    wrongOptions.userName = "root";
+    wrongOptions.password = "";
+    wrongOptions.owner = "dummy";
+    const manager = new MySqlManager(wrongOptions);
+
+    expect.assertions(1);
+    return expect(manager.executeSql(testRequest))
+        .rejects
+        .toMatchObject({message: "Unknown database '" + wrongOptions.owner + "'"});
   });
 });
 

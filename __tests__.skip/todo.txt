@@ -1,5 +1,0 @@
-in package.json:
-  "scripts": {
-    "test": "jest --detectOpenHandles --passWithNoTests",
-    ...
-  }

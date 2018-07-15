@@ -1,3 +1,6 @@
+const jestAjv = require("jest-ajv");
+const schema = require("../db/schema");
+
 const MySqlManager = require("../mysql/MySqlManager");
 const options = {
   owner: "user",
@@ -149,8 +152,7 @@ describe('MySQL DB content', () => {
     const request = {id: "1", sql: sqlStr, inputs: [options.owner, options.options.database || options.userName]};
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
-        .resolves
-        .toMatchObject({rowCount: 14});
+    return manager.executeSql(request)
+        .then(data => expect(data).toMatchSchema(schema));
   });
 });

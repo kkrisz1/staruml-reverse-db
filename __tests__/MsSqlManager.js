@@ -1,3 +1,6 @@
+const jestAjv = require("jest-ajv");
+const schema = require("../db/schema");
+
 const RequestInput = (require('../db/DbRequestInput'));
 const MsSqlManager = require("../mssql/MsSqlManager");
 const options = {
@@ -136,12 +139,12 @@ describe('MSSQL DB content', () => {
         + "  col.DATA_TYPE AS data_type, "
         + "  col.CHARACTER_MAXIMUM_LENGTH AS max_length, "
         + "  col.DATETIME_PRECISION AS date_precision, "
-        + "  CAST(CASE col.IS_NULLABLE WHEN 'NO' THEN 0 ELSE 1 END AS bit) AS is_nullable, "
+        + "  CAST(CASE col.IS_NULLABLE WHEN 'NO' THEN 0 ELSE 1 END AS tinyint) AS is_nullable, "
         + "  COLUMNPROPERTY(OBJECT_ID('[' + col.TABLE_SCHEMA + '].[' + col.TABLE_NAME + ']'), col.COLUMN_NAME, 'is_identity') AS IsIdentity, "
         + "  COLUMNPROPERTY(OBJECT_ID('[' + col.TABLE_SCHEMA + '].[' + col.TABLE_NAME + ']'), col.COLUMN_NAME, 'is_computed') AS IsComputed, "
-        + "  CAST(ISNULL(pk.is_primary_key, 0) AS bit) AS is_primary_key, "
-        + "  CAST(ISNULL(uk.is_unique, 0) AS bit) AS is_unique, "
-        + "  CAST(CASE WHEN fk.FK_NAME IS NULL THEN 0 ELSE 1 END AS bit) AS is_foreign_key, "
+        + "  CAST(ISNULL(pk.is_primary_key, 0) AS tinyint) AS is_primary_key, "
+        + "  CAST(ISNULL(uk.is_unique, 0) AS tinyint) AS is_unique, "
+        + "  CAST(CASE WHEN fk.FK_NAME IS NULL THEN 0 ELSE 1 END AS tinyint) AS is_foreign_key, "
         + "  fk.FK_NAME AS foreign_key_name, "
         + "  fk.REFERENCED_TABLE_NAME AS referenced_table_name, "
         + "  fk.REFERENCED_COLUMN_NAME AS referenced_column_name "
@@ -213,8 +216,7 @@ describe('MSSQL DB content', () => {
     const request = {id: "1", sql: sqlStr, inputs: [requestInput]};
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
-        .resolves
-        .toMatchObject({rowCount: 14});
+    return manager.executeSql(request)
+        .then(data => expect(data).toMatchSchema(schema));
   });
 });

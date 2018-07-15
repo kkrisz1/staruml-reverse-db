@@ -1,0 +1,90 @@
+{
+  "$id": "reverse-db",
+  "type": "object",
+  "required": [
+    "rows",
+    "rowCount"
+  ],
+  "properties": {
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "table_catalog",
+          "owner",
+          "table_name",
+          "column_name",
+          "data_type",
+          "max_length",
+          "is_nullable",
+          "is_primary_key",
+          "is_unique",
+          "is_foreign_key",
+          "foreign_key_name",
+          "referenced_table_name",
+          "referenced_column_name"
+        ],
+        "properties": {
+          "table_catalog": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "table_name": {
+            "type": "string"
+          },
+          "column_name": {
+            "type": "string"
+          },
+          "data_type": {
+            "type": "string"
+          },
+          "max_length": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "is_nullable": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "is_primary_key": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "is_foreign_key": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "foreign_key_name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "referenced_table_name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "referenced_column_name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      }
+    },
+    "rowCount": {
+      "type": "integer"
+    }
+  }
+}

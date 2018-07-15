@@ -1,4 +1,8 @@
+const jestAjv = require("jest-ajv");
+const schema = require("../db/schema");
+
 const PostgreSqlManager = require("../postgresql/PostgreSqlManager");
+
 const options = {
   owner: "public",
   userName: "user",
@@ -155,8 +159,7 @@ describe('PostgreSQL DB content', () => {
     const request = {id: "1", sql: sqlStr, inputs: [options.owner, options.options.database || options.userName]};
 
     expect.assertions(1);
-    return expect(manager.executeSql(request))
-        .resolves
-        .toMatchObject({rowCount: 14});
+    return manager.executeSql(request)
+        .then(data => expect(data).toMatchSchema(schema));
   });
 });

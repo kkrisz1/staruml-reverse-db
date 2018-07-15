@@ -36,6 +36,7 @@
     "tedious-connection-pool": "^1.0.5"
   },
   "devDependencies": {
-    "jest": "^23.1.0"
+    "jest": "^23.1.0",
+    "jest-ajv": "^1.0.3"
   }
 }

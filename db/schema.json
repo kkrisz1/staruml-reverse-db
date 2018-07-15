@@ -1,5 +1,5 @@
 {
-  "id": "reverse-db",
+  "$id": "reverse-db",
   "type": "object",
   "required": [
     "rows",

@@ -36,18 +36,6 @@ before_install:
   - docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U sa -P password01@ -i /tmp/db_create.sql
   - docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U test_user -P password01@ -i /tmp/expecteddatamodel_table_create.sql
 
-#before_script:
-#  - npm i -g jest
-
-jobs:
-  include:
-    - stage: Produce Coverage
-      node_js: node
-      script: jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
-
-notifications:
-  email: false
-
 before_deploy:
   - export PKG_NAME=$(node -p -e "require('./package.json').name")
   - export PKG_VERSION=$(node -p -e "require('./package.json').version")

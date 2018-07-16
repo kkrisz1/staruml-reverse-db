@@ -1,7 +1,7 @@
 const jestAjv = require("jest-ajv");
-const schema = require("../db/schema");
+const schema = require("./schema");
 
-const MySqlManager = require("../mysql/MySqlManager");
+const MySqlManager = require("../../mysql/MySqlManager");
 const options = {
   owner: "user",
   userName: "user",

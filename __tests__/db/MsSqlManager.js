@@ -1,8 +1,8 @@
 const jestAjv = require("jest-ajv");
-const schema = require("../db/schema");
+const schema = require("./schema");
 
-const RequestInput = (require('../db/DbRequestInput'));
-const MsSqlManager = require("../mssql/MsSqlManager");
+const RequestInput = (require('../../db/DbRequestInput'));
+const MsSqlManager = require("../../mssql/MsSqlManager");
 const options = {
   owner: "test_user",
   userName: "test_user",

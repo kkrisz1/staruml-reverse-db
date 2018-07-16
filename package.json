@@ -16,7 +16,7 @@
     "url": "https://github.com/kkrisz1"
   },
   "scripts": {
-    "test": "jest --detectOpenHandles --passWithNoTests",
+    "test": "jest --detectOpenHandles --passWithNoTests --coverage",
     "preversion": "npm test",
     "version": "git add -A",
     "postversion": "git push && git push --tags",
@@ -36,7 +36,9 @@
     "tedious-connection-pool": "^1.0.5"
   },
   "devDependencies": {
+    "electron": "1.7.11",
     "jest": "^23.1.0",
-    "jest-ajv": "^1.0.3"
+    "jest-ajv": "^1.0.3",
+    "spectron": "^3.8.0"
   }
 }

@@ -5,6 +5,7 @@ node_js:
 
 addons:
   postgresql: "9.6"
+  chrome: stable
   apt:
     sources:
       - mysql-5.7-trusty
@@ -35,8 +36,20 @@ before_install:
   - docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -U sa -P password01@ -i /tmp/db_create.sql
   - docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -U test_user -P password01@ -i /tmp/expecteddatamodel_table_create.sql
 
-#script:
-#  - npm test
+before_script:
+  - yarn global add nyc
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script:
+  - nyc --reporter=lcov yarn run unit
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+notifications:
+  email: false
 
 before_deploy:
   - export PKG_NAME=$(node -p -e "require('./package.json').name")

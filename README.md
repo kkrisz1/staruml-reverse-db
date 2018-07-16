@@ -1,6 +1,7 @@
 # ERD Generation Extension for StarUML v3
 
 [![Build Status](https://travis-ci.org/kkrisz1/staruml-reverse-db.svg?branch=master)](https://travis-ci.org/kkrisz1/staruml-reverse-db)
+[![Coverage Status](https://coveralls.io/repos/github/kkrisz1/staruml-reverse-db/badge.svg?branch=master)](https://coveralls.io/github/kkrisz1/staruml-reverse-db?branch=master)
 
 This extension for [StarUML](http://staruml.io) support to generate ER Data Model from database schema.
 

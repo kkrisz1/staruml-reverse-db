@@ -31,18 +31,6 @@ class PostgreSqlDbClient extends DbClient {
       resolve();
     });
   }
-
-  connectHandler(client) {
-    // console.log("connect");
-  }
-
-  acquireHandler(client) {
-    // console.log("acquire");
-  }
-
-  errorHandler(err, client) {
-    // console.error("Error is occurred", err);
-  }
 }
 
 module.exports = PostgreSqlDbClient;

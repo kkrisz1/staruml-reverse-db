@@ -64,20 +64,6 @@ class MsSqlDbClient extends DbClient {
         return TYPES.VarChar;
     }
   }
-
-  requestDone(rowCount, more) {
-    //console.log(rowCount + ' rows');
-  }
-
-  errorHandler(err) {
-    // console.error("Error is occurred", err);
-  }
-
-  columnMetadata(columnsMetadata) {
-    // columnsMetadata.forEach(function (column) {
-    //   console.log(column);
-    // });
-  }
 }
 
 module.exports = MsSqlDbClient;

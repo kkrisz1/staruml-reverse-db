@@ -27,18 +27,6 @@ class MySqlDbClient extends DbClient {
     }
     return this.pool;
   }
-
-  connectHandler(client) {
-    // console.log("connect");
-  }
-
-  acquireHandler(client) {
-    // console.log("acquire");
-  }
-
-  errorHandler(err) {
-    // console.error("Error is occurred", err);
-  }
 }
 
 module.exports = MySqlDbClient;

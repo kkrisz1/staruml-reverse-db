@@ -1,7 +1,7 @@
 const jestAjv = require("jest-ajv");
-const schema = require("../db/schema");
+const schema = require("./schema");
 
-const MySqlManager = require("../mysql/MySqlManager");
+const MySqlManager = require("../../mysql/MySqlManager");
 const options = {
   owner: "user",
   userName: "user",
@@ -24,7 +24,6 @@ describe('Wrong connection options', () => {
   test("Wrong password", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.password = "passwor";
-    wrongOptions.server = "localhost";
     manager = new MySqlManager(wrongOptions);
 
     // in case of docker, the server IP address is unpredictable

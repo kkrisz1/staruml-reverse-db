@@ -24,13 +24,12 @@ describe('Wrong connection options', () => {
   test("Wrong password", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.password = "passwor";
-    wrongOptions.server = "localhost";  // FIXME: turn off name resolving 127.0.0.1 <-> localhost
     manager = new MySqlManager(wrongOptions);
 
     expect.assertions(1);
     return expect(manager.executeSql(testRequest))
         .rejects
-        .toMatchObject({message: "Access denied for user '" + wrongOptions.userName + "'@'" + wrongOptions.server + "' (using password: YES)"});
+        .toMatchObject({message: expect.stringMatching(new RegExp("Access denied for user '" + wrongOptions.userName + "'@'.+' \\(using password: YES\\)"))});
   });
 
   test("Wrong server name", () => {

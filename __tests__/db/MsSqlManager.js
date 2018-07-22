@@ -11,7 +11,6 @@ const options = {
   options: {
     port: 1433,
     database: "test",
-    useColumnNames: true,
     rowCollectionOnRequestCompletion: true
   }
 };
@@ -32,7 +31,7 @@ describe('Wrong connection options', () => {
     expect.assertions(1);
     return expect(manager.executeSql(request))
         .rejects
-        .toMatchObject({message: "ConnectionError: Login failed for user '" + wrongOptions.userName + "'."});
+        .toMatchObject({message: "Login failed for user '" + wrongOptions.userName + "'."});
   });
 
   test("Wrong password", () => {
@@ -48,7 +47,7 @@ describe('Wrong connection options', () => {
     expect.assertions(1);
     return expect(manager.executeSql(request))
         .rejects
-        .toMatchObject({message: "ConnectionError: Login failed for user '" + wrongOptions.userName + "'."});
+        .toMatchObject({message: "Login failed for user '" + wrongOptions.userName + "'."});
   });
 
   test("Wrong database", () => {
@@ -64,7 +63,7 @@ describe('Wrong connection options', () => {
     expect.assertions(1);
     return expect(manager.executeSql(request))
         .rejects
-        .toMatchObject({message: "ConnectionError: Login failed for user '" + wrongOptions.userName + "'."});
+        .toMatchObject({message: "Login failed for user '" + wrongOptions.userName + "'."});
   });
 
   test("Wrong server name", () => {
@@ -80,7 +79,7 @@ describe('Wrong connection options', () => {
     expect.assertions(1);
     return expect(manager.executeSql(request))
         .rejects
-        .toMatchObject({message: "ConnectionError: Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - getaddrinfo ENOTFOUND " + wrongOptions.server});
+        .toMatchObject({message: "Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - getaddrinfo ENOTFOUND " + wrongOptions.server});
   });
 
   // test("Wrong server IP", () => {
@@ -112,7 +111,7 @@ describe('Wrong connection options', () => {
     expect.assertions(1);
     return expect(manager.executeSql(request))
         .rejects
-        .toMatchObject({message: "ConnectionError: Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port
+        .toMatchObject({message: "Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port
           + " - connect ECONNREFUSED " + wrongOptions.server + ":" + wrongOptions.options.port});
   });
 });
@@ -218,5 +217,21 @@ describe('MSSQL DB content', () => {
     expect.assertions(1);
     return manager.executeSql(request)
         .then(data => expect(data).toMatchSchema(schema));
+  });
+
+  test("MSSQL DB content with wrong prepared statement parameter", () => {
+    const sqlStr = "SELECT * "
+        + "FROM INFORMATION_SCHEMA.COLUMNS as col "
+        + "WHERE col.TABLE_SCHEMA = @owner "
+        + "ORDER BY col.TABLE_NAME, col.ORDINAL_POSITION;";
+
+    const requestInput = new RequestInput('owner', 'varchar', options.owner || options.userName);
+    const request = {id: "1", sql: sqlStr, inputs: []};
+
+    expect.assertions(1);
+    return manager.executeSql(request)
+        .catch(err => expect(err).toMatchObject({message: "Must declare the scalar variable \"@" + requestInput.name + "\"."}));
+        // .rejects
+        // .toMatchObject({message: "Must declare the scalar variable \"@owner\""});
   });
 });

@@ -1,7 +1,7 @@
 const DbClient = require("../db/DbClient");
 
+const tp = require('tedious-promises');
 const ConnectionPool = require('tedious-connection-pool');
-const Request = require('tedious').Request;
 const TYPES = require('tedious').TYPES;
 
 class MsSqlDbClient extends DbClient {
@@ -17,33 +17,18 @@ class MsSqlDbClient extends DbClient {
     return new Promise((resolve, reject) => {
       if (!this.pool) {
         this.pool = new ConnectionPool(this.poolConfig, this.options);
-        this.pool.on("error", err => reject(new Error(err)));
+        this.pool.on("error", err => reject(err));
+        tp.setConnectionPool(this.pool); // global scope
       }
-
-      this.pool.acquire((err, connection) => {
-        if (err) {
-          console.error("Connection failed: ", err);
-          reject(new Error(err));
-          return;
-        }
-
-        let request = new Request(sqlStr.toString(), (err, rowCount, rows) => {
-              if (err) {
-                reject(new Error(err));
-                return;
-              }
-
-              connection.release();
-              const mappedRows = rows.map(row => Object.assign(...Object.entries(row).map(([k, v]) => ({[k]: v.value}))));
-              resolve({rowCount: rowCount, rows: mappedRows});
-            }
-        );
-        inputs.forEach(input => {
-          request.addParameter(input.name, this.getTediousType(input.type), input.value);
-        });
-
-        connection.execSql(request);
-      })
+      const request = tp.sql(sqlStr.toString());
+      inputs.forEach(input => {
+        request.parameter(input.name, this.getTediousType(input.type), input.value);
+      });
+      request.execute()
+          .then(results => {
+            resolve({rowCount: results.length, rows: results});
+          })
+          .fail(err => reject(err));
     });
   }
 

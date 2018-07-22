@@ -33,7 +33,8 @@
     "pg": "^7.4.3",
     "pg-pool": "^2.0.3",
     "tedious": "^2.6.1",
-    "tedious-connection-pool": "^1.0.5"
+    "tedious-connection-pool": "^1.0.5",
+    "tedious-promises": "^0.4.1"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",

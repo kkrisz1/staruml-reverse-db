@@ -16,6 +16,7 @@ class PostgreSqlManager extends DbManager {
       host: options.server,
       port: options.options.port,
       database: options.options.database || options.userName,
+      ssl: options.options.ssl,
       logging: options.options.logging
     }));
   }

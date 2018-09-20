@@ -16,19 +16,8 @@ class PostgreSqlPreferences extends DbPreferences {
    * @return {object}
    */
   getConnOptions() {
-    return {
-      userName: app.preferences.get(this.connPrefKeyPrefix + ".username"),
-      password: app.preferences.get(this.connPrefKeyPrefix + ".password"),
-      server: app.preferences.get(this.connPrefKeyPrefix + ".server"),
-      owner: app.preferences.get(this.connPrefKeyPrefix + ".owner"),
-      options: {
-        port: app.preferences.get(this.connPrefOptKeyPrefix + ".port"),
-        database: app.preferences.get(this.connPrefOptKeyPrefix + ".database"),
-        logging: app.preferences.get(this.connPrefOptKeyPrefix + ".logging"),
-        ssl: app.preferences.get(this.connPrefOptKeyPrefix + ".ssl")
-      }
-    };
-  };
+    return Object.assign({options: {ssl: app.preferences.get(this.connPrefOptKeyPrefix + ".ssl")}}, super.getConnOptions());
+  }
 }
 
 module.exports = PostgreSqlPreferences;

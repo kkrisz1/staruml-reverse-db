@@ -47,7 +47,7 @@ before_deploy:
   - zip -r ./dist/$PKG_NAME-$PKG_VERSION.zip ./$PKG_NAME
 
 after_success:
-  - coveralls
+  - npm run coveralls
 
 deploy:
   provider: releases

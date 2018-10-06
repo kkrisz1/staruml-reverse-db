@@ -40,6 +40,7 @@ before_deploy:
   - export PKG_NAME=$(node -p -e "require('./package.json').name")
   - export PKG_VERSION=$(node -p -e "require('./package.json').version")
   - npm install -g mkdirp
+  - npm prune --production
   - mkdirp ./dist -m 0777
   - mkdirp ./$PKG_NAME -m 0777
   - cp *.js package.json README.md LICENSE ./$PKG_NAME

@@ -4,7 +4,7 @@ services:
   db:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: user

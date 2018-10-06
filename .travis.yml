@@ -46,6 +46,9 @@ before_deploy:
   - cp -r ./db ./erd ./keymaps ./menus ./mssql ./mysql ./node_modules ./polyfill ./postgresql ./preferences ./util ./$PKG_NAME
   - zip -r ./dist/$PKG_NAME-$PKG_VERSION.zip ./$PKG_NAME
 
+after_success:
+  - coveralls
+
 deploy:
   provider: releases
   api_key:

@@ -46,6 +46,12 @@
       "type": "string",
       "default": ""
     },
+    "db.mssql.connection.options.ssl": {
+      "text": "SSL",
+      "description": "Enable SSL",
+      "type": "check",
+      "default": false
+    },
     "db.mssql.connection.options.logging": {
       "text": "Logging",
       "description": "Logging",

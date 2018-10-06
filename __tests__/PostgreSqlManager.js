@@ -10,7 +10,8 @@ const options = {
   server: "127.0.0.1",
   options: {
     port: 5432,
-    database: "user"
+    database: "user",
+    ssl: false
   }
 };
 const testRequest = {
@@ -74,6 +75,20 @@ describe('Wrong connection options', () => {
         .rejects
         .toMatchObject({message: "database \"" + wrongOptions.options.database + "\" does not exist"});
   });
+
+  // test("SSL required database", () => {
+  //   // NOTE: Recommended that the author setup a free hosted Postgres instance for testing valid SSL connections
+  //   const wrongOptions = JSON.parse(JSON.stringify(options));
+  //   // NOTE: public testing postgresql server that has ssl enabled
+  //   wrongOptions.server = "";
+  //   wrongOptions.options.ssl = false;
+  //   const manager = new PostgreSqlManager(wrongOptions);
+
+  //   expect.assertions(1);
+  //   return expect(manager.executeSql(testRequest))
+  //     .rejects
+  //     .toMatchObject({mesesage: "no pg_hba.conf entry for host \"" + wrongOptions.server + "\", user \"" + wrongOptions.userName + "\", database \"" + wrongOptions.options.database + "\", SSL off"})
+  // })
 });
 
 

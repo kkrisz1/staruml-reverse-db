@@ -9,6 +9,15 @@ class PostgreSqlPreferences extends DbPreferences {
   constructor() {
     super("db.postgresql");
   }
+
+  /**
+   * Connection options
+   *
+   * @return {object}
+   */
+  getConnOptions() {
+    return Object.assign({options: {ssl: app.preferences.get(this.connPrefOptKeyPrefix + ".ssl")}}, super.getConnOptions());
+  }
 }
 
 module.exports = PostgreSqlPreferences;

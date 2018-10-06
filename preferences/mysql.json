@@ -46,6 +46,12 @@
       "type": "string",
       "default": "def"
     },
+    "db.mysql.connection.options.ssl": {
+      "text": "SSL",
+      "description": "Enable SSL",
+      "type": "check",
+      "default": false
+    },
     "db.mysql.connection.options.logging": {
       "text": "Logging",
       "description": "Logging",

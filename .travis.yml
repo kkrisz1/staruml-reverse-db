@@ -59,8 +59,7 @@ after_success:
 
 deploy:
   provider: releases
-  api_key:
-    secure: Ts3vSTRT+/8pc8LfK8af5zcxy4G8NvGfd7g4sQuOKiZGg1hPLHs2cMZbkWoQe7XgBSg7fZgUXEzH8yXYxAqwR9oLvxAB9LFnZyqt5tF47GEVPGpOKP2Q/QUqq+qDIWyfYLxjGi9iq8oxapgOisVOOsl1MHVJg/XkPPXmjnfr5C2q/EOPCnohQOlR3COXlyhEeO/UcAsVB7XqmpchZ5+uJBaoVL4KryeU0HoAvc6Pfd8YSDczz9xYWw7eGCbCHtQAS0AQerYe7LN5LIpz9tBQDJxyWIXQvEr4q1NGpbJZkoKHQEt4UWEmJyFSxM4jJnk0AhMwtN88f6siNf0G3HdZLdwC7A4CG1wHp0U6zrO3E48+u8GpuKwIMl/1vI4npmqrZY4+ffolxBT3OuGc+LVYuBj8/3AV8f/sb3r4r2aYoYlsk8PmZSQ/OU3cyN38m2JWtJRAhLNUn+9XYkTM9CFtY99NF3yyoL5Q2ktqvs6a/S6bcM10dwvfbPSDazCQoZ85Dv3ibyf9ZEMKClvCy6OrduVtNEDR+s4LOVIZQNJk/E+KGGGbVHe3YSrp7Be1kYdIHj+UMhfUJTDZMQXFrQuYmVcaXxEmRVaaFrv4MndE2kMtIG60H/m0YVTlP7QSfOCiuvJSy6k/Im53hcTXLV3mof+FZmAEPJ3EvSXpBnAOY2c=
+  github-token: $GITHUB_TOKEN
   on:
     repo: kkrisz1/staruml-reverse-db
     tags: true

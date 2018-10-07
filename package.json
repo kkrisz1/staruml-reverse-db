@@ -17,14 +17,17 @@
   },
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "test": "snyk test && jest --detectOpenHandles --passWithNoTests --coverage --coverageReporters=lcov",
+    "prepare": "npm run snyk-protect",
+    "test": "snyk test && npm run test-jest",
+    "test-jest": "jest --detectOpenHandles --passWithNoTests --coverage --coverageReporters=lcov",
     "preversion": "npm test",
     "version": "git add -A",
     "postversion": "git push && git push --tags",
     "release:patch": "npm version patch -m \"[release] %s\"",
     "release:minor": "npm version minor -m \"[release] %s\"",
     "release:major": "npm version major -m \"[release] %s\"",
-    "snyk-protect": "snyk protect"
+    "snyk-protect": "snyk protect",
+    "snyk-monitor": "snyk monitor"
   },
   "license": "GPLv3",
   "engines": {

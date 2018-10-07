@@ -45,6 +45,7 @@ before_install:
 before_deploy:
   - export PKG_NAME=$(node -p -e "require('./package.json').name")
   - export PKG_VERSION=$(node -p -e "require('./package.json').version")
+  - npm run snyk-protect
   - npm install -g mkdirp
   - npm prune --production
   - mkdirp ./dist -m 0777

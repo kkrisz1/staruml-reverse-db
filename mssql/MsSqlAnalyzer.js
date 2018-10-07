@@ -12,7 +12,6 @@ class MySqlAnalyzer extends DbAnalyzer {
   constructor(options, model) {
     super(options, model, new Manager(Object.assign(options, {
       options: {
-        useColumnNames: true,
         rowCollectionOnRequestCompletion: true
       }
     })));

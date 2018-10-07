@@ -1,7 +1,7 @@
 const jestAjv = require("jest-ajv");
-const schema = require("../db/schema");
+const schema = require("./schema");
 
-const PostgreSqlManager = require("../postgresql/PostgreSqlManager");
+const PostgreSqlManager = require("../../postgresql/PostgreSqlManager");
 
 const options = {
   owner: "public",

@@ -55,7 +55,7 @@ after_success:
 
 deploy:
   provider: releases
-  github-token: $GITHUB_TOKEN
+  api-key: $GITHUB_TOKEN
   on:
     repo: kkrisz1/staruml-reverse-db
     tags: true

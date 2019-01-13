@@ -4,6 +4,8 @@ CREATE DATABASE test;
 GO
 CREATE LOGIN test_user WITH PASSWORD = N'password01@', DEFAULT_DATABASE = test;
 GO
+DENY VIEW ANY DATABASE TO test_user;
+GO
 USE test;
 GO
 CREATE USER test_user FOR LOGIN test_user WITH DEFAULT_SCHEMA = test_user;

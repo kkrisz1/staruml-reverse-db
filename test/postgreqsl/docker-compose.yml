@@ -6,6 +6,8 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+    volumes:
+      - ./expecteddatamodel_table_create.sql:/docker-entrypoint-initdb.d/expecteddatamodel_table_create.sql:ro
     ports:
       - "127.0.0.1:5432:5432"
   web:

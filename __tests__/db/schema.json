@@ -79,6 +79,18 @@
               "null",
               "string"
             ]
+          },
+          "table_description": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "column_description": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       }

@@ -8,6 +8,8 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: user
+    volumes:
+      - ./expecteddatamodel_table_create.sql:/docker-entrypoint-initdb.d/expecteddatamodel_table_create.sql:ro
     ports:
       - "127.0.0.1:3306:3306"
   web:

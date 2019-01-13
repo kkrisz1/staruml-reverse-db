@@ -16,10 +16,10 @@ class ErDmBuilder {
   /**
    * Create an entity
    *
-   * @param {string} name
+   * @param {Object} element
    * @return {type.ERDEntity} entity
    */
-  createErdEntity(name) {
+  createErdEntity(element) {
     // return app.factory.createModel({
     //   id: "ERDEntity",
     //   parent: this._root,
@@ -30,7 +30,8 @@ class ErDmBuilder {
     const elem = new type.ERDEntity();
 
     elem._parent = this._root;
-    elem.name = name;
+    elem.name = element.table_name;
+    elem.documentation = element.table_description;
 
     this._root.ownedElements.push(elem);
 
@@ -72,6 +73,7 @@ class ErDmBuilder {
 
     elem._parent = namespace;
     elem.name = element.column_name;
+    elem.documentation = element.column_description;
     elem.primaryKey = Boolean(element.is_primary_key);
     elem.nullable = Boolean(element.is_nullable);
     elem.unique = !elem.primaryKey && Boolean(element.is_unique);

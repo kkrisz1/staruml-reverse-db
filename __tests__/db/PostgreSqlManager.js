@@ -104,7 +104,7 @@ describe('PostgreSQL DB content', () => {
   });
 
   test("PostgreSQL DB content", () => {
-    const sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog , "
+    const sqlStr = "SELECT col.TABLE_CATALOG AS table_catalog, "
         + "  col.TABLE_SCHEMA AS owner, "
         + "  col.TABLE_NAME AS table_name, "
         + "  col.COLUMN_NAME AS column_name, "
@@ -119,8 +119,12 @@ describe('PostgreSQL DB content', () => {
         + "  CAST(CASE WHEN fk.FK_NAME IS NULL THEN 0 ELSE 1 END AS bit) AS is_foreign_key, "
         + "  fk.FK_NAME AS foreign_key_name, "
         + "  fk.REFERENCED_TABLE_NAME AS referenced_table_name, "
-        + "  fk.REFERENCED_COLUMN_NAME AS referenced_column_name "
+        + "  fk.REFERENCED_COLUMN_NAME AS referenced_column_name, "
+        + "  obj_description(cls.oid) AS table_description, "
+        + "  col_description(cls.oid, col.ordinal_position::int) AS column_description "
         + "FROM INFORMATION_SCHEMA.COLUMNS as col "
+        + "  LEFT JOIN pg_class cls ON "
+        + "    col.table_name = cls.relname"
         + "  LEFT JOIN ( "
         + "    SELECT o.relnamespace::regnamespace::text AS TABLE_SCHEMA, "
         + "      o.relname AS TABLE_NAME, "

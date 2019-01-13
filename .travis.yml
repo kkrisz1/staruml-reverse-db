@@ -31,10 +31,6 @@ before_install:
   - sudo chmod 640 /etc/postgresql/9.6/main/pg_hba.conf
   - sudo service postgresql restart 9.6
   - docker-compose -f test/mssql/docker-compose.yml up -d db
-  - docker cp test/mssql/db_create.sql mssql_db_1:/tmp/db_create.sql
-  - docker cp test/mssql/expecteddatamodel_table_create.sql mssql_db_1:/tmp/expecteddatamodel_table_create.sql
-  - docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U sa -P password01@ -i /tmp/db_create.sql
-  - docker exec -it mssql_db_1 /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U test_user -P password01@ -i /tmp/expecteddatamodel_table_create.sql
 
 #jobs:
 #  include:

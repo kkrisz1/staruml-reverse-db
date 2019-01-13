@@ -74,7 +74,7 @@ class DbAnalyzer {
 
     const entityName = element.table_name;
     if (!self.currentEntity || self.currentEntity.name !== entityName) {
-      self.currentEntity = self.erDmBuilder.createErdEntity(entityName);
+      self.currentEntity = self.erDmBuilder.createErdEntity(element);
       // self.erDmBuilder.addErdEntity(self.currentEntity);
     }
 

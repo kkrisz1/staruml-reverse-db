@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const Request = require("../db/DbRequest");
 const RequestInput = require("../db/DbRequestInput");
 const DbAnalyzer = require("../db/DbAnalyzer");
@@ -10,7 +11,7 @@ class MySqlAnalyzer extends DbAnalyzer {
    * @constructor
    */
   constructor(options, model) {
-    super(options, model, new Manager(Object.assign(options, {
+    super(options, model, new Manager(_.merge(options, {
       options: {
         rowCollectionOnRequestCompletion: true
       }

@@ -21,7 +21,6 @@ services:
   - docker
 
 before_install:
-  - sudo mysql_upgrade
   - mysql -v -e "source test/mysql/db_create.sql"
   - mysql -v -e "source test/mysql/expecteddatamodel_table_create.sql"
   - psql -v ON_ERROR_STOP=1 --username postgres -f test/postgreqsl/db_create.sql

@@ -43,10 +43,16 @@ describe('Wrong connection options', () => {
     wrongOptions.server = "my.example.org";
     manager = new MySqlManager(wrongOptions);
 
+    // on travis-ci the server and port do not appear at the end of the error message
+    const expectedMessage = "getaddrinfo ENOTFOUND " + wrongOptions.server + "( " + wrongOptions.server + ":" + wrongOptions.options.port + ")?";
     expect.assertions(1);
     return expect(manager.executeSql(testRequest))
         .rejects
-        .toMatchObject({message: "getaddrinfo ENOTFOUND " + wrongOptions.server + " " + wrongOptions.server + ":" + wrongOptions.options.port});
+        // on travis-ci the server and port do not appear at the end of the error message
+        // .toMatchObject({message: "getaddrinfo ENOTFOUND " + wrongOptions.server + " " + wrongOptions.server + ":" + wrongOptions.options.port});
+        .toMatchObject(expect.objectContaining({
+          message: expect.stringMatching(new RegExp(expectedMessage))
+        }));
   });
 
   // test("Wrong server IP", () => {

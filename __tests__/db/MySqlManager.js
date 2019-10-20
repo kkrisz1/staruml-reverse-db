@@ -46,7 +46,7 @@ describe('Wrong connection options', () => {
     expect.assertions(1);
     return expect(manager.executeSql(testRequest))
         .rejects
-        .toMatchObject({message: "getaddrinfo ENOTFOUND " + wrongOptions.server + " " + wrongOptions.server + ":" + wrongOptions.options.port});
+        .toMatchObject({message: "getaddrinfo ENOTFOUND " + wrongOptions.server});
   });
 
   // test("Wrong server IP", () => {

@@ -18,6 +18,7 @@ addons:
 #      - mssql-tools
 
 services:
+  - mysql
   - docker
 
 before_install:

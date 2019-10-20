@@ -31,6 +31,8 @@ before_install:
 #  - sudo sed -i '/\bhost    all             all             127.0.0.1\/32            trust\b/i host    all             user            all                      md5' /etc/postgresql/9.6/main/pg_hba.conf
 #  - sudo chmod 640 /etc/postgresql/9.6/main/pg_hba.conf
 #  - sudo service postgresql restart 9.6
+  - sudo /etc/init.d/postgresql stop
+  - sudo /etc/init.d/mysql stop
   - docker-compose -f test/postgresql/docker-compose.yml up -d db
   - docker-compose -f test/mssql/docker-compose.yml up -d db
   - docker-compose -f test/mysql/docker-compose.yml up -d db

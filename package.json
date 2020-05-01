@@ -40,15 +40,15 @@
     "pg-pool": "^2.0.3",
     "tedious": "^2.6.1",
     "tedious-connection-pool": "^1.0.5",
-    "tedious-promises": "^0.4.1"
+    "tedious-promises": "^0.4.1",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
     "electron": "1.7.11",
     "jest": "^23.1.0",
     "jest-ajv": "^1.0.3",
-    "spectron": "^3.8.0",
-    "snyk": "^1.100.2"
+    "spectron": "^3.8.0"
   },
   "snyk": true
 }

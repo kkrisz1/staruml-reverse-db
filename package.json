@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
-    "electron": "1.7.11",
+    "electron": "7.2.4",
     "jest": "^23.1.0",
     "jest-ajv": "^1.0.3",
     "spectron": "^3.8.0",

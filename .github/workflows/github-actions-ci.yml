@@ -50,22 +50,20 @@ jobs:
           composeFile: test/mssql/docker-compose.yml
           composeArguments: -d
           serviceName: db
-#      - run: nc -zv -w 30 localhost 1433
       - name: Postgre SQL | Test with docker-compose
         uses: smartlyio/docker-compose-action@v1
         with:
           composeFile: test/postgresql/docker-compose.yml
           composeArguments: -d
           serviceName: db
-#      - run: nc -zv -w 30 localhost 5432 && echo "OK" || echo "FAILED"
       - name: MySQL | Test with docker-compose
         uses: smartlyio/docker-compose-action@v1
         with:
           composeFile: test/mysql/docker-compose.yml
           composeArguments: -d
           serviceName: db
-#      - run: nc -zv -w 30 localhost 3306
-      - run: sudo apt-get install -y postgresql-client
-      - run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
+      - run: nc -zv -w 30 localhost 1433
+      - run: nc -zv -w 30 localhost 5432
+      - run: nc -zv -w 30 localhost 3306
       - run: npm test
       - run: npm run coveralls

@@ -60,7 +60,7 @@ jobs:
       - run: npm test
 
   report:
-    needs: test
+    needs: build
     runs-on: ubuntu-latest
 
     steps:

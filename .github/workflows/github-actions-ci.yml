@@ -34,5 +34,9 @@ jobs:
       - run: docker-compose -f test/mssql/docker-compose.yml up -d db
       - run: docker-compose -f test/postgresql/docker-compose.yml up -d db
       - run: docker-compose -f test/mysql/docker-compose.yml up -d db
+      - run: docker-compose -f test/postgresql/docker-compose.yml logs db
       - run: npm test
+#      - run: docker-compose -f test/mssql/docker-compose.yml down
+#      - run: docker-compose -f test/postgresql/docker-compose.yml down
+#      - run: docker-compose -f test/mysql/docker-compose.yml down
       - run: npm run coveralls

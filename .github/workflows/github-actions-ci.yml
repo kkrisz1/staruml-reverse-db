@@ -8,18 +8,6 @@ on: [ push ]
 #    branches: [ $default-branch ]
 
 jobs:
-#  container-job:
-#    # Containers must run in Linux based operating systems
-#    runs-on: ubuntu-latest
-#    # Docker Hub image that `container-job` executes in
-#    container: node:16-bullseye
-#
-#    # Service containers to run with `container-job`
-#    services:
-#      # Label used to access the service container
-#      databases:
-#        # Docker Hub image
-#        image: docker:20.10.17-dind-alpine3.16
 
   build:
 

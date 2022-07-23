@@ -62,7 +62,7 @@ jobs:
         uses: potatoqualitee/mssqlsuite@v1.5.1
         with:
           install: sqlclient
-        run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
+      - run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
       - run: npm test
       - name: Cache coverage
         uses: actions/cache@v3

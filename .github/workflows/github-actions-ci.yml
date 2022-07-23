@@ -54,7 +54,7 @@ jobs:
       # temp solution
       - run: sleep 120
       - name: Check PostgreSQL
-        uses: akanieski/setup-postgres-cli@v1
+        uses: akanieski/setup-postgres-cli@v0.1.2
         with:
           password: password01@
           command: psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'

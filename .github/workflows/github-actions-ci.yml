@@ -30,4 +30,6 @@ jobs:
       - run: npm test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=critical
       - run: npm run coveralls

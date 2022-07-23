@@ -8,6 +8,19 @@ on: [ push ]
 #    branches: [ $default-branch ]
 
 jobs:
+#  container-job:
+#    # Containers must run in Linux based operating systems
+#    runs-on: ubuntu-latest
+#    # Docker Hub image that `container-job` executes in
+#    container: node:16-bullseye
+#
+#    # Service containers to run with `container-job`
+#    services:
+#      # Label used to access the service container
+#      databases:
+#        # Docker Hub image
+#        image: docker:20.10.17-dind-alpine3.16
+
   build:
 
     runs-on: ubuntu-latest
@@ -31,14 +44,14 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build --if-present
-      - run: docker-compose -p mssql -f test/mssql/docker-compose.yml up -d db
-      - run: nc -zv -w 30 localhost 1433
+#      - run: docker-compose -p mssql -f test/mssql/docker-compose.yml up -d db
+#      - run: nc -zv -w 30 localhost 1433
       - run: docker-compose -p postgresql -f test/postgresql/docker-compose.yml up -d db
       - run: nc -zv -w 30 localhost 5432
-      - run: docker-compose -p mysql -f test/mysql/docker-compose.yml up -d db
-      - run: nc -zv -w 30 localhost 3306
-      - run: docker-compose -p postgresql -f test/postgresql/docker-compose.yml logs db
-      - run: sleep 60 && nc -zv -w 30 localhost 1433 && nc -zv -w 30 localhost 5432 && nc -zv -w 30 localhost 3306 && npm test
+#      - run: docker-compose -p mysql -f test/mysql/docker-compose.yml up -d db
+#      - run: nc -zv -w 30 localhost 3306
+#      - run: sleep 60 && nc -zv -w 30 localhost 1433 && nc -zv -w 30 localhost 5432 && nc -zv -w 30 localhost 3306 && npm test
+      - run: sleep 120 && nc -zv -w 30 localhost 5432 && npm test
 #      - run: docker-compose -f test/mssql/docker-compose.yml down
 #      - run: docker-compose -f test/postgresql/docker-compose.yml down
 #      - run: docker-compose -f test/mysql/docker-compose.yml down

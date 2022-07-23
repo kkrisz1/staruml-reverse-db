@@ -23,7 +23,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high
+          args: --severity-threshold=critical
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:

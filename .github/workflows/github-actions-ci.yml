@@ -34,6 +34,7 @@ jobs:
       - run: docker-compose -f test/mssql/docker-compose.yml up -d db
       - run: docker-compose -f test/postgresql/docker-compose.yml up -d db
       - run: docker-compose -f test/mysql/docker-compose.yml up -d db
+      - run: nc -zv -w 30 localhost 5432
       - run: docker-compose -f test/postgresql/docker-compose.yml logs db
       - run: npm test
 #      - run: docker-compose -f test/mssql/docker-compose.yml down

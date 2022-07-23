@@ -16,7 +16,7 @@
     "url": "https://github.com/kkrisz1"
   },
   "scripts": {
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "coveralls": "make test-coverage",
     "prepare": "npm run snyk-protect",
     "test": "npm run test-jest",
     "test-jest": "jest --detectOpenHandles --forceExit --passWithNoTests --coverage --coverageReporters=lcov",

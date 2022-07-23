@@ -56,7 +56,6 @@ jobs:
       # temp solution
       - run: sleep 120
       - run: npm test
-#      - run: npm run coveralls
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:

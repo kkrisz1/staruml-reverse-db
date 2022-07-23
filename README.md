@@ -13,13 +13,13 @@ This extension for [StarUML](http://staruml.io) support to generate ER Data Mode
 **Supported databases**
 
 <a href="https://www.microsoft.com/sql-server/" title="SQL Server">
-  <img src="http://logo-load.com/uploads/posts/2016-08/sql-server-logo.png" width="100" />
+  <img src="./ms-sql.svg" width="100"/>
 </a>
 <a href="https://www.postgresql.org/" title="PostgreSQL">
-  <img src="http://logo-load.com/uploads/posts/2016-08/postgresql-logo.png" width="100" />
+  <img src="./postgre-sql.svg" width="100"/>
 </a>
 <a href="https://www.mysql.com/" title="MySQL">
-  <img src="http://logo-load.com/uploads/posts/2016-02/1455471347_logo-mysql.png" width="100" />
+  <img src="./mysql.svg" width="100"/>
 </a>
 
 

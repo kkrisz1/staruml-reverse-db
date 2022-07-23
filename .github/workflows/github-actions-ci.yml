@@ -33,11 +33,7 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
 
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
+      ## test ##
       - name: Run MS SQL
         uses: smartlyio/docker-compose-action@v1
         with:
@@ -63,7 +59,7 @@ jobs:
       - run: sleep 120
       - run: npm test
 
-  analyze:
+  report:
     needs: test
     runs-on: ubuntu-latest
 

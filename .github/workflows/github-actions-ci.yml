@@ -42,8 +42,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm ci
-      - run: npm run build --if-present
       - name: MS SQL | Test with docker-compose
         uses: smartlyio/docker-compose-action@v1
         with:
@@ -65,5 +63,7 @@ jobs:
       - run: nc -zv -w 30 localhost 1433
       - run: nc -zv -w 30 localhost 5432
       - run: nc -zv -w 30 localhost 3306
+      - run: npm ci
+      - run: npm run build --if-present
       - run: npm test
       - run: npm run coveralls

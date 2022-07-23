@@ -19,7 +19,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "prepare": "npm run snyk-protect",
     "test": "npm run test-jest",
-    "test-jest": "jest --detectOpenHandles --passWithNoTests --coverage --coverageReporters=lcov",
+    "test-jest": "jest --detectOpenHandles --forceExit --passWithNoTests --coverage --coverageReporters=lcov",
     "preversion": "npm test",
     "version": "git add -A",
     "postversion": "git push && git push --tags",

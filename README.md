@@ -1,6 +1,7 @@
 # ERD Generation Extension for StarUML v3
 
 [![Build Status](https://travis-ci.org/kkrisz1/staruml-reverse-db.svg?branch=master)](https://travis-ci.org/kkrisz1/staruml-reverse-db?branch=master)
+[![Build Status - GithubActions](https://github.com/kkrisz1/staruml-reverse-db/actions/workflows/github-actions-ci.yml/badge.svg)](https://github.com/kkrisz1/staruml-reverse-db/actions/workflows/github-actions-ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/kkrisz1/staruml-reverse-db/badge.svg?branch=master)](https://coveralls.io/github/kkrisz1/staruml-reverse-db?branch=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/kkrisz1/staruml-reverse-db/badge.svg?branch=master)](https://snyk.io/test/github/kkrisz1/staruml-reverse-db?branch=master)
 

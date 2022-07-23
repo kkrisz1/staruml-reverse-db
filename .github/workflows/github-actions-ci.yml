@@ -1,4 +1,4 @@
-name: '[CI] ERD Generation Extension for StarUML v3'
+name: 'github-actions-build'
 
 on: [ push ]
 #on:

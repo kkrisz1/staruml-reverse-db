@@ -56,7 +56,7 @@ jobs:
       - name: Install sqlclient
         uses: potatoqualitee/mssqlsuite@v1.5.1
         with:
-          install: sqlpackage
+          install: sqlclient
       - name: Run sqlclient
         run: sqlcmd -S localhost -U test_user -P password01@ -d user -Q "SELECT @@version;"
       - run: npm test

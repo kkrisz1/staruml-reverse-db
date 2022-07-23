@@ -58,7 +58,7 @@ jobs:
         with:
           install: sqlclient
       - name: Run sqlclient
-        run: sqlcmd -S localhost -U test_user -P password01@ -d user -Q "SELECT @@version;"
+        run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
       - run: npm test
       - name: Cache coverage
         uses: actions/cache@v3

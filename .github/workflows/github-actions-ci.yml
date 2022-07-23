@@ -54,6 +54,7 @@ jobs:
         uses: smartlyio/docker-compose-action@v1
         with:
           composeFile: test/postgresql/docker-compose.yml
+          composeArguments: -d
           serviceName: db
       - run: nc -zv -w 30 localhost 5432
 #      - name: MySQL | Test with docker-compose

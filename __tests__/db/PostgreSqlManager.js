@@ -20,10 +20,6 @@ const testRequest = {
   inputs: []
 };
 
-beforeEach(function () {
-  jest.setTimeout(30000) // ms
-});
-
 describe('Wrong connection options', () => {
   test("Wrong password", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));

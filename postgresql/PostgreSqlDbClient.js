@@ -1,6 +1,6 @@
 const DbClient = require("../db/DbClient");
 
-const ConnectionPool = require('pg-pool');
+const Pool = require('pg');
 const types = require('pg').types;
 const BIT_OID = 1560;
 
@@ -15,7 +15,7 @@ class PostgreSqlDbClient extends DbClient {
 
   _cmdExecStmnt(requestId, sqlStr, inputParams) {
     if (!this.pool) {
-      this.pool = new ConnectionPool(Object.assign(this.options, this.poolConfig));
+      this.pool = new Pool(Object.assign(this.options, this.poolConfig));
       types.setTypeParser(BIT_OID, val => parseInt(val));
     }
 

@@ -6,12 +6,13 @@ services:
     environment:
       ACCEPT_EULA: Y
       SA_PASSWORD: password01@
-      DATABASE: test_user
+      USERNAME: test_user
+      MSSQL_PID: Express
     command: >
       /bin/bash -c '
       /opt/mssql/bin/sqlservr &
       /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U sa -P $${SA_PASSWORD} -i /tmp/db_create.sql &&
-      /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U $${DATABASE} -P $${SA_PASSWORD} -i /tmp/expecteddatamodel_table_create.sql;
+      /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U $${USERNAME} -P $${SA_PASSWORD} -i /tmp/expecteddatamodel_table_create.sql;
       wait;'
     volumes:
       - ./db_create.sql:/tmp/db_create.sql

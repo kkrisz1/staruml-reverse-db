@@ -18,7 +18,7 @@
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "prepare": "npm run snyk-protect",
-    "test": "snyk test && npm run test-jest",
+    "test": "npm run test-jest",
     "test-jest": "jest --detectOpenHandles --passWithNoTests --coverage --coverageReporters=lcov",
     "preversion": "npm test",
     "version": "git add -A",

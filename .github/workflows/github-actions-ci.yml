@@ -30,6 +30,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Run MS SQL
         uses: smartlyio/docker-compose-action@v1
         with:
@@ -51,11 +59,15 @@ jobs:
       - run: nc -zv -w 30 localhost 1433
       - run: nc -zv -w 30 localhost 5432
       - run: nc -zv -w 30 localhost 3306
-      - run: npm ci
-      - run: npm run build --if-present
       # temp solution
       - run: sleep 120
       - run: npm test
+
+  analyze:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:

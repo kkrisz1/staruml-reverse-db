@@ -91,4 +91,3 @@ Belows are the rules to convert from database schema to ER Data Model elements.
     * identifying: `boolean`
     * cardinality: `string`
     * reference: `type.ERDColumn`
-

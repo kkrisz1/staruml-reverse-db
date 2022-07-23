@@ -53,8 +53,8 @@ jobs:
       - run: nc -zv -w 30 localhost 3306
       # temp solution
       - run: sleep 120
-      - uses: Check PostgreSQL
-      - uses: akanieski/setup-postgres-cli@v1
+      - name: Check PostgreSQL
+        uses: akanieski/setup-postgres-cli@v1
         with:
           password: password01@
           command: psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'

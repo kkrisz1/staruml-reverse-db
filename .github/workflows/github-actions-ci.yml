@@ -56,7 +56,7 @@ jobs:
           composeFile: test/postgresql/docker-compose.yml
           composeArguments: -d
           serviceName: db
-      - run: nc -zv -w 30 localhost 5432
+      - run: nc -zv -w 30 localhost 5432 && echo "OK" || echo "FAILED"
 #      - name: MySQL | Test with docker-compose
 #        uses: smartlyio/docker-compose-action@v1
 #        with:
@@ -68,5 +68,5 @@ jobs:
 #      - run: docker-compose -p mysql -f test/mysql/docker-compose.yml up -d db
 #      - run: nc -zv -w 30 localhost 3306
 #      - run: nc -zv -w 30 localhost 1433 && nc -zv -w 30 localhost 5432 && nc -zv -w 30 localhost 3306 && npm test
-      - run: nc -zv -w 30 localhost 5432 && npm test
+      - run: nc -zv -w 30 localhost 5432; npm test
       - run: npm run coveralls

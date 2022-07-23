@@ -46,7 +46,7 @@ jobs:
       - run: npm run build --if-present
 #      - run: docker-compose -p mssql -f test/mssql/docker-compose.yml up -d db
 #      - run: nc -zv -w 30 localhost 1433
-      - run: docker-compose -p postgresql -f test/postgresql/docker-compose.yml up -d db &
+      - run: docker-compose -p postgresql -f test/postgresql/docker-compose.yml up -d db
       - run: nc -zv -w 30 localhost 5432
 #      - run: docker-compose -p mysql -f test/mysql/docker-compose.yml up -d db
 #      - run: nc -zv -w 30 localhost 3306

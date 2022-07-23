@@ -64,6 +64,7 @@ jobs:
 #          serviceName: db
 #      - run: nc -zv -w 30 localhost 3306
       - run: sudo apt-get install -y postgresql-client
+      - run: sleep 60
       - run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
 #      - run: docker-compose -p mysql -f test/mysql/docker-compose.yml up -d db
 #      - run: nc -zv -w 30 localhost 3306

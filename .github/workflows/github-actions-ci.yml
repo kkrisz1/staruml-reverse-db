@@ -53,11 +53,9 @@ jobs:
       - run: nc -zv -w 30 localhost 3306
       # temp solution
       - run: sleep 120
+      - run: sudo apt-get install -y postgresql-client
       - name: Check PostgreSQL
-        uses: akanieski/setup-postgres-cli@v0.1.2
-        with:
-          password: password01@
-          command: psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
+        run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
       - name: Install sqlclient
         uses: potatoqualitee/mssqlsuite@v1.5.1
         with:

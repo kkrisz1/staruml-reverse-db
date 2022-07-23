@@ -42,19 +42,19 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: MS SQL | Test with docker-compose
+      - name: Run MS SQL
         uses: smartlyio/docker-compose-action@v1
         with:
           composeFile: test/mssql/docker-compose.yml
           composeArguments: -d
           serviceName: db
-      - name: Postgre SQL | Test with docker-compose
+      - name: Run Postgre SQL
         uses: smartlyio/docker-compose-action@v1
         with:
           composeFile: test/postgresql/docker-compose.yml
           composeArguments: -d
           serviceName: db
-      - name: MySQL | Test with docker-compose
+      - name: Run MySQL
         uses: smartlyio/docker-compose-action@v1
         with:
           composeFile: test/mysql/docker-compose.yml

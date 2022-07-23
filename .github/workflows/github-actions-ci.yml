@@ -53,16 +53,17 @@ jobs:
       - run: nc -zv -w 30 localhost 3306
       # temp solution
       - run: sleep 120
-#      - name: Check PostgreSQL
-#        uses: akanieski/setup-postgres-cli@v1
-#        with:
-#          password: password01@
-#          command: psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
-      - name: Check MSSQL
+      - name: Check PostgreSQL
+        uses: akanieski/setup-postgres-cli@v1
+        with:
+          password: password01@
+          command: psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
+      - name: Install sqlclient
         uses: potatoqualitee/mssqlsuite@v1.5.1
         with:
           install: sqlclient
-      - run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
+      - name: Check MSSQL
+        run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
       - run: npm test
       - name: Cache coverage
         uses: actions/cache@v3

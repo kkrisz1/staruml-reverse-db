@@ -58,6 +58,11 @@ jobs:
       # temp solution
       - run: sleep 120
       - run: npm test
+      - name: Cache coverage
+        uses: actions/cache@v3
+        with:
+          path: coverage
+          key: coverage-report
 
   report:
     needs: build

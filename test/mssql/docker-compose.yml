@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   db:
-    image: microsoft/mssql-server-linux:2017-CU7
+    image: mcr.microsoft.com/mssql/server:2017-CU7-ubuntu
     environment:
       ACCEPT_EULA: Y
       SA_PASSWORD: password01@

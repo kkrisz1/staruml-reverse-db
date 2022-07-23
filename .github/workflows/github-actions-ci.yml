@@ -48,6 +48,7 @@ jobs:
         uses: smartlyio/docker-compose-action@v1
         with:
           composeFile: test/mssql/docker-compose.yml
+          composeArguments: -d
           serviceName: db
 #      - run: nc -zv -w 30 localhost 1433
       - name: Postgre SQL | Test with docker-compose
@@ -61,6 +62,7 @@ jobs:
         uses: smartlyio/docker-compose-action@v1
         with:
           composeFile: test/mysql/docker-compose.yml
+          composeArguments: -d
           serviceName: db
 #      - run: nc -zv -w 30 localhost 3306
       - run: sudo apt-get install -y postgresql-client

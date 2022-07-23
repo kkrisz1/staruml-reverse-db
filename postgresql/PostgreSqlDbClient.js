@@ -1,6 +1,6 @@
 const DbClient = require("../db/DbClient");
 
-const Pool = require('pg');
+const { Pool } = require('pg');
 const types = require('pg').types;
 const BIT_OID = 1560;
 

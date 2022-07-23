@@ -65,6 +65,8 @@ jobs:
       - run: nc -zv -w 30 localhost 3306
       - run: npm ci
       - run: npm run build --if-present
+      # temp solution
+      - run: sleep 60
       - run: npm test
       - run: npm run coveralls
       - name: Coveralls

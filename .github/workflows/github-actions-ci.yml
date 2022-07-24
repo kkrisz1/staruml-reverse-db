@@ -51,8 +51,7 @@ jobs:
       - run: nc -zv -w 30 localhost 1433
       - run: nc -zv -w 30 localhost 5432
       - run: nc -zv -w 30 localhost 3306
-      # temp solution
-      - run: sleep 120
+#      - run: sleep 120
 #      - run: sudo apt-get install -y postgresql-client
 #      - name: Check PostgreSQL
 #        run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'

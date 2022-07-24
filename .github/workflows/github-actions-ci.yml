@@ -53,11 +53,11 @@ jobs:
       - run: nc -zv -w 30 localhost 3306
       # temp solution
       - run: sleep 120
-      - run: sudo apt-get install -y postgresql-client
-      - name: Check PostgreSQL
-        run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
-      - name: Check MSSQL
-        run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
+#      - run: sudo apt-get install -y postgresql-client
+#      - name: Check PostgreSQL
+#        run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
+#      - name: Check MSSQL
+#        run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
       - run: npm test
 #      - name: Cache coverage
 #        uses: actions/cache@v3

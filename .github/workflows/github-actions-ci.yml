@@ -59,17 +59,17 @@ jobs:
       - name: Check MSSQL
         run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
       - run: npm test
-      - name: Cache coverage
-        uses: actions/cache@v3
-        with:
-          path: coverage
-          key: coverage-report
-
-  report:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
+#      - name: Cache coverage
+#        uses: actions/cache@v3
+#        with:
+#          path: coverage
+#          key: coverage-report
+#
+#  report:
+#    needs: build
+#    runs-on: ubuntu-latest
+#
+#    steps:
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:

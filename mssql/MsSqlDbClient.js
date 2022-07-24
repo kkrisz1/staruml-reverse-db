@@ -20,13 +20,20 @@ class MsSqlDbClient extends DbClient {
                 }
                 const request = pool.request();
                 inputs.forEach(input => {
-                    request.input(input.name, this.getTediousType(input.type), input.value);
+                    request.input(input.name, this.getSqlType(input.type), input.value);
                 });
-                return request
-                    .query(sqlStr.toString());
+                return request.query(sqlStr.toString());
             })
             .then(result => {
-                return {rowCount: result.recordset.length, rows: result.recordset}
+                return {
+                    rowCount: result.recordset.length,
+                    rows: result.recordset,
+                }
+            })
+            .catch(error => {
+                throw {
+                    message: error.message,
+                };
             });
     }
 
@@ -36,7 +43,7 @@ class MsSqlDbClient extends DbClient {
             .then(() => this.pool = null);
     }
 
-    getTediousType(type) {
+    getSqlType(type) {
         switch (type) {
             case 'varchar':
                 return TYPES.NVarChar;

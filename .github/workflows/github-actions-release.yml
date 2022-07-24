@@ -41,14 +41,14 @@ jobs:
       - run: npm install -g mkdirp
       - run: npm prune --production
       - run: mkdirp ./dist --mode=0777
-      - run: echo "$PKG_NAME-$PKG_VERSION"; mkdirp ./$PKG_NAME --mode=0777
-      - run: cp *.js package.json README.md LICENSE ./$PKG_NAME
-      - run: cp -r ./db ./erd ./keymaps ./menus ./mssql ./mysql ./node_modules ./polyfill ./postgresql ./preferences ./util ./$PKG_NAME
-      - run: zip -r ./dist/$PKG_NAME-$PKG_VERSION.zip ./$PKG_NAME
+      - run: echo "${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}"; mkdirp ./${{ env.PKG_NAME }} --mode=0777
+      - run: cp *.js package.json README.md LICENSE ./${{ env.PKG_NAME }}
+      - run: cp -r ./db ./erd ./keymaps ./menus ./mssql ./mysql ./node_modules ./polyfill ./postgresql ./preferences ./util ./${{ env.PKG_NAME }}
+      - run: zip -r ./dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip ./${{ env.PKG_NAME }}
       - id: set-output
         run: |
-          echo "::set-output name=asset-path::$(echo \"./dist/$PKG_NAME-$PKG_VERSION.zip\")"
-          echo "::set-output name=asset-name::$(echo \"$PKG_NAME-$PKG_VERSION.zip\")"
+          echo "::set-output name=asset-path::$(echo \"./dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip\")"
+          echo "::set-output name=asset-name::$(echo \"${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip\")"
 #      - name: Release-package as artifact
 #        uses: actions/upload-artifact@v2
 #        with:

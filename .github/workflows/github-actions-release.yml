@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      upload_url: ${{ steps.create-release.outputs.upload_url }}
       asset-path: ${{ steps.set-output.outputs.asset-path }}
       asset-name: ${{ steps.set-output.outputs.asset-name }}
     steps:
@@ -79,7 +78,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.prepare-release.outputs.upload_url }}
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
           asset_path: ${{ needs.prepare-release.outputs.asset-path }}
           asset_name: ${{ needs.prepare-release.outputs.asset-name }}
           asset_content_type: application/zip

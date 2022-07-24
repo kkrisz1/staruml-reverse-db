@@ -31,12 +31,11 @@ jobs:
 
       ## test ##
       - name: Run MS SQL
-#        uses: smartlyio/docker-compose-action@v1
-#        with:
-#          composeFile: test/mssql/docker-compose.yml
-#          composeArguments: -d
-#          serviceName: db
-        run: docker-compose -p mssql -f test/mssql/docker-compose.yml up -d db
+        uses: smartlyio/docker-compose-action@v1
+        with:
+          composeFile: test/mssql/docker-compose.yml
+          composeArguments: -d
+          serviceName: db
       - name: Run Postgre SQL
         uses: smartlyio/docker-compose-action@v1
         with:
@@ -59,9 +58,6 @@ jobs:
         run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
       - name: Check MSSQL
         run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
-        continue-on-error: true
-      - name: Log MS SQL
-        run: docker-compose -p mssql -f test/mssql/docker-compose.yml logs db
       - run: npm test
       - name: Cache coverage
         uses: actions/cache@v3

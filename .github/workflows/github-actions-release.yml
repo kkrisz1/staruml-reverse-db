@@ -30,7 +30,7 @@ jobs:
       - id: set-package-name
         run: export PKG_NAME=$(node -p -e "require('./package.json').name")
       - id: set-package-version
-      - run: export PKG_VERSION=$(node -p -e "require('./package.json').version")
+        run: export PKG_VERSION=$(node -p -e "require('./package.json').version")
       - run: npm install -g mkdirp
       - run: npm prune --production
       - run: mkdirp ./dist -m 0777

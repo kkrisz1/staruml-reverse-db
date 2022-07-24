@@ -7,7 +7,7 @@ services:
       ACCEPT_EULA: Y
       SA_PASSWORD: password01@
       USERNAME: test_user
-      MSSQL_PID: Express
+      MSSQL_PID: Developer
     command: >
       /bin/bash -c '
       /opt/mssql/bin/sqlservr &

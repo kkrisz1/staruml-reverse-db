@@ -74,7 +74,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
-          path: coverage/
+          path: coverage
 
   report:
     needs: build
@@ -85,6 +85,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: coverage-report
+          working-directory: coverage
       - run: ls -la
       - name: Coveralls
         uses: coverallsapp/github-action@master

@@ -31,11 +31,12 @@ jobs:
 
       ## test ##
       - name: Run MS SQL
-        uses: smartlyio/docker-compose-action@v1
-        with:
-          composeFile: test/mssql/docker-compose.yml
-          composeArguments: -d
-          serviceName: db
+#        uses: smartlyio/docker-compose-action@v1
+#        with:
+#          composeFile: test/mssql/docker-compose.yml
+#          composeArguments: -d
+#          serviceName: db
+        run: docker-compose -p mssql -f test/mssql/docker-compose.yml up -d db
       - name: Run Postgre SQL
         uses: smartlyio/docker-compose-action@v1
         with:
@@ -43,12 +44,11 @@ jobs:
           composeArguments: -d
           serviceName: db
       - name: Run MySQL
-#        uses: smartlyio/docker-compose-action@v1
-#        with:
-#          composeFile: test/mysql/docker-compose.yml
-#          composeArguments: -d
-#          serviceName: db
-        run: docker-compose -p mssql -f test/mssql/docker-compose.yml up -d db
+        uses: smartlyio/docker-compose-action@v1
+        with:
+          composeFile: test/mysql/docker-compose.yml
+          composeArguments: -d
+          serviceName: db
       - run: nc -zv -w 30 localhost 1433
       - run: nc -zv -w 30 localhost 5432
       - run: nc -zv -w 30 localhost 3306

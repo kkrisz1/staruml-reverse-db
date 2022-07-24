@@ -29,12 +29,12 @@ jobs:
           cache: 'npm'
       - id: set-package-name
         run: |
-          echo "PKG_NAME=$(node -p -e \"require('./package.json').name\")" >> $GITHUB_ENV
-          echo "::set-output name=PKG_NAME::$(node -p -e \"require('./package.json').name\")"
+          echo PKG_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV
+          echo ::set-output name=PKG_NAME::$(node -p -e "require('./package.json').name")
       - id: set-package-version
         run: |
-          echo "PKG_VERSION=$(node -p -e \"require('./package.json').version\")" >> $GITHUB_ENV
-          echo "::set-output name=PKG_VERSION::$(node -p -e \"require('./package.json').version\")"
+          echo PKG_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV
+          echo ::set-output name=PKG_VERSION::$(node -p -e "require('./package.json').version")
       - run: npm install -g mkdirp
       - run: npm prune --production
       - run: mkdirp ./dist --mode=0777

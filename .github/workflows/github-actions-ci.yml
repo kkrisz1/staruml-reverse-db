@@ -56,12 +56,6 @@ jobs:
       - run: sudo apt-get install -y postgresql-client
       - name: Check PostgreSQL
         run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
-      - name: Install sqlclient
-        run: |
-          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-          curl "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list" | sudo tee /etc/apt/sources.list.d/msprod.list
-          sudo apt-get update
-          sudo apt-get install mssql-tools unixodbc-dev
       - name: Check MSSQL
         run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
       - run: npm test

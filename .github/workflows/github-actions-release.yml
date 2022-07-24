@@ -1,0 +1,78 @@
+name: 'github-actions-release'
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+
+    outputs:
+      asset-path: ${{ steps.set-output.outputs.asset-path }}
+      asset-name: ${{ steps.set-output.outputs.asset-name }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        env:
+          cache-name: node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - id: set-package-name
+        run: export PKG_NAME=$(node -p -e "require('./package.json').name")
+      - id: set-package-version
+      - run: export PKG_VERSION=$(node -p -e "require('./package.json').version")
+      - run: npm install -g mkdirp
+      - run: npm prune --production
+      - run: mkdirp ./dist -m 0777
+      - run: mkdirp ./$PKG_NAME -m 0777
+      - run: cp *.js package.json README.md LICENSE ./$PKG_NAME
+      - run: cp -r ./db ./erd ./keymaps ./menus ./mssql ./mysql ./node_modules ./polyfill ./postgresql ./preferences ./util ./$PKG_NAME
+      - run: zip -r ./dist/$PKG_NAME-$PKG_VERSION.zip ./$PKG_NAME
+      - id: set-output
+        run: |
+          echo "::set-output name=asset-path::$(echo \"./dist/$PKG_NAME-$PKG_VERSION.zip\")"
+          echo "::set-output name=asset-name::$(echo \"$PKG_NAME-$PKG_VERSION.zip\")"
+#      - name: Release-package as artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: release-package
+#          path: ${{ needs.prepare-release.outputs.pkg-name }}
+#
+#  release:
+#    needs: prepare-release
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Download release-package
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: release-package
+#          path: ${{ needs.prepare-release.outputs.package }}
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+          prerelease: false
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ${{ steps.set-output.outputs.asset-path }}
+          asset_name: ${{ steps.set-output.outputs.asset-name }}
+          asset_content_type: application/zip

@@ -46,13 +46,13 @@ jobs:
       - run: ls -la dist/
       - id: set-output
         run: |
-          echo "::set-output name=asset-path::$(echo \"./dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip\")"
+          echo "::set-output name=asset-path::$(echo ./dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip)"
           echo "::set-output name=asset-name::$(echo ${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip)"
       - name: Release-package as artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.set-output.outputs.asset-name }}
-          path: dist
+          path: ${{ steps.set-output.outputs.asset-path }}
 
   release:
     needs: prepare-release
@@ -63,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ${{ needs.prepare-release.outputs.asset-name }}
-          path: dist
+          path: ${{ needs.prepare-release.outputs.asset-path }}
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1

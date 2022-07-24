@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
+      upload_url: ${{ steps.create-release.outputs.upload_url }}
       asset-path: ${{ steps.set-output.outputs.asset-path }}
       asset-name: ${{ steps.set-output.outputs.asset-name }}
     steps:
@@ -46,24 +47,24 @@ jobs:
       - run: ls -la dist/
       - id: set-output
         run: |
-          echo "::set-output name=asset-path::$(echo \"dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip\")"
+          echo "::set-output name=asset-path::$(echo \"./dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip\")"
           echo "::set-output name=asset-name::$(echo \"${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip\")"
-#      - name: Release-package as artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: release-package
-#          path: ${{ needs.prepare-release.outputs.pkg-name }}
-#
-#  release:
-#    needs: prepare-release
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Download release-package
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: release-package
-#          path: ${{ needs.prepare-release.outputs.package }}
+      - name: Release-package as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.set-output.outputs.asset-name }}
+          path: dist
+
+  release:
+    needs: prepare-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download release-package
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.prepare-release.outputs.asset-name }}
+          path: dist
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1
@@ -74,11 +75,11 @@ jobs:
           release_name: ${{ github.ref }}
           draft: true
           prerelease: false
-      - uses: actions/upload-release-asset@v1.0.1
+      - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ${{ steps.set-output.outputs.asset-path }}
-          asset_name: ${{ steps.set-output.outputs.asset-name }}
+          upload_url: ${{ needs.prepare-release.outputs.upload_url }}
+          asset_path: ${{ needs.prepare-release.outputs.asset-path }}
+          asset_name: ${{ needs.prepare-release.outputs.asset-name }}
           asset_content_type: application/zip

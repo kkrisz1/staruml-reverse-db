@@ -58,6 +58,7 @@ jobs:
         run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
       - name: Check MSSQL
         run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
+        continue-on-error: true
       - name: Log MS SQL
         uses: smartlyio/docker-compose-action@v1
         with:

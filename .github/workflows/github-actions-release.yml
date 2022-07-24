@@ -12,9 +12,6 @@ jobs:
     outputs:
       asset-path: ${{ steps.set-output.outputs.asset-path }}
       asset-name: ${{ steps.set-output.outputs.asset-name }}
-    env:
-      PKG_NAME: ${{ steps.set-package-name.outputs.PKG_NAME }}
-      PKG_VERSION: ${{ steps.set-package-version.outputs.PKG_VERSION }}
     steps:
       - uses: actions/checkout@v3
       - name: Cache node modules

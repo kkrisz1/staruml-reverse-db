@@ -53,7 +53,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       - name: Run MS SQL
         uses: smartlyio/docker-compose-action@v1
         with:

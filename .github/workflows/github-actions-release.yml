@@ -33,8 +33,8 @@ jobs:
         run: export PKG_VERSION=$(node -p -e "require('./package.json').version")
       - run: npm install -g mkdirp
       - run: npm prune --production
-      - run: mkdirp ./dist -m 0o777
-      - run: mkdirp ./$PKG_NAME -m 0o777
+      - run: mkdirp ./dist --mode=0777
+      - run: mkdirp ./$PKG_NAME --mode=0777
       - run: cp *.js package.json README.md LICENSE ./$PKG_NAME
       - run: cp -r ./db ./erd ./keymaps ./menus ./mssql ./mysql ./node_modules ./polyfill ./postgresql ./preferences ./util ./$PKG_NAME
       - run: zip -r ./dist/$PKG_NAME-$PKG_VERSION.zip ./$PKG_NAME

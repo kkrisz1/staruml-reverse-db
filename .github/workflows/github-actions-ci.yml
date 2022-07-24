@@ -102,15 +102,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Download Coverage report
+        id: download-coverage-report
         uses: actions/download-artifact@v2
         with:
           name: coverage-report
-          path: coverage
       - run: ls -la
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ${{ steps.download-coverage-report.outputs.download-path }}/lcov.info
 
   verify:
     runs-on: ubuntu-latest

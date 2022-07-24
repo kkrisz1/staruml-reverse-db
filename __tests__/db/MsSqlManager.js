@@ -114,6 +114,22 @@ describe('Wrong connection options', () => {
             .rejects
             .toMatchObject({message: "Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - Could not connect (sequence)"});
     });
+
+    test("Not trust server certificate", () => {
+        const wrongOptions = JSON.parse(JSON.stringify(options));
+        wrongOptions.options.trustServerCertificate = false;
+        const request = {
+            id: "1",
+            sql: "SELECT 1",
+            inputs: []
+        };
+        manager = new MsSqlManager(wrongOptions);
+
+        expect.assertions(1);
+        return expect(manager.executeSql(request))
+            .rejects
+            .toMatchObject({message: "Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - self signed certificate"});
+    });
 });
 
 

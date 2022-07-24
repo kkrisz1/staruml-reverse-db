@@ -1,7 +1,7 @@
 {
   "name": "kkrisz1.staruml-reverse-db",
   "title": "Entity Relationship DataModel Generation",
-  "description": "ERD Generation Extension for StarUML v3",
+  "description": "ERD Generation Extension for StarUML v5",
   "homepage": "https://github.com/kkrisz1/staruml-reverse-db",
   "issues": "https://github.com/kkrisz1/staruml-reverse-db/issues",
   "keywords": [
@@ -31,7 +31,7 @@
   },
   "license": "GPLv3",
   "engines": {
-    "staruml": ">=3.0.0"
+    "staruml": ">=5.0.0"
   },
   "dependencies": {
     "lodash": "4.17.15",

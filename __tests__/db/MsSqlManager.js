@@ -11,8 +11,9 @@ const options = {
   options: {
     port: 1433,
     database: "test",
-    rowCollectionOnRequestCompletion: true
-  }
+    rowCollectionOnRequestCompletion: true,
+    trustServerCertificate: true,
+  },
 };
 
 describe('Wrong connection options', () => {

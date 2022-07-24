@@ -35,11 +35,9 @@
   },
   "dependencies": {
     "lodash": "4.17.15",
+    "mssql": "^8.1.2",
     "mysql2": "^1.5.3",
-    "pg": "^8.7.3",
-    "tedious": "^2.6.1",
-    "tedious-connection-pool": "^1.0.5",
-    "tedious-promises": "^0.4.1"
+    "pg": "^8.7.3"
   },
   "devDependencies": {
     "coveralls": "^3.1.1",

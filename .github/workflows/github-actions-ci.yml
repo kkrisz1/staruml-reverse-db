@@ -3,9 +3,11 @@ name: 'github-actions-ci'
 #on: [ push ]
 on:
   push:
-    branches: [ $default-branch ]
+    branches:
+      - master
   pull_request:
-    branches: [ $default-branch ]
+    branches:
+      - master
 
 jobs:
 
@@ -22,7 +24,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'false' }}
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit }} == 'false'
         run: npm ci
 
   build:

@@ -43,11 +43,12 @@ jobs:
           composeArguments: -d
           serviceName: db
       - name: Run MySQL
-        uses: smartlyio/docker-compose-action@v1
-        with:
-          composeFile: test/mysql/docker-compose.yml
-          composeArguments: -d
-          serviceName: db
+#        uses: smartlyio/docker-compose-action@v1
+#        with:
+#          composeFile: test/mysql/docker-compose.yml
+#          composeArguments: -d
+#          serviceName: db
+        run: docker-compose -p mssql -f test/mssql/docker-compose.yml up -d db
       - run: nc -zv -w 30 localhost 1433
       - run: nc -zv -w 30 localhost 5432
       - run: nc -zv -w 30 localhost 3306
@@ -60,11 +61,7 @@ jobs:
         run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
         continue-on-error: true
       - name: Log MS SQL
-        uses: smartlyio/docker-compose-action@v1
-        with:
-          composeFile: test/mssql/docker-compose.yml
-          composeCommand: logs
-          serviceName: db
+        run: docker-compose -p mssql -f test/mssql/docker-compose.yml logs db
       - run: npm test
       - name: Cache coverage
         uses: actions/cache@v3

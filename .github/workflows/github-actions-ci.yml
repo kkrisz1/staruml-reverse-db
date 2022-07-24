@@ -100,6 +100,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
       - name: Download Coverage report
         uses: actions/download-artifact@v2
         with:

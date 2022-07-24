@@ -1,0 +1,126 @@
+name: 'github-actions-ci'
+
+#on: [ push ]
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+
+  install-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        env:
+          cache-name: node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'false' }}
+        run: npm ci
+
+  build:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        env:
+          cache-name: node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - run: npm run build --if-present
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        env:
+          cache-name: node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Run MS SQL
+        uses: smartlyio/docker-compose-action@v1
+        with:
+          composeFile: test/mssql/docker-compose.yml
+          composeArguments: -d
+          serviceName: db
+      - name: Run Postgre SQL
+        uses: smartlyio/docker-compose-action@v1
+        with:
+          composeFile: test/postgresql/docker-compose.yml
+          composeArguments: -d
+          serviceName: db
+      - name: Run MySQL
+        uses: smartlyio/docker-compose-action@v1
+        with:
+          composeFile: test/mysql/docker-compose.yml
+          composeArguments: -d
+          serviceName: db
+      - run: nc -zv -w 30 localhost 1433
+      - run: nc -zv -w 30 localhost 5432
+      - run: nc -zv -w 30 localhost 3306
+      # temp solution
+      - run: sleep 120
+#      - run: sudo apt-get install -y postgresql-client
+#      - name: Check PostgreSQL
+#        run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
+#      - name: Check MSSQL
+#        run: sqlcmd -S 127.0.0.1 -U test_user -P password01@ -d test -Q 'SELECT 1;'
+      - run: npm test
+      - name: Coverage report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage
+
+  report:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Coverage report
+        id: download-coverage-report
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-report
+      - run: ls -la
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ${{ steps.download-coverage-report.outputs.download-path }}/lcov.info
+
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=critical

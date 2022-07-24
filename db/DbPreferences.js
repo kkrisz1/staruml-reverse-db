@@ -40,8 +40,9 @@ class DbPreferences {
         port: app.preferences.get(this.connPrefOptKeyPrefix + ".port"),
         database: app.preferences.get(this.connPrefOptKeyPrefix + ".database"),
         ssl: app.preferences.get(this.connPrefOptKeyPrefix + ".ssl"),
-        logging: app.preferences.get(this.connPrefOptKeyPrefix + ".logging")
-      }
+        logging: app.preferences.get(this.connPrefOptKeyPrefix + ".logging"),
+        trustServerCertificate: app.preferences.get(this.connPrefOptKeyPrefix + ".trustServerCertificate"),
+      },
     };
   };
 }

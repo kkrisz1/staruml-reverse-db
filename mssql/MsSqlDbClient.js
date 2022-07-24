@@ -1,54 +1,54 @@
 const DbClient = require("../db/DbClient");
 
-const tp = require('tedious-promises');
-const ConnectionPool = require('tedious-connection-pool');
-const TYPES = require('tedious').TYPES;
+const sql = require('mssql')
+const TYPES = sql.TYPES;
 
 class MsSqlDbClient extends DbClient {
-  constructor(options) {
-    super(options, null, {
-      min: 5,
-      max: 10,
-      log: options.options.logging
-    });
-  }
-
-  _cmdExecStmnt(requestId, sqlStr, inputs) {
-    return new Promise((resolve, reject) => {
-      if (!this.pool) {
-        this.pool = new ConnectionPool(this.poolConfig, this.options);
-        this.pool.on("error", err => reject(err));
-        tp.setConnectionPool(this.pool); // global scope
-      }
-      const request = tp.sql(sqlStr.toString());
-      inputs.forEach(input => {
-        request.parameter(input.name, this.getTediousType(input.type), input.value);
-      });
-      request.execute()
-          .then(results => {
-            resolve({rowCount: results.length, rows: results});
-          })
-          .fail(err => reject(err));
-    });
-  }
-
-  _cmdClose() {
-    return new Promise(resolve => {
-      if (this.pool) {
-        this.pool.drain(() => console.log("Pool is ended..."));
-        this.pool = null;
-      }
-
-      resolve();
-    });
-  }
-
-  getTediousType(type) {
-    switch (type) {
-      case 'varchar':
-        return TYPES.VarChar;
+    constructor(options) {
+        super(options, null, {
+            min: 5,
+            max: 10,
+            log: options.options.logging
+        });
     }
-  }
+
+    _cmdExecStmnt(requestId, sqlStr, inputs) {
+        return sql.connect(Object.assign(this.options, this.poolConfig))
+            .then((pool) => {   // global pool
+                if (!this.pool) {
+                    this.pool = pool;
+                }
+                const request = pool.request();
+                inputs.forEach(input => {
+                    request.input(input.name, this.getSqlType(input.type), input.value);
+                });
+                return request.query(sqlStr.toString());
+            })
+            .then(result => {
+                return {
+                    rowCount: result.recordset.length,
+                    rows: result.recordset,
+                }
+            })
+            .catch(error => {
+                throw {
+                    message: error.message,
+                };
+            });
+    }
+
+    _cmdClose() {
+        return this.pool.close()
+            .then(() => console.log("Pool is ended..."))
+            .then(() => this.pool = null);
+    }
+
+    getSqlType(type) {
+        switch (type) {
+            case 'varchar':
+                return TYPES.NVarChar;
+        }
+    }
 }
 
 module.exports = MsSqlDbClient;

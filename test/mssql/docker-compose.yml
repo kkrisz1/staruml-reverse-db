@@ -11,6 +11,7 @@ services:
     command: >
       /bin/bash -c '
       /opt/mssql/bin/sqlservr &
+      sleep 10;
       /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U sa -P $${SA_PASSWORD} -i /tmp/db_create.sql &&
       /opt/mssql-tools/bin/sqlcmd -e -S localhost -l 30 -U $${USERNAME} -P $${SA_PASSWORD} -i /tmp/expecteddatamodel_table_create.sql;
       wait;'

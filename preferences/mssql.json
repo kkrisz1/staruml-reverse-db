@@ -52,6 +52,12 @@
       "type": "check",
       "default": false
     },
+    "db.mssql.connection.options.trustServerCertificate": {
+      "text": "Trust Server Certificate",
+      "description": "Trust Server Certificate",
+      "type": "check",
+      "default": false
+    },
     "db.mssql.connection.options.logging": {
       "text": "Logging",
       "description": "Logging",

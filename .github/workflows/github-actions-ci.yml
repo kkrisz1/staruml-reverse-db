@@ -1,11 +1,11 @@
-name: 'github-actions-build'
+name: 'github-actions-ci'
 
-on: [ push ]
-#on:
-#  push:
-#    branches: [ $default-branch ]
-#  pull_request:
-#    branches: [ $default-branch ]
+#on: [ push ]
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
 
 jobs:
 

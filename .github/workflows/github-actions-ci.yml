@@ -87,7 +87,7 @@ jobs:
 #      - name: Check PostgreSQL
 #        run: PGPASSWORD=password PGSSLMODE=disable psql -h 127.0.0.1 -U user -d user -c 'SELECT 1'
 #      - name: Check MSSQL
-#        run: sqlcmd -S localhost -U test_user -P password01@ -d test -Q "SELECT @@version;"
+#        run: sqlcmd -S 127.0.0.1 -U test_user -P password01@ -d test -Q 'SELECT 1;'
       - run: npm test
       - name: Coverage report as artifact
         uses: actions/upload-artifact@v2

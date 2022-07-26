@@ -34,7 +34,7 @@ class MySqlAnalyzer extends DbAnalyzer {
         + "FROM INFORMATION_SCHEMA.COLUMNS as col "
         + "  LEFT JOIN pg_class cls ON "
         + "    col.table_name = cls.relname AND "
-		+ "    cls.relnamespace::regnamespace::text = col.table_schema "
+        + "    cls.relnamespace::regnamespace::text = col.table_schema "
         + "  LEFT JOIN ( "
         + "    SELECT o.relnamespace::regnamespace::text AS TABLE_SCHEMA, "
         + "      o.relname AS TABLE_NAME, "

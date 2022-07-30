@@ -44,7 +44,7 @@ describe('Wrong connection options', () => {
     manager = new MySqlManager(wrongOptions);
 
     // on travis-ci the server and port do not appear at the end of the error message
-    const regex = "my\\.example\\.org";
+    const regex = "my\.example\.org";
     const expectedMessage = "getaddrinfo ENOTFOUND " + regex + "( " + regex + ":" + wrongOptions.options.port + ")?";
     expect.assertions(1);
     return expect(manager.executeSql(testRequest))

@@ -36,7 +36,7 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "mssql": "^8.1.4",
-    "mysql2": "^1.5.3",
+    "mysql2": "^1.7.0",
     "pg": "^8.10.0"
   },
   "devDependencies": {

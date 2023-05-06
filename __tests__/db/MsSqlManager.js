@@ -128,7 +128,7 @@ describe('Wrong connection options', () => {
         expect.assertions(1);
         return expect(manager.executeSql(request))
             .rejects
-            .toMatchObject({message: "Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - self signed certificate"});
+            .toMatchObject({message: "Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - self-signed certificate"});
     });
 });
 

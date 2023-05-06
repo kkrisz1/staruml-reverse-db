@@ -38,6 +38,12 @@ class MsSqlDbClient extends DbClient {
     }
 
     _cmdClose() {
+        if (!this.pool) {
+            return new Promise(resolve => {
+                resolve();
+            });
+        }
+
         return this.pool.close()
             .then(() => console.log("Pool is ended..."))
             .then(() => this.pool = null);

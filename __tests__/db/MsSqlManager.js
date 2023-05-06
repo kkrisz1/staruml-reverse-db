@@ -31,7 +31,7 @@ describe('Wrong connection options', () => {
             sql: "SELECT 1",
             inputs: []
         };
-        const manager = new MsSqlManager(wrongOptions);
+        manager = new MsSqlManager(wrongOptions);
 
         expect.assertions(1);
         return expect(manager.executeSql(request))
@@ -63,7 +63,7 @@ describe('Wrong connection options', () => {
             sql: "SELECT 1",
             inputs: []
         };
-        const manager = new MsSqlManager(wrongOptions);
+        manager = new MsSqlManager(wrongOptions);
 
         expect.assertions(1);
         return expect(manager.executeSql(request))

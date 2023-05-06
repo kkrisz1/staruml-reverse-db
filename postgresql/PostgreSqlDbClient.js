@@ -29,11 +29,10 @@ class PostgreSqlDbClient extends DbClient {
             })
                 .then(() => console.log("No pool is created..."));
         }
-        return new Promise(resolve => {
-            this.pool.end(() => console.log("Pool is ended..."));
-            this.pool = null;
-            resolve();
-        });
+
+        return this.pool.end()
+            .then(() => console.log("Pool is ended..."))
+            .then(() => this.pool = null);
     }
 }
 

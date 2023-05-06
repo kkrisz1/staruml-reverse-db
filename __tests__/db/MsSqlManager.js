@@ -19,6 +19,10 @@ const options = {
 describe('Wrong connection options', () => {
     let manager = null;
 
+    afterEach(async () => {
+        await manager.closeAllConnections();
+    });
+
     test("Wrong user", () => {
         const wrongOptions = JSON.parse(JSON.stringify(options));
         wrongOptions.userName = "dummy";
@@ -140,8 +144,8 @@ describe('MSSQL DB content', () => {
         manager = new MsSqlManager(options);
     });
 
-    afterEach(() => {
-        manager.closeAllConnections();
+    afterEach(async () => {
+        await manager.closeAllConnections();
     });
 
     test("MSSQL DB content", () => {

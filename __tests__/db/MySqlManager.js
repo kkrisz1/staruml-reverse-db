@@ -21,8 +21,8 @@ const testRequest = {
 describe('Wrong connection options', () => {
   let manager = null;
 
-  afterEach(() => {
-    manager.closeAllConnections();
+  afterEach(async () => {
+    await manager.closeAllConnections();
   });
 
   test("Wrong password", () => {
@@ -115,8 +115,8 @@ describe('MySQL DB content', () => {
     manager = new MySqlManager(options);
   });
 
-  afterEach(() => {
-    manager.closeAllConnections();
+  afterEach(async () => {
+    await manager.closeAllConnections();
   });
 
   test("MySQL DB content", () => {

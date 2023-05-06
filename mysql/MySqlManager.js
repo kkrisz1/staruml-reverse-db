@@ -17,7 +17,7 @@ class MySqlManager extends DbManager {
       port: options.options.port,
       database: options.owner,
       ssl: options.options.ssl,
-      logging: options.options.logging
+      debug: options.options.logging
     }));
   }
 }

@@ -26,14 +26,10 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
-      - id: set-package-name
+      - id: set-package-properties
         run: |
           echo PKG_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV
-          echo ::set-output name=PKG_NAME::$(node -p -e "require('./package.json').name")
-      - id: set-package-version
-        run: |
           echo PKG_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV
-          echo ::set-output name=PKG_VERSION::$(node -p -e "require('./package.json').version")
       - run: npm install -g mkdirp
       - run: npm prune --production
       - run: mkdirp ./dist --mode=0777
@@ -45,8 +41,8 @@ jobs:
       - run: ls -la dist/
       - id: set-output
         run: |
-          echo "::set-output name=asset-path::$(echo ./dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip)"
-          echo "::set-output name=asset-name::$(echo ${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip)"
+          echo asset-path=$(echo ./dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip) >> $GITHUB_OUTPUT
+          echo asset-name=$(echo ${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip) >> $GITHUB_OUTPUT
       - name: Release-package as artifact
         uses: actions/upload-artifact@v3
         with:

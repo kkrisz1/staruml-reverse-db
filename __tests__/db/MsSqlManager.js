@@ -23,6 +23,15 @@ describe('Wrong connection options', () => {
         await manager.closeAllConnections();
     });
 
+    test("Close non-opened connections", () => {
+        manager = new MsSqlManager(options);
+
+        expect.assertions(1);
+        return expect(manager.closeAllConnections())
+            .resolves
+            .toBeUndefined();
+    });
+
     test("Wrong user", () => {
         const wrongOptions = JSON.parse(JSON.stringify(options));
         wrongOptions.userName = "dummy";

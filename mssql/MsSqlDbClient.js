@@ -41,7 +41,8 @@ class MsSqlDbClient extends DbClient {
         if (!this.pool) {
             return new Promise(resolve => {
                 resolve();
-            });
+            })
+                .then(() => console.log("No pool is created..."));
         }
 
         return this.pool.close()

@@ -11,27 +11,57 @@
               "label": "MS SQL Server",
               "id": "tools.db.mssql",
               "submenu": [
-                { "label": "Generate ER Data Model...", "id": "tools.db.mssql.generate.erd", "command": "reverse-db-mssql:generate-erd" },
-                { "type": "separator" },
-                { "label": "Configure Server...", "id": "tools.db.mssql.configure", "command": "reverse-db-mssql:configure" }
+                {
+                  "label": "Generate ER Data Model...",
+                  "id": "tools.db.mssql.generate.erd",
+                  "command": "reverse-db-mssql:generate-erd"
+                },
+                {
+                  "type": "separator"
+                },
+                {
+                  "label": "Configure Server...",
+                  "id": "tools.db.mssql.configure",
+                  "command": "reverse-db-mssql:configure"
+                }
               ]
             },
             {
               "label": "MySQL Server",
               "id": "tools.db.mysql",
               "submenu": [
-                { "label": "Generate ER Data Model...", "id": "tools.db.mysql.generate.erd", "command": "reverse-db-mysql:generate-erd" },
-                { "type": "separator" },
-                { "label": "Configure Server...", "id": "tools.db.mysql.configure", "command": "reverse-db-mysql:configure" }
+                {
+                  "label": "Generate ER Data Model...",
+                  "id": "tools.db.mysql.generate.erd",
+                  "command": "reverse-db-mysql:generate-erd"
+                },
+                {
+                  "type": "separator"
+                },
+                {
+                  "label": "Configure Server...",
+                  "id": "tools.db.mysql.configure",
+                  "command": "reverse-db-mysql:configure"
+                }
               ]
             },
             {
               "label": "PostgreSQL Server",
               "id": "tools.db.postgresql",
               "submenu": [
-                { "label": "Generate ER Data Model...", "id": "tools.db.postgresql.generate.erd", "command": "reverse-db-postgresql:generate-erd" },
-                { "type": "separator" },
-                { "label": "Configure Server...", "id": "tools.db.postgresql.configure", "command": "reverse-db-postgresql:configure" }
+                {
+                  "label": "Generate ER Data Model...",
+                  "id": "tools.db.postgresql.generate.erd",
+                  "command": "reverse-db-postgresql:generate-erd"
+                },
+                {
+                  "type": "separator"
+                },
+                {
+                  "label": "Configure Server...",
+                  "id": "tools.db.postgresql.configure",
+                  "command": "reverse-db-postgresql:configure"
+                }
               ]
             }
           ]

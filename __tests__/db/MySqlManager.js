@@ -25,6 +25,15 @@ describe('Wrong connection options', () => {
         await manager.closeAllConnections();
     });
 
+    test("Close non-opened connections", () => {
+        manager = new MySqlManager(options);
+
+        expect.assertions(1);
+        return expect(manager.closeAllConnections())
+            .resolves
+            .toBeUndefined();
+    });
+
     test("Wrong password", () => {
         const wrongOptions = JSON.parse(JSON.stringify(options));
         wrongOptions.password = "passwor";

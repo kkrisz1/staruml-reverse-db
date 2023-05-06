@@ -21,6 +21,10 @@ const testRequest = {
 describe('Wrong connection options', () => {
   let manager = null;
 
+  afterEach(() => {
+    manager.closeAllConnections();
+  });
+
   test("Wrong password", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.password = "passwor";

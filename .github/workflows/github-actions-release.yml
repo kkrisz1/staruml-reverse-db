@@ -48,7 +48,7 @@ jobs:
           echo "::set-output name=asset-path::$(echo ./dist/${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip)"
           echo "::set-output name=asset-name::$(echo ${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}.zip)"
       - name: Release-package as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.set-output.outputs.asset-name }}
           path: ${{ steps.set-output.outputs.asset-path }}
@@ -60,7 +60,7 @@ jobs:
     steps:
       - name: Download release-package
         id: download-release-asset
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ needs.prepare-release.outputs.asset-name }}
       - name: Create Release

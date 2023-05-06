@@ -2,6 +2,7 @@ const jestAjv = require("jest-ajv");
 const schema = require("./schema");
 
 const PostgreSqlManager = require("../../postgresql/PostgreSqlManager");
+const MsSqlManager = require("../../mssql/MsSqlManager");
 
 const options = {
   owner: "public",
@@ -21,10 +22,16 @@ const testRequest = {
 };
 
 describe('Wrong connection options', () => {
+  let manager = null;
+
+  afterEach(async () => {
+    await manager.closeAllConnections();
+  });
+
   test("Wrong password", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.password = "passwor";
-    const manager = new PostgreSqlManager(wrongOptions);
+    manager = new PostgreSqlManager(wrongOptions);
 
     expect.assertions(1);
     return expect(manager.executeSql(testRequest))
@@ -35,7 +42,7 @@ describe('Wrong connection options', () => {
   test("Wrong server name", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.server = "my.example.org";
-    const manager = new PostgreSqlManager(wrongOptions);
+    manager = new PostgreSqlManager(wrongOptions);
 
     // on travis-ci the server and port do not appear at the end of the error message
     const regex = "my\\.example\\.org";
@@ -53,7 +60,7 @@ describe('Wrong connection options', () => {
   // test("Wrong server IP", () => {
   //   const wrongOptions = JSON.parse(JSON.stringify(options));
   //   wrongOptions.server = "10.0.0.2";
-  //   const manager = new PostgreSqlManager(wrongOptions);
+  //   manager = new PostgreSqlManager(wrongOptions);
   //
   //   expect.assertions(1);
   //   return expect(manager.executeSql(testRequest))
@@ -64,7 +71,7 @@ describe('Wrong connection options', () => {
   test("Wrong server port", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.options.port = 54321;
-    const manager = new PostgreSqlManager(wrongOptions);
+    manager = new PostgreSqlManager(wrongOptions);
 
     expect.assertions(1);
     return expect(manager.executeSql(testRequest))
@@ -75,7 +82,7 @@ describe('Wrong connection options', () => {
   test("Not existing database", () => {
     const wrongOptions = JSON.parse(JSON.stringify(options));
     wrongOptions.options.database = "dummy";
-    const manager = new PostgreSqlManager(wrongOptions);
+    manager = new PostgreSqlManager(wrongOptions);
 
     expect.assertions(1);
     return expect(manager.executeSql(testRequest))
@@ -89,7 +96,7 @@ describe('Wrong connection options', () => {
   //   // NOTE: public testing postgresql server that has ssl enabled
   //   wrongOptions.server = "";
   //   wrongOptions.options.ssl = false;
-  //   const manager = new PostgreSqlManager(wrongOptions);
+  //   manager = new PostgreSqlManager(wrongOptions);
 
   //   expect.assertions(1);
   //   return expect(manager.executeSql(testRequest))
@@ -106,8 +113,8 @@ describe('PostgreSQL DB content', () => {
     manager = new PostgreSqlManager(options);
   });
 
-  afterEach(() => {
-    manager.closeAllConnections();
+  afterEach(async () => {
+    await manager.closeAllConnections();
   });
 
   test("PostgreSQL DB content", () => {

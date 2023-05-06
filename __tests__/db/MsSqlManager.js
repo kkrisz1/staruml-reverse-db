@@ -19,6 +19,10 @@ const options = {
 describe('Wrong connection options', () => {
     let manager = null;
 
+    afterEach(async () => {
+        await manager.closeAllConnections();
+    });
+
     test("Wrong user", () => {
         const wrongOptions = JSON.parse(JSON.stringify(options));
         wrongOptions.userName = "dummy";
@@ -27,7 +31,7 @@ describe('Wrong connection options', () => {
             sql: "SELECT 1",
             inputs: []
         };
-        const manager = new MsSqlManager(wrongOptions);
+        manager = new MsSqlManager(wrongOptions);
 
         expect.assertions(1);
         return expect(manager.executeSql(request))
@@ -59,7 +63,7 @@ describe('Wrong connection options', () => {
             sql: "SELECT 1",
             inputs: []
         };
-        const manager = new MsSqlManager(wrongOptions);
+        manager = new MsSqlManager(wrongOptions);
 
         expect.assertions(1);
         return expect(manager.executeSql(request))
@@ -128,7 +132,7 @@ describe('Wrong connection options', () => {
         expect.assertions(1);
         return expect(manager.executeSql(request))
             .rejects
-            .toMatchObject({message: "Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - self signed certificate"});
+            .toMatchObject({message: "Failed to connect to " + wrongOptions.server + ":" + wrongOptions.options.port + " - self-signed certificate"});
     });
 });
 
@@ -140,8 +144,8 @@ describe('MSSQL DB content', () => {
         manager = new MsSqlManager(options);
     });
 
-    afterEach(() => {
-        manager.closeAllConnections();
+    afterEach(async () => {
+        await manager.closeAllConnections();
     });
 
     test("MSSQL DB content", () => {

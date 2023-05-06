@@ -17,7 +17,6 @@
   },
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "prepare": "npm run snyk-protect",
     "test": "npm run test-jest",
     "test-jest": "jest --detectOpenHandles --forceExit --passWithNoTests --coverage --coverageReporters=lcov",
     "preversion": "npm test",
@@ -25,9 +24,7 @@
     "postversion": "git push && git push --tags",
     "release:patch": "npm version patch -m \"[release] %s\"",
     "release:minor": "npm version minor -m \"[release] %s\"",
-    "release:major": "npm version major -m \"[release] %s\"",
-    "snyk-protect": "snyk protect",
-    "snyk-monitor": "snyk monitor"
+    "release:major": "npm version major -m \"[release] %s\""
   },
   "license": "GPLv3",
   "engines": {
@@ -44,8 +41,6 @@
     "electron": "^18.3.7",
     "jest": "^29.5.0",
     "jest-ajv": "^1.0.3",
-    "snyk": "^1.1152.0",
     "spectron": "^19.0.0"
-  },
-  "snyk": true
+  }
 }

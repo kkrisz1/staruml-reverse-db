@@ -5,6 +5,14 @@
 [![Coverage Status](https://coveralls.io/repos/github/kkrisz1/staruml-reverse-db/badge.svg?branch=master)](https://coveralls.io/github/kkrisz1/staruml-reverse-db?branch=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/kkrisz1/staruml-reverse-db/badge.svg?branch=master)](https://snyk.io/test/github/kkrisz1/staruml-reverse-db?branch=master)
 
+### Example for generating ER Data Model
+
+[![generate-er-diagram](./generate-er-diagram.gif)](./generate-er-diagram.gif)
+
+### Example for drawing ER Diagram
+
+[![draw-er-diagram](./draw-er-diagram.gif)](./draw-er-diagram.gif)
+
 This extension for [StarUML](http://staruml.io) support to generate ER Data Model from database schema.
 
 > __Note__

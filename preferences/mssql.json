@@ -46,6 +46,11 @@
       "type": "string",
       "default": ""
     },
+    "db.mssql.connection.options.domain": {
+      "text": "Domain name",
+      "description": "If set, domain login will be used",
+      "type": "string"
+    },
     "db.mssql.connection.options.ssl": {
       "text": "SSL",
       "description": "Enable SSL",

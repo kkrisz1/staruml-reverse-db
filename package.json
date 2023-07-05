@@ -32,12 +32,12 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "mssql": "^9.1.1",
-    "mysql2": "^3.3.0",
-    "pg": "^8.10.0"
+    "mysql2": "^3.4.5",
+    "pg": "^8.11.1"
   },
   "devDependencies": {
     "electron": "^18.3.7",
-    "jest": "^29.5.0",
+    "jest": "^29.6.0",
     "jest-ajv": "^1.0.3",
     "spectron": "^19.0.0"
   }

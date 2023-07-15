@@ -15,7 +15,7 @@ class MsSqlManager extends DbManager {
             password: options.password,
             server: options.server,
             owner: options.owner,
-            domain: options.options.domain,
+            domain: options.options.domain === "" ? undefined : options.options.domain,
             options: {
                 port: options.options.port,
                 database: options.options.database,

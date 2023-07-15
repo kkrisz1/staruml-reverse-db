@@ -26,6 +26,15 @@ class DbPreferences {
     };
 
     /**
+     * Connection preference prefix
+     *
+     * @return {object}
+     */
+    getConnPrefKeyPrefix() {
+        return this.connPrefKeyPrefix;
+    };
+
+    /**
      * Connection options
      *
      * @return {object}

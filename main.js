@@ -48,6 +48,14 @@ const _updateModel = (command, options, model) => {
       });
 };
 
+function _listenOnPreferenceChanges(dbPrefs, erdGenerator) {
+  app.preferences.on('change', (key, value) => {
+    if (key.startsWith(dbPrefs.getConnPrefKeyPrefix())) {
+      erdGenerator.dbAnalyzer.manager.closeAllConnections();
+    }
+  })
+}
+
 /**
  * Command Handler for ER Data Model Generator based on DB schema
  *
@@ -57,21 +65,27 @@ function _handleMsSqlErdGen(options, model) {
   options = options || msSqlDbPrefs.getConnOptions();
   model = model || _createModel(options);
 
-  return new MsSqlErdGenerator(options, model).analyze();
+  const msSqlErdGenerator = new MsSqlErdGenerator(options, model);
+  _listenOnPreferenceChanges(msSqlDbPrefs, msSqlErdGenerator);
+  return msSqlErdGenerator.analyze();
 }
 
 function _handlePostgreSqlErdGen(options, model) {
   options = options || postgreSqlDbPrefs.getConnOptions();
   model = model || _createModel(options);
 
-  return new PostgreSqlErdGenerator(options, model).analyze();
+  const postgreSqlErdGenerator = new PostgreSqlErdGenerator(options, model);
+  _listenOnPreferenceChanges(postgreSqlDbPrefs, postgreSqlErdGenerator);
+  return postgreSqlErdGenerator.analyze();
 }
 
 function _handleMySqlErdGen(options, model) {
   options = options || mySqlDbPrefs.getConnOptions();
   model = model || _createModel(options);
 
-  return new MySqlErdGenerator(options, model).analyze();
+  const mySqlErdGenerator = new MySqlErdGenerator(options, model);
+  _listenOnPreferenceChanges(mySqlDbPrefs, mySqlErdGenerator);
+  return mySqlErdGenerator.analyze();
 }
 
 function _handleMySqlErdUpdate(options, model) {

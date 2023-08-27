@@ -4,9 +4,9 @@ const RequestInput = require("../db/DbRequestInput");
 const DbAnalyzer = require("../db/DbAnalyzer");
 const Manager = require("./MsSqlManager");
 
-class MySqlAnalyzer extends DbAnalyzer {
+class MsSqlAnalyzer extends DbAnalyzer {
     /**
-     * MySqlAnalyzer
+     * MsSqlAnalyzer
      *
      * @constructor
      */
@@ -140,4 +140,4 @@ class MySqlAnalyzer extends DbAnalyzer {
     };
 }
 
-module.exports = MySqlAnalyzer;
+module.exports = MsSqlAnalyzer;

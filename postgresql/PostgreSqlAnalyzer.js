@@ -2,9 +2,9 @@ const Request = require("../db/DbRequest");
 const DbAnalyzer = require("../db/DbAnalyzer");
 const Manager = require("./PostgreSqlManager");
 
-class MySqlAnalyzer extends DbAnalyzer {
+class PostgreSqlAnalyzer extends DbAnalyzer {
     /**
-     * MySqlAnalyzer
+     * PostgreSqlAnalyzer
      *
      * @constructor
      */
@@ -90,4 +90,4 @@ class MySqlAnalyzer extends DbAnalyzer {
     };
 }
 
-module.exports = MySqlAnalyzer;
+module.exports = PostgreSqlAnalyzer;

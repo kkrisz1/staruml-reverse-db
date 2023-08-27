@@ -48,6 +48,22 @@ describe('Wrong connection options', () => {
             .toMatchObject({message: "Login failed for user '" + wrongOptions.userName + "'."});
     });
 
+    test("Wrong domain", () => {
+        const wrongOptions = JSON.parse(JSON.stringify(options));
+        wrongOptions.options.domain = "dummy";
+        const request = {
+            id: "1",
+            sql: "SELECT 1",
+            inputs: []
+        };
+        manager = new MsSqlManager(wrongOptions);
+
+        expect.assertions(1);
+        return expect(manager.executeSql(request))
+            .rejects
+            .toMatchObject({message: "Login failed. The login is from an untrusted domain and cannot be used with Integrated authentication."});
+    });
+
     test("Wrong password", () => {
         const wrongOptions = JSON.parse(JSON.stringify(options));
         wrongOptions.password = "passwor";

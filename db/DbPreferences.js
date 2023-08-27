@@ -40,8 +40,6 @@ class DbPreferences {
      * @return {object}
      */
     getConnOptions() {
-        const connDomain = app.preferences.get(this.connPrefOptKeyPrefix + ".domain");
-
         return {
             userName: app.preferences.get(this.connPrefKeyPrefix + ".username"),
             password: app.preferences.get(this.connPrefKeyPrefix + ".password"),
@@ -50,7 +48,7 @@ class DbPreferences {
             options: {
                 port: app.preferences.get(this.connPrefOptKeyPrefix + ".port"),
                 database: app.preferences.get(this.connPrefOptKeyPrefix + ".database"),
-                domain: connDomain === "" ? undefined : connDomain,
+                domain: app.preferences.get(this.connPrefOptKeyPrefix + ".domain"),
                 ssl: app.preferences.get(this.connPrefOptKeyPrefix + ".ssl"),
                 logging: app.preferences.get(this.connPrefOptKeyPrefix + ".logging"),
                 trustServerCertificate: app.preferences.get(this.connPrefOptKeyPrefix + ".trustServerCertificate"),
